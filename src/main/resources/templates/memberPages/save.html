@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+
+<div class="container">
+    <div class="row m-5">
+        <div class="col">
+            <form action="/member/save" method="post">
+                <div>
+                    <span>Email</span>
+                    <input type="text" name="memberEmail">
+                </div>
+                <div>
+                    <sapn>비밀번호</sapn>
+                    <input type="text" name="memberPassword">
+                </div>
+                <div>
+                    <span>이름</span>
+                    <input type="text" name="memberName">
+                </div>
+                <div>
+                    <span>전화번호</span>
+                    <input type="text" name="memberMobile">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+</html>
