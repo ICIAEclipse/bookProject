@@ -6,8 +6,11 @@ import com.icia.book.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
+import java.util.NoSuchElementException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +22,16 @@ public class MemberService {
         memberRepository.save(memberEntity);
     }
 
+
+    public boolean login(MemberDTO memberDTO) {
+        MemberEntity memberEntity = memberRepository.findByMemberEmail(memberDTO.getMemberEmail()).orElseThrow(() -> new NoSuchElementException());
+        if(memberDTO.getMemberPassword().equals(memberEntity.getMemberPassword())){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public List<MemberDTO> findAll() {
         List<MemberEntity> memberEntityList = memberRepository.findAll();
         List<MemberDTO> memberDTOList = new ArrayList<>();
@@ -26,5 +39,6 @@ public class MemberService {
             memberEntityList.add(MemberDTO.toDTO(memberEntity));
         }
         return memberDTOList;
+
     }
 }

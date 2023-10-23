@@ -10,7 +10,7 @@
 <div class="container">
     <div class="row m-5">
         <div class="col">
-            <form name="save-form" action="/member/save" method="post">
+            <form name="login-form" action="/member/login" method="post">
                 <div>
                     <span style="display: inline-block; width: 100px">Email</span>
                     <input type="text" name="memberEmail">
@@ -31,9 +31,9 @@
 </body>
 
 <script th:inline="javascript">
-    const save_fn = () =>{
-        const saveForm = document.querySelector("[name = 'save-form']");
-        saveForm.submit();
+    const login_fn = () =>{
+        const loginForm = document.querySelector("[name = 'login-form']");
+        loginForm.submit();
     }
 </script>
 
