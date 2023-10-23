@@ -7,9 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import javax.transaction.Transactional;
 import java.util.NoSuchElementException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -40,5 +42,12 @@ public class MemberService {
         }
         return memberDTOList;
 
+    }
+
+
+    public MemberDTO findById(Long id) {
+        MemberEntity memberEntity = memberRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        MemberDTO memberDTO = MemberDTO.toDTO(memberEntity);
+        return memberDTO;
     }
 }
