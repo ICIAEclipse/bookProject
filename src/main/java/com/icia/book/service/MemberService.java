@@ -53,14 +53,7 @@ public class MemberService {
     }
 
 
-//    public boolean findById(MemberDTO memberDTO) {
-//        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberDTO.getId());
-//        if(optionalMemberEntity.isPresent()) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
+
 
     public void delete(Long id) {
         memberRepository.deleteById(id);
@@ -80,5 +73,10 @@ public class MemberService {
             addressDTOList.add(AddressDTO.toDTO(addressEntity));
         }
         return addressDTOList;
+    }
+
+    public void update(MemberDTO memberDTO) {
+        MemberEntity memberEntity = MemberEntity.toSaveEntity(memberDTO);
+        memberRepository.save(memberEntity);
     }
 }
