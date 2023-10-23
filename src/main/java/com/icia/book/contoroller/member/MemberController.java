@@ -125,10 +125,10 @@ public class MemberController {
             model.addAttribute("member", memberDTO);
             return "/memberPages/memberUpdate";
         }
+    }
 
     @GetMapping("/address")
-    public String addressForm(HttpSession session,
-                              Model model){
+    public String addressForm(HttpSession session, Model model) {
         String memberEmail = (String) session.getAttribute("loginEmail");
         List<AddressDTO> addressDTOList = memberService.findAddressByMemberEmail(memberEmail);
         System.out.println(addressDTOList);
@@ -137,3 +137,4 @@ public class MemberController {
 
     }
 }
+
