@@ -36,4 +36,22 @@ public class MemberController {
     public String loginForm(){
         return "memberPages/login";
     }
+
+    @PostMapping("/login")
+    public String login(@ModelAttribute MemberDTO memberDTO){
+        try{
+            boolean result = memberService.login(memberDTO);
+            if(result){
+                if(memberDTO.getMemberEmail().equals("admin")){
+                    return "redirect:/admin";
+                }else {
+                    return "redirect:/";
+                }
+            }else {
+                return "redirect:/member/login";
+            }
+        }catch (Exception e){
+            return"redirect:/member/login";
+        }
+    }
 }
