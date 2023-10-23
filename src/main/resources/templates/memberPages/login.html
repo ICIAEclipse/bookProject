@@ -10,6 +10,9 @@
 <div class="container">
     <div class="row m-5">
         <div class="col">
+            <div id="error-type" style="color: red">
+                <p th:if="${error== 'error1'}">아이디 혹은 비밀번호가 틀렸습니다.</p>
+            </div>
             <form name="login-form" action="/member/login" method="post">
                 <div>
                     <span style="display: inline-block; width: 100px">Email</span>
@@ -33,7 +36,16 @@
 <script th:inline="javascript">
     const login_fn = () =>{
         const loginForm = document.querySelector("[name = 'login-form']");
-        loginForm.submit();
+        const loginEmail = document.querySelector("[name = 'memberEmail']").value;
+        const loginPassword = document.querySelector("[name = 'memberPassword']").value;
+        const errorType = document.getElementById("error-type")
+        if(loginEmail == ''){
+            errorType.innerHTML = `<p>아이디를 입력해주세요.</p>`
+        }else if (loginPassword == "") {
+            errorType.innerHTML = `<p>비밀번호를 입력해주세요.</p>`
+        }else {
+            loginForm.submit();
+        }
     }
 </script>
 
