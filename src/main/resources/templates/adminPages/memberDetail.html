@@ -13,16 +13,18 @@
             <table class = "table table-striped">
             <tr>
                 <th>id</th>
-                <th>이메일</th>
-                <th>이름</th>
-                <th>전화번호</th>
-            </tr>
-            <tr th:each="member: ${memberList}">
                 <td th:text="${member.id}"></td>
-                <td>
-                    <a th:href="@{|/admin/member/${member.id}|}" th:text="${member.memberEmail}"></a>
-                </td>
+            </tr>
+            <tr>
+                <th>이메일</th>
+                <td th:text="${member.memberEmail}"></td>
+            </tr>
+            <tr>
+                <th>이름</th>
                 <td th:text="${member.memberName}"></td>
+            </tr>
+            <tr>
+                <th>전화번호</th>
                 <td th:text="${member.memberMobile}"></td>
             </tr>
             </table>

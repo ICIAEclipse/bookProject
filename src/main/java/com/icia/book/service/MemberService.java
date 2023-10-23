@@ -49,5 +49,6 @@ public class MemberService {
         MemberEntity memberEntity = memberRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
         MemberDTO memberDTO = MemberDTO.toDTO(memberEntity);
         return memberDTO;
+
     }
 }
