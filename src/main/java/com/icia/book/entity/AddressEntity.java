@@ -1,18 +1,16 @@
-package com.icia.book.Entity;
+package com.icia.book.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter(AccessLevel.PRIVATE)
-@Table(name="recent_address_table")
+@Table(name="address_table")
 @Entity
-public class RecentAddressEntity {
+public class AddressEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,11 +27,10 @@ public class RecentAddressEntity {
     @Column(length = 50)
     private String addressDetail;
 
-    @CreationTimestamp
     @Column()
-    private LocalDateTime createdAt;
+    private int addressStatus;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 }

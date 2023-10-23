@@ -1,4 +1,5 @@
-package com.icia.book.Entity;
+package com.icia.book.entity;
+
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,28 +11,24 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter(AccessLevel.PRIVATE)
-@Table(name="inquiry_comment_table")
+@Table(name="recent_table")
 @Entity
-public class InquiryCommentEntity {
+
+public class RecentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20, nullable = false)
-    private String inquiryCommentWriter;
-
-    @Column(length = 500, nullable = false)
-    private String inquiryCommentContents;
-
     @CreationTimestamp
     @Column()
-    private LocalDateTime createdAt;
+    private LocalDateTime viewAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_Id")
     private MemberEntity memberEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inquiry_id")
-    private InquiryEntity inquiryEntity;
+    @JoinColumn(name = "book_Id")
+    private BookEntity bookEntity;
+
 }
