@@ -16,10 +16,10 @@ import java.util.List;
 public class AdminMemberController {
     public final MemberService memberService;
 
-    @GetMapping("/list")
+    @GetMapping("/member")
     public String findAll(Model model){
         List<MemberDTO> memberDTOList = memberService.findAll();
-        model.addAttribute("list", memberDTOList);
-        return "adminPages/list";
+        model.addAttribute("memberList", memberDTOList);
+        return "memberList";
     }
 }

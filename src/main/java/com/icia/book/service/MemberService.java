@@ -36,7 +36,7 @@ public class MemberService {
         List<MemberEntity> memberEntityList = memberRepository.findAll();
         List<MemberDTO> memberDTOList = new ArrayList<>();
         for(MemberEntity memberEntity: memberEntityList){
-            memberEntityList.add(MemberDTO.toDTO(memberEntity));
+            memberDTOList.add(MemberDTO.toDTO(memberEntity));
         }
         return memberDTOList;
 

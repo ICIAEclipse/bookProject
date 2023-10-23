@@ -16,7 +16,7 @@
             <th>이름</th>
             <th>전화번호</th>
         </tr>
-        <tr th:each="member: ${list}">
+        <tr th:each="member: ${memberList}">
             <td th:text="${member.id}"></td>
             <td th:text="${member.memberEmail}"></td>
             <td th:text="${member.memberName}"></td>
