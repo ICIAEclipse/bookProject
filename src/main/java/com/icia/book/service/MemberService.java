@@ -1,12 +1,16 @@
 package com.icia.book.service;
 
-import com.icia.book.dto.MemberDTO;
 import com.icia.book.entity.MemberEntity;
+import com.icia.book.dto.MemberDTO;
 import com.icia.book.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
 import java.util.NoSuchElementException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +22,7 @@ public class MemberService {
         memberRepository.save(memberEntity);
     }
 
+
     public boolean login(MemberDTO memberDTO) {
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberDTO.getMemberEmail()).orElseThrow(() -> new NoSuchElementException());
         if(memberDTO.getMemberPassword().equals(memberEntity.getMemberPassword())){
@@ -25,5 +30,15 @@ public class MemberService {
         }else{
             return false;
         }
+    }
+
+    public List<MemberDTO> findAll() {
+        List<MemberEntity> memberEntityList = memberRepository.findAll();
+        List<MemberDTO> memberDTOList = new ArrayList<>();
+        for(MemberEntity memberEntity: memberEntityList){
+            memberEntityList.add(MemberDTO.toDTO(memberEntity));
+        }
+        return memberDTOList;
+
     }
 }
