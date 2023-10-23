@@ -3,10 +3,14 @@ package com.icia.book.contoroller.member;
 import com.icia.book.dto.MemberDTO;
 import com.icia.book.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpSession;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @RequestMapping("/member")
@@ -27,6 +31,16 @@ public class MemberController {
         }catch (Exception e){
             System.out.println(e.toString());
             return "redirect:/member/save";
+        }
+    }
+
+    @PostMapping("duplicate-check")
+    public ResponseEntity EmailDupleCheck(@RequestParam("memberEmail") String memberEmail){
+        try {
+            memberService.findByMemberEmail(memberEmail);
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }catch(NoSuchElementException noSuchElementException){
+            return new ResponseEntity(HttpStatus.OK);
         }
     }
 
