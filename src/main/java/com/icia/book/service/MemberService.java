@@ -1,10 +1,13 @@
 package com.icia.book.service;
 
+import com.icia.book.dto.AddressDTO;
 import com.icia.book.dto.MemberDTO;
+import com.icia.book.entity.AddressEntity;
 import com.icia.book.entity.MemberEntity;
 import com.icia.book.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,5 +69,16 @@ public class MemberService {
     public MemberDTO findByMemberEmail(String memberEmail) {
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
         return MemberDTO.toDTO(memberEntity);
+    }
+
+    @Transactional
+    public List<AddressDTO> findAddressByMemberEmail(String memberEmail){
+        MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
+        List<AddressEntity> addressEntityList = memberEntity.getAddressEntityList();
+        List<AddressDTO> addressDTOList = new ArrayList<>();
+        for(AddressEntity addressEntity : addressEntityList){
+            addressDTOList.add(AddressDTO.toDTO(addressEntity));
+        }
+        return addressDTOList;
     }
 }
