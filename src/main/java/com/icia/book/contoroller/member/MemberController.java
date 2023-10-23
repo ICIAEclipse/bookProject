@@ -85,4 +85,13 @@ public class MemberController {
         session.removeAttribute("loginEmail");
         return "redirect:/";
     }
+
+    @GetMapping("/mypage")
+    public String myPage(HttpSession session,
+                         Model model){
+        MemberDTO memberDTO = memberService.findByMemberEmail((String) session.getAttribute("loginEmail"));
+        System.out.println(memberDTO);
+        model.addAttribute("member", memberDTO);
+        return "memberPages/mypage";
+    }
 }
