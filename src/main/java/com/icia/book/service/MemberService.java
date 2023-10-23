@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @Service
@@ -50,6 +51,16 @@ public class MemberService {
         MemberDTO memberDTO = MemberDTO.toDTO(memberEntity);
         return memberDTO;
     }
+
+
+//    public boolean findById(MemberDTO memberDTO) {
+//        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(memberDTO.getId());
+//        if(optionalMemberEntity.isPresent()) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
     public void delete(Long id) {
         memberRepository.deleteById(id);

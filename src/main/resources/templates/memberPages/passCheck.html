@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+
+<div class="container">
+    <div class="row m-5">
+        <div class="col">
+            <form action="/member/passcheck" method="post">
+                <input type="hidden" name="memberEmail" th:value="${session.loginEmail}">
+                <input type="text" name="memberPassword" placeholder="비밀번호">
+                <input type="submit" value="비밀번호 체크">
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+</html>
