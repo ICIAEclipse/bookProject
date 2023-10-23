@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
+    <div class="col">
+        <div class="text-end">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categorySave">등록</button>
+        </div>
+        <div class="modal fade" id="categorySave" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">책 카테고리 등록</h1>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Id</span>
+                            <input class="form-control" name="categoryId">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">이름</span>
+                            <input class="form-control" name="categoryName">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-primary" onclick="categorySave()">등록</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>이름</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+            <tr th:each="category : ${categoryList}">
+                <td><input th:name="|categoryId${category.id}|" class="form-control" th:value="${category.categoryId}">
+                </td>
+                <td><input th:name="|categoryName${category.id}|" class="form-control"
+                           th:value="${category.categoryName}"></td>
+                <td>
+                    <button class="btn btn-secondary" th:onclick="update_fn([[${category.id}]])">수정</button>
+                </td>
+                <td>
+                    <button class="btn btn-danger" th:onclick="delete_fn([[${category.id}]])">삭제</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const categorySave = () => {
+        const categoryId = document.querySelector('[name="categoryId"]').value;
+        const categoryName = document.querySelector('[name="categoryName"]').value;
+        if (categoryId.length == 3) {
+            if (categoryName.length != 0) {
+                axios({
+                    method: "post",
+                    url: "/admin/category",
+                    data: {
+                        categoryId: categoryId,
+                        categoryName: categoryName
+                    }
+                }).then(res => {
+                    location.href = "/admin/category";
+                }).catch(err => {
+                    alert("등록실패");
+                })
+            } else {
+                alert("이름을 입력하세요.")
+                document.querySelector('[name="categoryName"]').focus();
+            }
+        } else {
+            alert("id는 3자리입니다.")
+            document.querySelector('[name="categoryId"]').focus();
+        }
+    }
+
+    const update_fn = (id) => {
+        const categoryId = document.querySelector('[name="categoryId' + id + '"]').value;
+        const categoryName = document.querySelector('[name="categoryName' + id + '"]').value;
+        if (confirm("해당 카테고리를 수정하시겠습니까?")) {
+            if (categoryId.length == 3) {
+                if (categoryName.length != 0) {
+                    axios({
+                        method: "put",
+                        url: "/admin/category",
+                        data: {
+                            id: id,
+                            categoryId: categoryId,
+                            categoryName: categoryName
+                        }
+                    }).then(res => {
+                        location.href = "/admin/category";
+                    }).catch(err => {
+                        alert("수정실패");
+                    })
+                } else {
+                    alert("이름을 입력하세요.")
+                    document.querySelector('[name="categoryName"]').focus();
+                }
+            } else {
+                alert("id는 3자리입니다.")
+                document.querySelector('[name="categoryId"]').focus();
+            }
+        }
+    }
+    const delete_fn = (id) => {
+        if (confirm("해당 카테고리를 삭제하시겠습니까?")) {
+            axios({
+                method: "delete",
+                url: "/admin/category",
+                data: {
+                    id: id
+                }
+            }).then(res => {
+                location.href = "/admin/category";
+            }).catch(err => {
+                alert("삭제실패");
+            })
+        }
+    }
+</script>
+</html>
