@@ -1,17 +1,14 @@
 package com.icia.book.service;
 
-import com.icia.book.entity.MemberEntity;
 import com.icia.book.dto.MemberDTO;
+import com.icia.book.entity.MemberEntity;
 import com.icia.book.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
-import javax.transaction.Transactional;
-import java.util.NoSuchElementException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -54,5 +51,9 @@ public class MemberService {
 
     public void delete(Long id) {
         memberRepository.deleteById(id);
+    }
+
+    public void findByMemberEmail(String memberEmail) {
+        MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
     }
 }
