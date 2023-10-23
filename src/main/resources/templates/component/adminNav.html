@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- 부트스트랩 -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</head>
+<body>
+
+<div th:fragment="adminNav" id="adminNav">
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" href="#">상품관리</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">책 카테고리 관리</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">주문내역 관리</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">회원 관리</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">게시판 공지사항</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">자주 묻는 질문</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">1대1 문의</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">문의 카테고리</a>
+        </li>
+    </ul>
+    <script th:inline="javascript">
+
+    </script>
+
+</div>
+</body>
+</html>
