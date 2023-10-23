@@ -1,7 +1,7 @@
 package com.icia.book.service;
 
-import com.icia.book.DTO.MemberDTO;
-import com.icia.book.Entity.MemberEntity;
+import com.icia.book.dto.MemberDTO;
+import com.icia.book.entity.MemberEntity;
 import com.icia.book.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

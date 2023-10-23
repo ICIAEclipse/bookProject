@@ -1,4 +1,4 @@
-package com.icia.book.Entity;
+package com.icia.book.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;

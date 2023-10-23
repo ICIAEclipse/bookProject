@@ -1,6 +1,6 @@
 package com.icia.book.contoroller.member;
 
-import com.icia.book.DTO.MemberDTO;
+import com.icia.book.dto.MemberDTO;
 import com.icia.book.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -32,4 +32,8 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/login")
+    public String loginForm(){
+        return "memberPages/login";
+    }
 }

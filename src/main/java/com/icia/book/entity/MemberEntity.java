@@ -1,6 +1,6 @@
-package com.icia.book.Entity;
+package com.icia.book.entity;
 
-import com.icia.book.DTO.MemberDTO;
+import com.icia.book.dto.MemberDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
