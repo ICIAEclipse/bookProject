@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
+    <div class="col">
+        <table>
+            <tr>
+                <th>isbn</th>
+                <th>cover</th>
+                <th>title</th>
+                <th>author</th>
+                <th>pubDate</th>
+                <th>priceStandard</th>
+                <th>구매사이트</th>
+            </tr>
+            <tr th:each="aladinBook : ${aladinSearch.item}">
+                <td th:text="${aladinBook.isbn}"></td>
+                <td><img th:src="@{${aladinBook.cover}}"></td>
+                <td th:text="${aladinBook.title}"></td>
+                <td th:text="${aladinBook.author}"></td>
+                <td th:text="${aladinBook.pubDate}"></td>
+                <td th:text="${aladinBook.priceStandard}"></td>
+                <td><a th:href="@{|${aladinBook.link}|}">구매사이트</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+</html>
