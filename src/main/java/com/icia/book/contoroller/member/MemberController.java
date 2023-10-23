@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
 
 @RequiredArgsConstructor
@@ -30,6 +29,14 @@ public class MemberController {
             return "redirect:/member/save";
         }
     }
+
+    @GetMapping("/update")
+    public String update(Long id, Model model) {
+        MemberDTO memberDTO = memberService.findById(id);
+        model.addAttribute("member", memberDTO);
+        return "memberPages/memberUpdate";
+    }
+
 
     @GetMapping("/login")
     public String loginForm(@RequestParam(value = "error", required = false, defaultValue = "") String error,
