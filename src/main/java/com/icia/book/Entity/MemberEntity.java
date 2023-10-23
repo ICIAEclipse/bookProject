@@ -1,5 +1,6 @@
 package com.icia.book.Entity;
 
+import com.icia.book.DTO.MemberDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +29,8 @@ public class MemberEntity {
     @Column(length = 20, nullable = false)
     private String memberMobile;
 
-    //회원 상태(사용가능, 회원탈퇴, 휴먼정지 등)
+    //회원 상태(사용가능, 회원탈퇴, 휴면정지 등)
+    // 사용가능 = 0 , 휴면정지 = 1, 회원탈퇴 = 2
     @Column(nullable = false)
     private int memberStatus;
 
@@ -77,4 +79,12 @@ public class MemberEntity {
     @OneToOne(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private RecentAddressEntity recentAddressEntity;
 
+    public static MemberEntity toSaveEntity(MemberDTO memberDTO) {
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setMemberEmail(memberDTO.getMemberEmail());
+        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
+        memberEntity.setMemberName(memberDTO.getMemberName());
+        memberEntity.setMemberMobile(memberDTO.getMemberMobile());
+        return memberEntity;
+    }
 }
