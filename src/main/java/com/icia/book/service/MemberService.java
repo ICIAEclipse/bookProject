@@ -53,7 +53,8 @@ public class MemberService {
         memberRepository.deleteById(id);
     }
 
-    public void findByMemberEmail(String memberEmail) {
+    public MemberDTO findByMemberEmail(String memberEmail) {
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
+        return MemberDTO.toDTO(memberEntity);
     }
 }
