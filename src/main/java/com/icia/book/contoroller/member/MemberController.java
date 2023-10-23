@@ -1,5 +1,6 @@
 package com.icia.book.contoroller.member;
 
+import com.icia.book.dto.AddressDTO;
 import com.icia.book.dto.MemberDTO;
 import com.icia.book.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -91,8 +93,17 @@ public class MemberController {
     public String myPage(HttpSession session,
                          Model model){
         MemberDTO memberDTO = memberService.findByMemberEmail((String) session.getAttribute("loginEmail"));
-        System.out.println(memberDTO);
         model.addAttribute("member", memberDTO);
         return "memberPages/mypage";
+    }
+
+    @GetMapping("/address")
+    public String addressForm(HttpSession session,
+                              Model model){
+        String memberEmail = (String) session.getAttribute("loginEmail");
+        List<AddressDTO> addressDTOList = memberService.findAddressByMemberEmail(memberEmail);
+        System.out.println(addressDTOList);
+        model.addAttribute("addressList", addressDTOList);
+        return "memberPages/memberAddress";
     }
 }

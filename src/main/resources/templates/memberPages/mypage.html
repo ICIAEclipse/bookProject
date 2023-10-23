@@ -7,14 +7,17 @@
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
-<div class="container">
-    <div class="row m-5">
-        <div class="col">
-            <a th:href="@{|/member/update/${member.id}|}">회원정보 수정</a>
+<div class="container m-5">
+    <div class="row">
+        <div id="side-bar" class="col-3">
+            <a th:href="@{/member/update/${member.id}}">회원정보 수정</a>
+            <a href="/member/address">배송지등록</a>
+        </div>
+        <div id="contents" class="col">
+            <p th:text="${member.memberName}"></p>
         </div>
     </div>
 </div>
-
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
 </html>
