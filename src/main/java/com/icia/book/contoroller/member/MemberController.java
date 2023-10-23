@@ -44,8 +44,8 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/update")
-    public String update(Long id, Model model) {
+    @GetMapping("/update/{id}")
+    public String update(@PathVariable("id") Long id, Model model) {
         MemberDTO memberDTO = memberService.findById(id);
         model.addAttribute("member", memberDTO);
         return "memberPages/memberUpdate";
@@ -67,6 +67,7 @@ public class MemberController {
             boolean result = memberService.login(memberDTO);
             if(result){
                 session.setAttribute("loginEmail", memberDTO.getMemberEmail());
+                session.setAttribute("loginId", memberDTO.getId());
                 if(memberDTO.getMemberEmail().equals("admin")){
                     return "redirect:/admin";
                 }else {
