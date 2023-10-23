@@ -20,6 +20,6 @@ public class AdminMemberController {
     public String findAll(Model model){
         List<MemberDTO> memberDTOList = memberService.findAll();
         model.addAttribute("memberList", memberDTOList);
-        return "memberList";
+        return "adminPages/memberList";
     }
 }
