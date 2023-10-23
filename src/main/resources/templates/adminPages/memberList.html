@@ -16,6 +16,7 @@
                 <th>이메일</th>
                 <th>이름</th>
                 <th>전화번호</th>
+                <th></th>
             </tr>
             <tr th:each="member: ${memberList}">
                 <td th:text="${member.id}"></td>
@@ -24,6 +25,9 @@
                 </td>
                 <td th:text="${member.memberName}"></td>
                 <td th:text="${member.memberMobile}"></td>
+                <td>
+                    <button class="btn btn-danger" th:onclick="member_delete([[${member.id}]])">삭제</button>
+                </td>
             </tr>
             </table>
         </div>
@@ -32,4 +36,17 @@
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
+<script th:inline="javascript">
+    const member_delete = (id) => {
+        axios({
+            method: "delete",
+            url: `/admin/member/delete/${id}`
+        }).then(res => {
+            alert("삭제 성공");
+            location.href = "/admin/member";
+        }).catch(err => {
+            alert("삭제 실패");
+        })
+    }
+</script>
 </html>
