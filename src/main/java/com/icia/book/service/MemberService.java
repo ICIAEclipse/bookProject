@@ -14,6 +14,11 @@ import java.util.List;
 public class MemberService {
     private final MemberRepository memberRepository;
 
+    public void save(MemberDTO memberDTO) {
+        MemberEntity memberEntity = MemberEntity.toSaveEntity(memberDTO);
+        memberRepository.save(memberEntity);
+    }
+
     public List<MemberDTO> findAll() {
         List<MemberEntity> memberEntityList = memberRepository.findAll();
         List<MemberDTO> memberDTOList = new ArrayList<>();

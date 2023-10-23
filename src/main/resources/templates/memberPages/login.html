@@ -10,22 +10,17 @@
 <div class="container">
     <div class="row m-5">
         <div class="col">
-            <form action="/member/save" method="post">
+            <form name="save-form" action="/member/save" method="post">
                 <div>
-                    <span>Email</span>
+                    <span style="display: inline-block; width: 100px">Email</span>
                     <input type="text" name="memberEmail">
                 </div>
                 <div>
-                    <sapn>비밀번호</sapn>
+                    <sapn style="display: inline-block; width: 100px">비밀번호</sapn>
                     <input type="text" name="memberPassword">
                 </div>
                 <div>
-                    <span>이름</span>
-                    <input type="text" name="memberName">
-                </div>
-                <div>
-                    <span>전화번호</span>
-                    <input type="text" name="memberMobile">
+                    <input type="button" value="login" onclick="login_fn()">
                 </div>
             </form>
         </div>
@@ -34,4 +29,12 @@
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
+
+<script th:inline="javascript">
+    const save_fn = () =>{
+        const saveForm = document.querySelector("[name = 'save-form']");
+        saveForm.submit();
+    }
+</script>
+
 </html>
