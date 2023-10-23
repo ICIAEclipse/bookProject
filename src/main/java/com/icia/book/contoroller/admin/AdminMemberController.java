@@ -19,7 +19,7 @@ public class AdminMemberController {
     @GetMapping("/member")
     public String findAll(Model model){
         List<MemberDTO> memberDTOList = memberService.findAll();
-        model.addAttribute("list", memberDTOList);
+        model.addAttribute("memberList", memberDTOList);
         return "adminPages/memberList";
     }
 }

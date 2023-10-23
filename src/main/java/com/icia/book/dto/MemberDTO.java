@@ -16,7 +16,7 @@ public class MemberDTO {
     private String memberMobile;
     private int memberStatus;
 
-    public static MemberEntity toDTO(MemberEntity memberEntity){
+    public static MemberDTO toDTO(MemberEntity memberEntity){
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setId(memberEntity.getId());
         memberDTO.setMemberEmail(memberEntity.getMemberEmail());
@@ -24,6 +24,6 @@ public class MemberDTO {
         memberDTO.setMemberName(memberEntity.getMemberName());
         memberDTO.setMemberMobile(memberEntity.getMemberMobile());
         memberDTO.setMemberStatus(memberEntity.getMemberStatus());
-        return memberEntity;
+        return memberDTO;
     }
 }
