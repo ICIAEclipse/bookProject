@@ -1,12 +1,13 @@
 package com.icia.book.dto;
 
 import com.icia.book.entity.CategoryEntity;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 public class CategoryDTO {
 
