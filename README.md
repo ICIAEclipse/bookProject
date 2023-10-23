@@ -1,5 +1,6 @@
 # bookProject
-`sql
+## 프로젝트용 DB생성
+`
 
     create user 'user_bookproject'@'localhost' identified by '1234';
 
