@@ -7,9 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import javax.transaction.Transactional;
 import java.util.NoSuchElementException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -36,9 +38,16 @@ public class MemberService {
         List<MemberEntity> memberEntityList = memberRepository.findAll();
         List<MemberDTO> memberDTOList = new ArrayList<>();
         for(MemberEntity memberEntity: memberEntityList){
-            memberEntityList.add(MemberDTO.toDTO(memberEntity));
+            memberDTOList.add(MemberDTO.toDTO(memberEntity));
         }
         return memberDTOList;
 
+    }
+
+
+    public MemberDTO findById(Long id) {
+        MemberEntity memberEntity = memberRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        MemberDTO memberDTO = MemberDTO.toDTO(memberEntity);
+        return memberDTO;
     }
 }

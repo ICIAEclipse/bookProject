@@ -4,6 +4,7 @@ import com.icia.book.dto.MemberDTO;
 import com.icia.book.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,14 @@ public class MemberController {
             return "redirect:/member/save";
         }
     }
+
+    @GetMapping("/update")
+    public String update(Long id, Model model) {
+        MemberDTO memberDTO = memberService.findById(id);
+        model.addAttribute("member", memberDTO);
+        return "memberPages/memberUpdate";
+    }
+
 
     @GetMapping("/login")
     public String loginForm(){
