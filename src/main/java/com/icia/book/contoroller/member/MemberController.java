@@ -4,11 +4,8 @@ import com.icia.book.dto.MemberDTO;
 import com.icia.book.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 
 @RequiredArgsConstructor
@@ -26,21 +23,31 @@ public class MemberController {
     public String save(@ModelAttribute MemberDTO memberDTO){
         try{
             memberService.save(memberDTO);
-
-            return "index";
+            return "redirect:/member/login";
         }catch (Exception e){
             System.out.println(e.toString());
             return "redirect:/member/save";
         }
     }
 
+    @GetMapping("/update")
+    public String update(Long id, Model model) {
+        MemberDTO memberDTO = memberService.findById(id);
+        model.addAttribute("member", memberDTO);
+        return "memberPages/memberUpdate";
+    }
+
+
     @GetMapping("/login")
-    public String loginForm(){
+    public String loginForm(@RequestParam(value = "error", required = false, defaultValue = "") String error,
+                            Model model){
+        model.addAttribute("error", error);
         return "memberPages/login";
     }
 
     @PostMapping("/login")
     public String login(@ModelAttribute MemberDTO memberDTO,
+                        Model model,
                         HttpSession session){
         try{
             boolean result = memberService.login(memberDTO);
@@ -52,10 +59,16 @@ public class MemberController {
                     return "redirect:/";
                 }
             }else {
-                return "redirect:/member/login";
+                return "redirect:/member/login?error=error1";
             }
         }catch (Exception e){
-            return"redirect:/member/login";
+            return"redirect:/member/login?error=error1";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session){
+        session.removeAttribute("loginEmail");
+        return "redirect:/";
     }
 }
