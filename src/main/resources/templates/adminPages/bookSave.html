@@ -11,30 +11,194 @@
         <div th:replace="~{component/adminNav :: adminNav}"></div>
     </div>
     <div class="col">
+        <div class="row justify-content-center mb-3">
+            <div class="col-8">
+                <form action="/admin/book/save">
+                    <div class="input-group">
+                        <select name="type" class="form-select">
+                            <option value="Keyword">제목+저자</option>
+                            <option value="Title">제목</option>
+                            <option value="Author">저자</option>
+                            <option value="Publisher">출판사</option>
+                        </select>
+                        <input name="q" class="form-control">
+                        <button class="btn btn-primary">검색</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <table>
             <tr>
                 <th>isbn</th>
-                <th>cover</th>
-                <th>title</th>
-                <th>author</th>
-                <th>pubDate</th>
-                <th>priceStandard</th>
-                <th>구매사이트</th>
+                <th>표지</th>
+                <th>제목</th>
+                <th>작가</th>
+                <th>출판사</th>
+                <th>출판일</th>
+                <th>정가</th>
+                <th>할인가</th>
+                <th>선택</th>
             </tr>
             <tr th:each="aladinBook : ${aladinSearch.item}">
-                <td th:text="${aladinBook.isbn}"></td>
-                <td><img th:src="@{${aladinBook.cover}}"></td>
-                <td th:text="${aladinBook.title}"></td>
-                <td th:text="${aladinBook.author}"></td>
-                <td th:text="${aladinBook.pubDate}"></td>
-                <td th:text="${aladinBook.priceStandard}"></td>
-                <td><a th:href="@{|${aladinBook.link}|}">구매사이트</a></td>
+                <td th:id="|isbn${aladinBook.isbn}|" th:text="${aladinBook.isbn}"></td>
+                <td><img th:id="|img${aladinBook.isbn}|" th:src="@{${aladinBook.cover}}"></td>
+                <td th:id="|name${aladinBook.isbn}|" th:text="${aladinBook.title}"></td>
+                <td th:id="|author${aladinBook.isbn}|" th:text="${aladinBook.author}"></td>
+                <td th:id="|bookPublisher${aladinBook.isbn}|" th:text="${aladinBook.publisher}"></td>
+                <td th:id="|pubDate${aladinBook.isbn}|" th:text="${aladinBook.pubDate}"></td>
+                <td th:id="|price${aladinBook.isbn}|" th:text="${aladinBook.priceStandard}"></td>
+                <td th:id="|salePrice${aladinBook.isbn}|" th:text="${aladinBook.priceSales}"></td>
+                <td>
+                    <button class="btn btn-primary" th:onclick="setForm([[${aladinBook.isbn}]])">선택</button>
+                </td>
+                <div th:id="|contents${aladinBook.isbn}|" th:text="${aladinBook.description}"
+                     style="display: none"></div>
             </tr>
         </table>
+        <div id="input-area" class="my-3" style="display: none;">
+            <form action="/admin/book/save" name="bookSave" method="post">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">isbn</span>
+                    <input name="isbn" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">제목</span>
+                    <input name="bookName" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">작가</span>
+                    <input name="bookAuthor" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">출판사</span>
+                    <input name="bookPublisher" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">출판일</span>
+                    <input name="bookDate" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">표지</span>
+                    <input name="bookProfile" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">수량</span>
+                    <input name="bookCount" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">정가</span>
+                    <input name="bookPrice" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">할인가</span>
+                    <input name="bookSalePrice" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">책 내용</span>
+                    <input name="bookContents" class="form-control">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">카테고리</span>
+                    <select class="form-select" name="categoryId">
+                        <option th:each="category : ${categoryList}" th:value="${category.id}" th:text="${category.categoryName}">
+                        </option>
+                    </select>
+                </div>
+                <div class="text-end">
+                    <button class="btn btn-primary">등록</button>
+                </div>
+            </form>
+        </div>
+        <div class="container">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <!--첫페이지 요청 링크 /board?page=1 -->
+                    <a class="page-link" th:href="@{/admin/book/save(page=1, type=${type}, q=${q})}">
+                        <span>First</span>
+                    </a>
+                </li>
+
+                <li th:class="${aladinSearch.startIndex == 1} ? 'disabled'" class="page-item">
+                    <!--boardList.first: isFirst()
+                        boardList.number: getNumber()-->
+                    <a class="page-link"
+                       th:href="${aladinSearch.startIndex == 1} ? '#' : @{/admin/book/save(page=${aladinSearch.startIndex - 1}, type=${type}, q=${q})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=2 -->
+                        <span><</span> <!-- < -->
+                    </a>
+                </li>
+
+                <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할
+                    for(int page=startPage; page<=endPage; page++) -->
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:class="${page == aladinSearch.startIndex} ? 'page-item active'" class="page-item">
+                    <a class="page-link" th:text="${page}"
+                       th:href="@{/admin/book/save(page=${page}, type=${type}, q=${q})}"></a>
+                </li>
+
+                <!-- 다음 페이지 요청
+                    현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+                    getNumber() 값은 2임.
+                    따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+                <li th:class="${aladinSearch.startIndex == maxPages} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="${aladinSearch.startIndex == maxPages} ? '#' : @{/admin/book/save(page=${aladinSearch.startIndex + 1}, type=${type}, q=${q})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=4 -->
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/admin/book/save(page=${maxPages}, type=${type}, q=${q})}">
+                        <span>Last</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
-
-
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
+<script th:inline="javascript">
+    const setForm = (isbn) => {
+        const imgId = "#img" + isbn;
+        const bookNameId = "#name" + isbn;
+        const bookAuthorId = "#author" + isbn;
+        const pubDateId = "#pubDate" + isbn;
+        const priceId = "#price" + isbn;
+        const salePriceId = "#salePrice" + isbn;
+        const contentsId = "#contents" + isbn;
+        const bookPublisherId = "#bookPublisher" + isbn;
+        const img = document.querySelector(imgId).src;
+        const name = document.querySelector(bookNameId).innerText;
+        const author = document.querySelector(bookAuthorId).innerText;
+        const pubDate = document.querySelector(pubDateId).innerText;
+        const price = document.querySelector(priceId).innerText;
+        const salePrice = document.querySelector(salePriceId).innerText;
+        const contents = document.querySelector(contentsId).innerText;
+        const bookPublisher = document.querySelector(bookPublisherId).innerText;
+        document.querySelector('[name="isbn"]').value = isbn;
+        document.querySelector('[name="bookProfile"]').value = img;
+        document.querySelector('[name="bookName"]').value = name;
+        document.querySelector('[name="bookAuthor"]').value = author;
+        document.querySelector('[name="bookDate"]').value = pubDate;
+        document.querySelector('[name="bookPrice"]').value = price;
+        document.querySelector('[name="bookSalePrice"]').value = salePrice;
+        document.querySelector('[name="bookContents"]').value = contents;
+        document.querySelector('[name="bookPublisher"]').value = bookPublisher;
+        document.querySelector("#input-area").style.display = "block";
+    };
+
+    document.querySelector('[name="bookSave"]').addEventListener("submit", (e) => {
+        e.preventDefault();
+        const bookCount = document.querySelector('[name="bookCount"]').value;
+        if(bookCount == ""){
+            alert("수량을 입력하세요");
+            document.querySelector('[name="bookCount"]').focus();
+        } else {
+            document.querySelector('[name="bookSave"]').submit();
+        }
+    });
+</script>
 </html>
