@@ -11,29 +11,13 @@
     <div class="row m-5">
         <div class="col">
             <form name="update-form" action="/member/update" method="post">
-                <div style="display: none">
-                    <span style="display: inline-block; width: 100px">Id</span>
-                    <input type="text" name="id" th:value="${member.id}">
-                </div>
-                <div>
-                    <span style="display: inline-block; width: 100px">Email</span>
-                    <input type="text" name="memberEmail" th:value="${member.memberEmail}" readonly>
-                </div>
-                <div>
-                    <sapn style="display: inline-block; width: 100px">비밀번호</sapn>
-                    <input type="text" name="memberPassword" th:value="${member.memberPassword}">
-                </div>
-                <div>
-                    <span style="display: inline-block; width: 100px">이름</span>
-                    <input type="text" name="memberName" th:value="${member.memberName}">
-                </div>
-                <div>
-                    <span style="display: inline-block; width: 100px">전화번호</span>
-                    <input type="text" name="memberMobile" th:value="${member.memberMobile}">
-                </div>
-                <div>
-                    <input type="button" value="수정" onclick="update_fn()">
-                </div>
+                회원번호 <input type="text" name="id" th:value="${member.id}" readonly> <br>
+                이메일 <input type="text" name="memberEmail" th:value="${member.memberEmail}" readonly> <br>
+                비밀번호 <input type="text" name="memberPassword" th:value="${member.memberPassword}"> <br>
+                이름 <input type="text" name="memberName" th:value="${member.memberName}"> <br>
+                핸드폰 <input type="text" name="memberMobile" th:value="${member.memberMobile}"> <br>
+                회원상태 <input type="text" name="memberStatus" th:value="${member.memberStatus}" readonly> <br>
+                <input type="submit" value="수정">
             </form>
         </div>
     </div>
@@ -41,10 +25,5 @@
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
-<script th:inline="javascript">
-    const update_fn = () =>{
-        const updateForm = document.querySelector("[name = 'update-form']");
-        updateForm.submit();
-    }
-</script>
+
 </html>

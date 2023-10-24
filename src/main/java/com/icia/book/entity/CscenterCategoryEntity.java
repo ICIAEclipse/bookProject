@@ -22,6 +22,6 @@ public class CscenterCategoryEntity {
     @Column(length = 20, nullable = false)
     private String centerName;
 
-    @OneToMany(mappedBy = "cscenterCategoryEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "cscenterCategoryEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<FaqEntity> faqEntityList;
 }

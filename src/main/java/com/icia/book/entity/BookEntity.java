@@ -55,19 +55,19 @@ public class BookEntity {
     @JoinColumn(name = "book_category_id")
     private CategoryEntity categoryEntity;
 
-    @OneToMany(mappedBy = "bookEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bookEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<OrderDetailEntity> orderDetailEntity;
 
-    @OneToMany(mappedBy = "bookEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bookEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<CartEntity> cartEntityList;
 
-    @OneToMany(mappedBy = "bookEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bookEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<BasketEntity> basketEntityList;
 
-    @OneToMany(mappedBy = "bookEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bookEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList;
 
-    @OneToMany(mappedBy = "bookEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "bookEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<RecentEntity> recentEntityList;
 
     public static BookEntity toSaveBookEntity(BookDTO bookDTO, CategoryEntity categoryEntity) {

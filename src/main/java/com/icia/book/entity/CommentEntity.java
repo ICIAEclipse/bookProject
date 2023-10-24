@@ -33,6 +33,6 @@ public class CommentEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    @OneToMany(mappedBy = "commentEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "commentEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<CommentLikeEntity> commentLikeEntityList;
 }

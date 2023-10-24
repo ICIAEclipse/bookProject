@@ -50,21 +50,37 @@ public class MemberController {
     public String update(@PathVariable("id") Long id, Model model) {
         MemberDTO memberDTO = memberService.findById(id);
         model.addAttribute("member", memberDTO);
+        System.out.println("값이 넘어가는지 확인 " + memberDTO);
         return "memberPages/memberUpdate";
     }
 
-//    @PostMapping("/passcheck")
-//    public String login(@ModelAttribute MemberDTO memberDTO,
-//                        Model model) {
-//        boolean result = memberService.login(memberDTO);
-//        boolean memberDTO1 = memberService.findById(memberDTO);
-//        if (result == true) {
-//            model.addAttribute("member", memberDTO1);
-//            return "/memberPages/memberUpdate";
-//        } else {
-//            return "index";
-//        }
-//    }
+    @PostMapping("/update")
+    public String update(MemberDTO memberDTO) {
+        System.out.println("dto 확인" + memberDTO);
+        memberService.update(memberDTO);
+        return "index";
+    }
+
+    @GetMapping("passCheck")
+    public String passcheck() {
+        return "memberPages/passCheck";
+    }
+
+
+    @PostMapping("/passCheck")
+    public String passcheck(@ModelAttribute MemberDTO memberDTO, Model model) {
+        System.out.println("포스트입니다 " + memberDTO);
+        String getMemberEmail = memberDTO.getMemberEmail();
+        String getPw = memberDTO.getMemberPassword();
+        MemberDTO result = memberService.findByMemberEmail(getMemberEmail);
+        System.out.println("비밀번호 체크입니다 : " + result);
+        if (result.getMemberPassword().equals(getPw)) {
+            model.addAttribute("member", result);
+            return "/memberPages/memberUpdate";
+        } else {
+            return "index";
+        }
+    }
 
 
     @GetMapping("/login")
@@ -113,7 +129,7 @@ public class MemberController {
 
     @GetMapping("/passcheck")
     public String passCheck() {
-        return "memberPages/passCheck";
+        return "passCheck";
     }
 
     @PostMapping("/passcheck")
