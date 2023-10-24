@@ -1,7 +1,9 @@
 package com.icia.book.service;
 
 import com.icia.book.dto.CategoryDTO;
+import com.icia.book.entity.BookEntity;
 import com.icia.book.entity.CategoryEntity;
+import com.icia.book.repository.BookRepository;
 import com.icia.book.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,7 +21,7 @@ import java.util.NoSuchElementException;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-
+    private final BookRepository bookRepository;
     public List<CategoryDTO> findAll(){
         List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
         List<CategoryDTO> categoryDTOList = new ArrayList<>();
@@ -64,7 +66,14 @@ public class CategoryService {
         categoryRepository.save(categoryUpdateEntity);
     }
 
+    @Transactional
     public void delete(Long id) {
+        CategoryEntity categoryEntity = categoryRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        List<BookEntity> bookEntityList = categoryEntity.getBookEntityList();
+        bookEntityList.forEach(bookEntity -> {
+            BookEntity book = BookEntity.toDeleteCategoryBookEntity(bookEntity);
+            bookRepository.save(book);
+        });
         categoryRepository.deleteById(id);
     }
 }

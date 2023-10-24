@@ -21,7 +21,7 @@ public class BookEntity {
     @Column(length = 10, unique = true, nullable = false)
     private String isbn;
 
-    @Column(length = 30, nullable = false)
+    @Column(length = 200, nullable = false)
     private String bookName;
 
     @Column(length = 100, nullable = false)
@@ -79,7 +79,7 @@ public class BookEntity {
         bookEntity.setBookDate(bookDTO.getBookDate());
         bookEntity.setBookProfile(bookDTO.getBookProfile());
         bookEntity.setBookCount(bookDTO.getBookCount());
-        if(bookDTO.getBookCount() == 0){
+        if (bookDTO.getBookCount() == 0) {
             bookEntity.setBookStatus(0);
         } else {
             bookEntity.setBookStatus(1);
@@ -89,5 +89,23 @@ public class BookEntity {
         bookEntity.setBookContents(bookDTO.getBookContents());
         bookEntity.setCategoryEntity(categoryEntity);
         return bookEntity;
+    }
+
+    public static BookEntity toDeleteCategoryBookEntity(BookEntity bookEntity) {
+        BookEntity book = new BookEntity();
+        book.setId(bookEntity.getId());
+        book.setIsbn(bookEntity.getIsbn());
+        book.setBookName(bookEntity.getBookName());
+        book.setBookAuthor(bookEntity.getBookAuthor());
+        book.setBookPublisher(bookEntity.getBookPublisher());
+        book.setBookDate(bookEntity.getBookDate());
+        book.setBookProfile(bookEntity.getBookProfile());
+        book.setBookCount(bookEntity.getBookCount());
+        book.setBookStatus(bookEntity.getBookStatus());
+        book.setBookPrice(bookEntity.getBookPrice());
+        book.setBookSalePrice(bookEntity.getBookSalePrice());
+        book.setBookContents(bookEntity.getBookContents());
+        book.setCategoryEntity(null);
+        return book;
     }
 }
