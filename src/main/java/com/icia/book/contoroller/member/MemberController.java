@@ -50,6 +50,7 @@ public class MemberController {
     public String update(@PathVariable("id") Long id, Model model) {
         MemberDTO memberDTO = memberService.findById(id);
         model.addAttribute("member", memberDTO);
+        System.out.println("값이 넘어가는지 확인 " + memberDTO);
         return "memberPages/memberUpdate";
     }
 
@@ -60,14 +61,22 @@ public class MemberController {
         return "index";
     }
 
+    @GetMapping("passCheck")
+    public String passcheck() {
+        return "memberPages/passCheck";
+    }
+
+
     @PostMapping("/passCheck")
     public String passcheck(@ModelAttribute MemberDTO memberDTO, Model model) {
-        Long getId = memberDTO.getId();
+        System.out.println("포스트입니다 " + memberDTO);
+        String getMemberEmail = memberDTO.getMemberEmail();
         String getPw = memberDTO.getMemberPassword();
-        MemberDTO result = memberService.findById(getId);
-        if(result.getMemberPassword() == getPw) {
-            model.addAttribute("member", memberDTO);
-            return "memberPages/passCheck";
+        MemberDTO result = memberService.findByMemberEmail(getMemberEmail);
+        System.out.println("비밀번호 체크입니다 : " + result);
+        if (result.getMemberPassword().equals(getPw)) {
+            model.addAttribute("member", result);
+            return "/memberPages/memberUpdate";
         } else {
             return "index";
         }
