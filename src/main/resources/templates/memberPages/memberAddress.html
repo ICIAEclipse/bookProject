@@ -2,6 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="~{component/config :: config}"></th:block>
+
+    <!-- 다음API 주소검색 -->
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 <body>
 <div th:replace="~{component/header :: header}"></div>
@@ -10,16 +13,26 @@
 <div class="container m-5">
     <div class="row">
         <div class="col">
+            <div class="text-end mb-3">
+                <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#registerAddress">
+                    &plus; 새 배송지 등록
+                </button>
+            </div>
+            <hr>
             <h4 th:if="${addressList.size() == 0}">등록된 배송지가 없습니다.</h4>
-            <div th:each="address : ${addressList}">
-                <div class="card">
-                    <h6 th:text="${address.getAddress()} + ' ' + ${address.getAddressDetail()}"></h6>
+            <div id="addressList">
+                <div  th:each="address : ${addressList}">
                     <h6 th:text="${address.getAddressName()}"></h6>
+                    <h6 th:text="${address.getPostCode()}"></h6>
+                    <h6 th:text="${address.getAddress()} + ' ' + ${address.getAddressDetail()}"></h6>
+                    <hr>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div th:replace="~{memberPages/newAddress :: newAddress}"></div>
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>

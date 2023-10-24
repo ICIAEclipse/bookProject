@@ -1,5 +1,6 @@
 package com.icia.book.entity;
 
+import com.icia.book.dto.AddressDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,4 +34,14 @@ public class AddressEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
+
+    public static AddressEntity toSaveEntity(AddressDTO addressDTO, MemberEntity memberEntity) {
+        AddressEntity addressEntity = new AddressEntity();
+        addressEntity.setAddressName(addressDTO.getAddressName());
+        addressEntity.setPostCode(addressDTO.getPostCode());
+        addressEntity.setAddress(addressDTO.getAddress());
+        addressEntity.setAddressDetail(addressDTO.getAddressDetail());
+        addressEntity.setMemberEntity(memberEntity);
+        return addressEntity;
+    }
 }
