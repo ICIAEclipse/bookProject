@@ -150,7 +150,16 @@ public class MemberController {
         System.out.println(addressDTOList);
         model.addAttribute("addressList", addressDTOList);
         return "memberPages/memberAddress";
+    }
 
+    @PostMapping("/address")
+    public ResponseEntity saveAddress(@RequestBody AddressDTO addressDTO,
+                                      @RequestParam("memberEmail") String memberEmail){
+        AddressDTO savedAddressDTO = memberService.saveAddress(addressDTO, memberEmail);
+//        for(AddressDTO addressDTO1 : addressDTOList){
+//            System.out.println(addressDTO1);
+//        }
+        return new ResponseEntity<>(savedAddressDTO,HttpStatus.OK);
     }
 }
 

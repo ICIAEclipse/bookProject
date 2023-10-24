@@ -4,6 +4,7 @@ import com.icia.book.dto.AddressDTO;
 import com.icia.book.dto.MemberDTO;
 import com.icia.book.entity.AddressEntity;
 import com.icia.book.entity.MemberEntity;
+import com.icia.book.repository.AddressRepository;
 import com.icia.book.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 
 @Service
@@ -63,6 +63,16 @@ public class MemberService {
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
         return MemberDTO.toDTO(memberEntity);
     }
+    
+    public void update(MemberDTO memberDTO) {
+        System.out.println("서비스 " + memberDTO);
+        MemberEntity memberEntity = MemberEntity.toUpdateEntity(memberDTO);
+        memberRepository.save(memberEntity);
+    }
+
+    ///////////////////////////////////////////////////////
+
+    private final AddressRepository addressRepository;
 
     @Transactional
     public List<AddressDTO> findAddressByMemberEmail(String memberEmail){
@@ -76,9 +86,17 @@ public class MemberService {
     }
 
     @Transactional
-    public void update(MemberDTO memberDTO) {
-        System.out.println("서비스 " + memberDTO);
-        MemberEntity memberEntity = MemberEntity.toUpdateEntity(memberDTO);
-        memberRepository.save(memberEntity);
+    public AddressDTO saveAddress(AddressDTO addressDTO, String memberEmail) {
+        MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
+        AddressEntity addressEntity = AddressEntity.toSaveEntity(addressDTO, memberEntity);
+        AddressEntity SavedAddressEntity = addressRepository.save(addressEntity);
+//        memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
+//        List<AddressEntity> addressEntityList = memberEntity.getAddressEntityList();
+//        List<AddressDTO> addressDTOList = new ArrayList<>();
+//        addressEntityList.forEach(entity ->{
+//            addressDTOList.add(AddressDTO.toDTO(entity));
+//        });
+        return AddressDTO.toDTO(SavedAddressEntity);
     }
+  
 }

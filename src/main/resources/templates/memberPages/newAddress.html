@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+
+    <!-- 다음API 주소검색 -->
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
+<body>
+
+<div th:fragment="newAddress" class="modal fade" id="registerAddress" data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog p-4">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">배송지 등록</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-5">
+                    <label for="addressName" class="form-label">배송지명</label>
+                    <input type="text" class="form-control" id="addressName" name="addressName" placeholder="최대 10글자" onblur="saveButton()">
+                </div>
+                <div class="mb-5">
+                    <input type="button" class="form-control btn btn-outline-info mb-3" onclick="searchAddress()" value="주소 검색">
+                    <input type="text" class="form-control mb-3" id="postCode" name="postCode" placeholder="우편번호" readonly>
+                    <input type="text" class="form-control mb-3" id="address" name="address" placeholder="기본주소" readonly onblur="saveButton()">
+                    <input type="text" class="form-control mb-3" id="addressDetail" name="addressDetail" placeholder="상세주소">
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" id="addressSave" class="btn btn-info" data-bs-dismiss="modal" onclick="save_address()">저장</button>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        const searchAddress = () => {
+            const address = document.getElementById("address")
+            const postCode = document.getElementById("postCode")
+
+            new daum.Postcode({
+                oncomplete: function (data) {
+                    postCode.value = data.zonecode;
+                    if (data.buildingName != "") {
+                        address.value = data.address + "(" + data.buildingName + ")";
+                    } else {
+                        address.value = data.address;
+                    }
+                }
+            }).open();
+            saveButton();
+        }
+
+        function saveButton() {
+            const addressName = document.getElementById("addressName").value;
+            const address = document.getElementById("address").value;
+            const addressDetail = document.getElementById("addressDetail").value;
+            const postCode = document.getElementById("postCode").value;
+            const addressSave = document.getElementById("addressSave")
+            if(addressName!="" && address!="" && addressDetail!="" && postCode!=""){
+                addressSave.disabled = false;
+            }
+        }
+
+        const save_address = () => {
+            let addressName = document.getElementById("addressName").value;
+            let address = document.getElementById("address").value;
+            let addressDetail = document.getElementById("addressDetail").value;
+            let postCode = document.getElementById("postCode").value;
+            const memberEmail = [[${session.loginEmail}]]
+            const addressList = document.getElementById("addressList")
+            axios({
+                method:"post",
+                url:"/member/address",
+                data:{
+                    addressName : addressName,
+                    address :address,
+                    addressDetail : addressDetail,
+                    postCode : postCode},
+                params:{memberEmail, memberEmail},
+            }).then(res => {
+                addressList.insertAdjacentHTML('afterbegin',
+                    `<div>
+                        <h6>${res.data.addressName}</h6>
+                        <h6>${res.data.postCode}</h6>
+                        <h6>${res.data.address} ${res.data.addressDetail}</h6>
+                        <hr>
+                    </div>`
+                )
+                addressName = "";
+                address ="";
+                addressDetail="";
+                postCode="";
+            }).catch(err => {
+
+            })
+        }
+    </script>
+</div>
+
+</body>
+</html>
