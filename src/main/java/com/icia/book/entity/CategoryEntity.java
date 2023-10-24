@@ -24,7 +24,7 @@ public class CategoryEntity {
     @Column(length = 20, nullable = false)
     private String categoryName;
 
-    @OneToMany(mappedBy = "categoryEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "categoryEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<BookEntity> bookEntityList = new ArrayList<>();
 
     public static CategoryEntity toSaveCategoryEntity(CategoryDTO categoryDTO) {

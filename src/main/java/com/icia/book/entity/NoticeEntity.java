@@ -40,7 +40,7 @@ public class NoticeEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    @OneToMany(mappedBy = "noticeEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "noticeEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<NoticeFileEntity> noticeFileEntityList;
 
 }
