@@ -53,18 +53,25 @@ public class MemberController {
         return "memberPages/memberUpdate";
     }
 
-//    @PostMapping("/passcheck")
-//    public String login(@ModelAttribute MemberDTO memberDTO,
-//                        Model model) {
-//        boolean result = memberService.login(memberDTO);
-//        boolean memberDTO1 = memberService.findById(memberDTO);
-//        if (result == true) {
-//            model.addAttribute("member", memberDTO1);
-//            return "/memberPages/memberUpdate";
-//        } else {
-//            return "index";
-//        }
-//    }
+    @PostMapping("/update")
+    public String update(MemberDTO memberDTO) {
+        System.out.println("dto 확인" + memberDTO);
+        memberService.update(memberDTO);
+        return "index";
+    }
+
+    @PostMapping("/passCheck")
+    public String passcheck(@ModelAttribute MemberDTO memberDTO, Model model) {
+        Long getId = memberDTO.getId();
+        String getPw = memberDTO.getMemberPassword();
+        MemberDTO result = memberService.findById(getId);
+        if(result.getMemberPassword() == getPw) {
+            model.addAttribute("member", memberDTO);
+            return "memberPages/passCheck";
+        } else {
+            return "index";
+        }
+    }
 
 
     @GetMapping("/login")
@@ -113,7 +120,7 @@ public class MemberController {
 
     @GetMapping("/passcheck")
     public String passCheck() {
-        return "memberPages/passCheck";
+        return "passCheck";
     }
 
     @PostMapping("/passcheck")
