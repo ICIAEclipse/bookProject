@@ -19,7 +19,7 @@ public class AladinService {
     private String aladin_list_URL = "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
     public AladinSearchDTO allList(int page) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<String> response = restTemplate.getForEntity(aladin_list_URL + "?ttbkey="+ aladin_api_key +"&QueryType=ItemNewAll&SearchTarget=book&output=js&Version=20131101", String.class);
+        HttpEntity<String> response = restTemplate.getForEntity(aladin_list_URL + "?ttbkey="+ aladin_api_key +"&QueryType=ItemNewAll&Start="+ page +"&SearchTarget=book&output=js&Version=20131101", String.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
         AladinSearchDTO aladinSearchDTO = objectMapper.readValue(response.getBody(), AladinSearchDTO.class);
@@ -28,10 +28,9 @@ public class AladinService {
 
     public AladinSearchDTO searchList(int page, String type, String q) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<String> response = restTemplate.getForEntity(aladin_search_URL + "?ttbkey="+ aladin_api_key+ "&Query="+q+"&QueryType="+ type +"&output=js&Version=20131101", String.class);
+        HttpEntity<String> response = restTemplate.getForEntity(aladin_search_URL + "?ttbkey="+ aladin_api_key+ "&Query="+q+"&QueryType="+ type +"&Start="+ page +"&output=js&Version=20131101", String.class);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         AladinSearchDTO aladinSearchDTO = objectMapper.readValue(response.getBody(), AladinSearchDTO.class);
         return aladinSearchDTO;
     }

@@ -35,7 +35,7 @@ public class InquiryEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    @OneToMany(mappedBy = "inquiryEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "inquiryEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<InquiryCommentEntity> inquiryCommentEntityList;
 
 }

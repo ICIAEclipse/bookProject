@@ -63,10 +63,10 @@ public class MemberService {
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
         return MemberDTO.toDTO(memberEntity);
     }
-
-
+    
     public void update(MemberDTO memberDTO) {
-        MemberEntity memberEntity = MemberEntity.toSaveEntity(memberDTO);
+        System.out.println("서비스 " + memberDTO);
+        MemberEntity memberEntity = MemberEntity.toUpdateEntity(memberDTO);
         memberRepository.save(memberEntity);
     }
 
@@ -98,4 +98,5 @@ public class MemberService {
 //        });
         return AddressDTO.toDTO(SavedAddressEntity);
     }
+  
 }
