@@ -2,13 +2,14 @@ package com.icia.book.contoroller.admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.icia.book.dto.AladinSearchDTO;
+import com.icia.book.dto.BookDTO;
 import com.icia.book.service.AladinService;
+import com.icia.book.service.BookService;
+import com.icia.book.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AdminBookController {
 
     private final AladinService aladinService;
-
+    private final CategoryService categoryService;
+    private final BookService bookService;
     @GetMapping("/save")
     public String aladinList(@RequestParam(value = "q", required = false, defaultValue = "") String q,
                              @RequestParam(value = "type", required = false, defaultValue = "Keyword") String type,
@@ -38,7 +40,16 @@ public class AdminBookController {
         model.addAttribute("page", page);
         model.addAttribute("type", type);
         model.addAttribute("q", q);
+        model.addAttribute("maxPages", maxPages);
         model.addAttribute("aladinSearch", aladinSearchDTO);
+        model.addAttribute("categoryList", categoryService.findAll());
         return "adminPages/bookSave";
+    }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute BookDTO bookDTO){
+        System.out.println("bookDTO = " + bookDTO);
+        bookService.save(bookDTO);
+        return "redirect:/admin/book";
     }
 }

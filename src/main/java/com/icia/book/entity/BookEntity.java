@@ -1,10 +1,12 @@
 package com.icia.book.entity;
 
+import com.icia.book.dto.BookDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,7 +33,7 @@ public class BookEntity {
     @Column(length = 20)
     private String bookDate;
 
-    @Column(length = 50)
+    @Column(length = 200)
     private String bookProfile;
 
     @Column
@@ -67,4 +69,25 @@ public class BookEntity {
 
     @OneToMany(mappedBy = "bookEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<RecentEntity> recentEntityList;
+
+    public static BookEntity toSaveBookEntity(BookDTO bookDTO, CategoryEntity categoryEntity) {
+        BookEntity bookEntity = new BookEntity();
+        bookEntity.setIsbn(bookDTO.getIsbn());
+        bookEntity.setBookName(bookDTO.getBookName());
+        bookEntity.setBookAuthor(bookDTO.getBookAuthor());
+        bookEntity.setBookPublisher(bookDTO.getBookPublisher());
+        bookEntity.setBookDate(bookDTO.getBookDate());
+        bookEntity.setBookProfile(bookDTO.getBookProfile());
+        bookEntity.setBookCount(bookDTO.getBookCount());
+        if(bookDTO.getBookCount() == 0){
+            bookEntity.setBookStatus(0);
+        } else {
+            bookEntity.setBookStatus(1);
+        }
+        bookEntity.setBookPrice(bookDTO.getBookPrice());
+        bookEntity.setBookSalePrice(bookDTO.getBookSalePrice());
+        bookEntity.setBookContents(bookDTO.getBookContents());
+        bookEntity.setCategoryEntity(categoryEntity);
+        return bookEntity;
+    }
 }
