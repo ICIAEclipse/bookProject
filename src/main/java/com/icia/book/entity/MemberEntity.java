@@ -34,49 +34,49 @@ public class MemberEntity {
     @Column(nullable = false)
     private int memberStatus;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<OrderEntity> orderEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<OrderDetailEntity> orderDetailEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<CartEntity> cartEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<BasketEntity> basketEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<CommentLikeEntity> commentLikeEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<RecentEntity> recentEntityList;
 
-    @OneToMany(mappedBy = "senderEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "senderEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<LetterEntity> senderEntityList;
 
-    @OneToMany(mappedBy = "receiverEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "receiverEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<LetterEntity> receiverEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<NoticeEntity> noticeEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<InquiryEntity> inquiryEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<InquiryCommentEntity> inquiryCommentEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<SearchEntity> searchEntityList;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<AddressEntity> addressEntityList;
 
-    @OneToOne(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private RecentAddressEntity recentAddressEntity;
 
     public static MemberEntity toSaveEntity(MemberDTO memberDTO) {
