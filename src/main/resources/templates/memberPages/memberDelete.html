@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+
+<div class="container m-5">
+    <div class="row">
+        <div class="col">
+            <div class="card p-3">
+                <h4>회원탈퇴 시 유의사항</h4>
+                <h6>회원탈퇴 시 모든 회원정보와 할인쿠폰, 통합포인트, 마일리지, 교환권, 종호캐시, 종호 e캐시, 구매내역이 자동으로 삭제 처리되며, 복구가 불가합니다.</h6>
+
+                <h6>자동 삭제 항목(복구 불가능) : 회원정보, 상품구매, eBook 콘텐츠, 할인쿠폰, 마일리지, 통합포인트, 예치금, 종호e캐시 등의 모든 내역</h6>
+
+                <h6>회원 아이디에 대해서는 서비스 이용의 혼선 방지, 법령에서 규정하는 회원 거래 정보의 보존 기간 동안의 보관 의무의 이행, 기타 안정적인 서비스 제공을 위하여 필요한 정보이므로
+                    탈퇴 후 동일 아이디로의 재가입은 허용되지 않습니다.</h6>
+            </div>
+            <br>
+            <div class="card p-3">
+                <h4>탈퇴사유</h4>
+                <h6>종호문고를 이용하면서 느꼈던 불편사항을 선택해 주세요.</h6>
+                <h6>향후 보다 나은 서비스 제공을 위한 소중한 자료로 반영하겠습니다.</h6>
+                <br>
+
+                <div>
+                    <input type="checkbox" value="noGoods"> 찾는 상품이 없음 <br>
+                    <input type="checkbox" value="noInfo"> 상품의 정보가 부족
+                </div>
+            </div>
+            <hr>
+            <div>
+                <form action="/member/delete" method="post">
+                    <input type="radio" value="ok1"> 회원탈퇴 안내 사항을 확인했으며 탈퇴에 동의합니다. (필수)<br>
+                    <input type="radio" value="ok2"> 모든 금권 혜택 자동소멸에 동의합니다. (필수)
+                    <input type="submit" value="탈퇴">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+</html>
