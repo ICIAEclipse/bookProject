@@ -1,6 +1,7 @@
 package com.icia.book.dto;
 
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,6 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@Builder
 public class BookDTO {
 
     private Long id;
@@ -17,10 +19,10 @@ public class BookDTO {
     private String bookPublisher;
     private String bookDate;
     private String bookProfile;
-    private int bookCount;
-    private int bookStatus;
-    private int bookPrice;
-    private int bookSalePrice;
+    private Integer bookCount;
+    private Integer bookStatus;
+    private Integer bookPrice;
+    private Integer bookSalePrice;
     private String bookContents;
     private Long categoryId;
 }
