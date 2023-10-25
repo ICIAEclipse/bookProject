@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -64,5 +66,14 @@ public class BookService {
                         .build()
         );
         return bookDTOPage;
+    }
+
+    public List<BookDTO> findAll() {
+        List<BookEntity> bookEntityList = bookRepository.findAll();
+        List<BookDTO> bookDTOList = new ArrayList<>();
+        for(BookEntity bookEntity: bookEntityList){
+            bookDTOList.add(BookDTO.toDTO(bookEntity));
+        }
+        return bookDTOList;
     }
 }
