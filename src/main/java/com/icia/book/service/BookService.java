@@ -8,6 +8,8 @@ import com.icia.book.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -21,5 +23,14 @@ public class BookService {
         BookEntity bookEntity = BookEntity.toSaveBookEntity(bookDTO, categoryEntity);
         System.out.println(bookEntity.getBookProfile());
         bookRepository.save(bookEntity);
+    }
+
+    public List<BookDTO> findAll() {
+        List<BookEntity> bookEntityList = bookRepository.findAll();
+        List<BookDTO> bookDTOList = new ArrayList<>();
+        for(BookEntity bookEntity: bookEntityList){
+            bookDTOList.add(BookDTO.toDTO(bookEntity));
+        }
+        return bookDTOList;
     }
 }
