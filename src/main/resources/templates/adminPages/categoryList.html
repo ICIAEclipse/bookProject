@@ -181,12 +181,16 @@
         }
     }
     const delete_fn = (id) => {
+        const categoryId = document.querySelector('[name="categoryId' + id + '"]').value;
+        const categoryName = document.querySelector('[name="categoryName' + id + '"]').value;
         if (confirm("해당 카테고리를 삭제하시겠습니까?")) {
             axios({
                 method: "delete",
                 url: "/admin/category",
                 data: {
-                    id: id
+                    id: id,
+                    categoryId: categoryId,
+                    categoryName: categoryName
                 }
             }).then(res => {
                 location.href = "/admin/category";

@@ -91,7 +91,7 @@ public class BookEntity {
         return bookEntity;
     }
 
-    public static BookEntity toDeleteCategoryBookEntity(BookEntity bookEntity) {
+    public static BookEntity toDeleteCategoryBookEntity(BookEntity bookEntity, CategoryEntity categoryEntity) {
         BookEntity book = new BookEntity();
         book.setId(bookEntity.getId());
         book.setIsbn(bookEntity.getIsbn());
@@ -105,7 +105,7 @@ public class BookEntity {
         book.setBookPrice(bookEntity.getBookPrice());
         book.setBookSalePrice(bookEntity.getBookSalePrice());
         book.setBookContents(bookEntity.getBookContents());
-        book.setCategoryEntity(null);
+        book.setCategoryEntity(categoryEntity);
         return book;
     }
 }

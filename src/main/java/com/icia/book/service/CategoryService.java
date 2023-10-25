@@ -70,8 +70,16 @@ public class CategoryService {
     public void delete(Long id) {
         CategoryEntity categoryEntity = categoryRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
         List<BookEntity> bookEntityList = categoryEntity.getBookEntityList();
+        if(categoryRepository.findByCategoryId("000").isEmpty()){
+            CategoryDTO categoryDTO = new CategoryDTO();
+            categoryDTO.setCategoryId("000");
+            categoryDTO.setCategoryName("미분류");
+            CategoryEntity categoryEntity1 = CategoryEntity.toSaveCategoryEntity(categoryDTO);
+            categoryRepository.save(categoryEntity1);
+        }
+        CategoryEntity categoryEntity2 = categoryRepository.findByCategoryId("000").orElseThrow(()-> new NoSuchElementException());
         bookEntityList.forEach(bookEntity -> {
-            BookEntity book = BookEntity.toDeleteCategoryBookEntity(bookEntity);
+            BookEntity book = BookEntity.toDeleteCategoryBookEntity(bookEntity, categoryEntity2);
             bookRepository.save(book);
         });
         categoryRepository.deleteById(id);

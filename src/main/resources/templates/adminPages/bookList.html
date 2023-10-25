@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
+    <div class="col">
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <form action="/admin/book">
+                    <div class="input-group">
+                        <select name="categoryId" class="form-select">
+                            <option value="">전체보기</option>
+                            <option th:each="category :${categoryList}" th:text="${category.categoryName}" th:value="${category.categoryId}" th:selected="${categoryId == category.categoryId}"></option>
+                        </select>
+                        <input name="q" class="form-control">
+                        <button class="btn btn-primary">검색</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="text-end">
+            <button class="btn btn-primary" onclick="bookSave()">상품 등록</button>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Isbn</th>
+                <th>제목</th>
+                <th>지은이</th>
+                <th>판매상태</th>
+                <th>수량</th>
+                <th>분류</th>
+                <th>수정</th>
+            </tr>
+            <tr th:each="book : ${bookList}">
+                <td th:text="${book.isbn}"></td>
+                <td th:text="${book.bookName}" style="width: 300px;"></td>
+                <td th:text="${book.bookAuthor}"></td>
+                <td style="width: 150px;">
+                    <div class="input-group">
+                        <select name="bookStatus" class="form-select">
+                            <option value="0" th:selected="${book.bookStatus == 0}">품절</option>
+                            <option value="1" th:selected="${book.bookStatus == 1}">판매중</option>
+                            <option value="2" th:selected="${book.bookStatus == 2}">판매중지</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="input-group">
+                        <input class="form-control" name="bookCount" th:value="${book.bookCount}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                    </div>
+                </td>
+                <td>
+                    <select name="updateCategoryId" class="form-select">
+                        <option th:each="category :${categoryList}" th:text="${category.categoryName}" th:value="${category.id}" th:selected="${book.categoryId == category.id}"></option>
+                    </select>
+                </td>
+                <td><button class="btn btn-primary">수정</button></td>
+            </tr>
+        </table>
+        <div class="container">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <!--첫페이지 요청 링크 /board?page=1 -->
+                    <a class="page-link" th:href="@{/admin/book(page=1, categoryId=${categoryId}, q=${q})}">
+                        <span>First</span>
+                    </a>
+                </li>
+
+                <li th:class="${bookList.first} ? 'disabled'" class="page-item">
+                    <!--boardList.first: isFirst()
+                        boardList.number: getNumber()-->
+                    <a class="page-link"
+                       th:href="${bookList.first} ? '#' : @{/admin/book(page=${bookList.number}, categoryId=${categoryId}, q=${q})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=2 -->
+                        <span><</span> <!-- < -->
+                    </a>
+                </li>
+
+                <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할
+                    for(int page=startPage; page<=endPage; page++) -->
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:class="${page == bookList.number + 1} ? 'page-item active'" class="page-item">
+                    <a class="page-link" th:text="${page}"
+                       th:href="@{/admin/book(page=${page}, categoryId=${categoryId}, q=${q})}"></a>
+                </li>
+
+                <!-- 다음 페이지 요청
+                    현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+                    getNumber() 값은 2임.
+                    따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+                <li th:class="${bookList.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="${bookList.last} ? '#' : @{/admin/book(page=${bookList.number + 2}, categoryId=${categoryId}, q=${q})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=4 -->
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/admin/book(page=${bookList.totalPages}, categoryId=${categoryId}, q=${q})}">
+                        <span>Last</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const bookSave = () => {
+        location.href = "/admin/book/save";
+    }
+</script>
+</html>
