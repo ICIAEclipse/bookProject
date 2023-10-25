@@ -61,6 +61,7 @@ public class MemberController {
         return "index";
     }
 
+
     @GetMapping("passCheck")
     public String passcheck() {
         return "memberPages/passCheck";
@@ -161,5 +162,11 @@ public class MemberController {
 //        }
         return new ResponseEntity<>(savedAddressDTO,HttpStatus.OK);
     }
+
+    @GetMapping("/delete")
+    public String delete(MemberDTO memberDTO){
+        return "memberPages/memberDelete";
+    }
+
 }
 
