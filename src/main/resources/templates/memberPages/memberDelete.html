@@ -34,9 +34,15 @@
             <hr>
             <div>
                 <form action="/member/delete" method="post">
-                    <input type="radio" value="ok1"> 회원탈퇴 안내 사항을 확인했으며 탈퇴에 동의합니다. (필수)<br>
-                    <input type="radio" value="ok2"> 모든 금권 혜택 자동소멸에 동의합니다. (필수)
-                    <input type="submit" value="탈퇴">
+                    <input type="hidden" name="id" th:value="${member.id}">
+                    <input type="hidden" name="memberStatus" th:value="1">
+                    <input type="hidden" name="memberPassword" th:value="${member.memberPassword}">
+                    <input type="hidden" name="memberName" th:value="${member.memberName}">
+                    <input type="hidden" name="memberEmail" th:value="${member.memberEmail}">
+                    <input type="hidden" name="memberMobile" th:value="${member.memberMobile}">
+                    <input id="check1" type="radio" value="ok1" onclick="deleteAble_fn()"> 회원탈퇴 안내 사항을 확인했으며 탈퇴에 동의합니다. (필수)<br>
+                    <input id="check2" type="radio" value="ok2" onclick="deleteAble_fn()"> 모든 금권 혜택 자동소멸에 동의합니다. (필수)<br>
+                    <input id="deleteButton" type="submit" value="탈퇴" onclick="delete_fn()" disabled>
                 </form>
             </div>
         </div>
@@ -45,4 +51,16 @@
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
+<script th:inline="javascript">
+    const deleteAble_fn = () => {
+        const ck1 = document.getElementById("check1");
+        const ck2 = document.getElementById("check2");
+        const deleteButton = document.getElementById("deleteButton");
+        if (ck1.checked && ck2.checked) {
+            deleteButton.removeAttribute("disabled");
+        }
+
+    }
+</script>
+
 </html>
