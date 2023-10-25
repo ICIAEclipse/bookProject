@@ -192,12 +192,42 @@
 
     document.querySelector('[name="bookSave"]').addEventListener("submit", (e) => {
         e.preventDefault();
+        const isbn = document.querySelector('[name="isbn"]').value;
+        const bookProfile = document.querySelector('[name="bookProfile"]').value;
+        const bookName = document.querySelector('[name="bookName"]').value;
+        const bookAuthor = document.querySelector('[name="bookAuthor"]').value;
+        const bookDate = document.querySelector('[name="bookDate"]').value;
+        const bookPrice = document.querySelector('[name="bookPrice"]').value;
+        const bookSalePrice = document.querySelector('[name="bookSalePrice"]').value;
+        const bookContents = document.querySelector('[name="bookContents"]').value;
+        const bookPublisher = document.querySelector('[name="bookPublisher"]').value;
         const bookCount = document.querySelector('[name="bookCount"]').value;
+        const categoryId = document.querySelector('[name="categoryId"]').value;
         if(bookCount == ""){
             alert("수량을 입력하세요");
             document.querySelector('[name="bookCount"]').focus();
         } else {
-            document.querySelector('[name="bookSave"]').submit();
+            axios({
+                method:"post",
+                url:"/admin/book/save",
+                data: {
+                    isbn:isbn,
+                    bookProfile:bookProfile,
+                    bookName:bookName,
+                    bookAuthor:bookAuthor,
+                    bookDate:bookDate,
+                    bookPrice:bookPrice,
+                    bookSalePrice:bookSalePrice,
+                    bookContents:bookContents,
+                    bookPublisher:bookPublisher,
+                    bookCount:bookCount,
+                    categoryId:categoryId
+                }
+            }).then(res => {
+                location.href = "/admin/book";
+            }).catch(err => {
+                alert("이미 등록된 상품입니다.");
+            })
         }
     });
 </script>
