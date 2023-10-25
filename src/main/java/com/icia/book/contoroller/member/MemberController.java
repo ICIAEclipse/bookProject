@@ -148,19 +148,16 @@ public class MemberController {
     public String addressForm(HttpSession session, Model model) {
         String memberEmail = (String) session.getAttribute("loginEmail");
         List<AddressDTO> addressDTOList = memberService.findAddressByMemberEmail(memberEmail);
-        System.out.println(addressDTOList);
         model.addAttribute("addressList", addressDTOList);
         return "memberPages/memberAddress";
     }
 
     @PostMapping("/address")
     public ResponseEntity saveAddress(@RequestBody AddressDTO addressDTO,
-                                      @RequestParam("memberEmail") String memberEmail){
-        AddressDTO savedAddressDTO = memberService.saveAddress(addressDTO, memberEmail);
-//        for(AddressDTO addressDTO1 : addressDTOList){
-//            System.out.println(addressDTO1);
-//        }
-        return new ResponseEntity<>(savedAddressDTO,HttpStatus.OK);
+                                      @RequestParam("memberEmail") String memberEmail,
+                                      @RequestParam("defaultAddressChecked") boolean defaultAddressChecked){
+        List<AddressDTO> addressDTOList = memberService.saveAddress(addressDTO, memberEmail, defaultAddressChecked);
+        return new ResponseEntity<>(addressDTOList,HttpStatus.OK);
     }
 
     @GetMapping("/delete")

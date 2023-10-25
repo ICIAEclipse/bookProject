@@ -41,7 +41,13 @@ public class AddressEntity {
         addressEntity.setPostCode(addressDTO.getPostCode());
         addressEntity.setAddress(addressDTO.getAddress());
         addressEntity.setAddressDetail(addressDTO.getAddressDetail());
+        addressEntity.setAddressStatus(addressDTO.getAddressStatus());
         addressEntity.setMemberEntity(memberEntity);
         return addressEntity;
+    }
+
+    public static AddressEntity changeStatusTo0(AddressEntity savedAddress) {
+        savedAddress.setAddressStatus(0);
+        return savedAddress;
     }
 }

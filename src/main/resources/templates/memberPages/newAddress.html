@@ -19,31 +19,46 @@
             <div class="modal-body">
                 <div class="mb-5">
                     <label for="addressName" class="form-label">배송지명</label>
-                    <input type="text" class="form-control" id="addressName" name="addressName" placeholder="최대 10글자" onblur="saveButton()">
+                    <input type="text" class="form-control" id="addressName" name="addressName" placeholder="최대 10글자" onkeyup="saveButton_able()">
                 </div>
-                <div class="mb-5">
+                <div class="mb-3">
                     <input type="button" class="form-control btn btn-outline-primary mb-3" onclick="searchAddress()" value="주소 검색">
                     <input type="text" class="form-control mb-3" id="postCode" name="postCode" placeholder="우편번호" readonly>
-                    <input type="text" class="form-control mb-3" id="address" name="address" placeholder="기본주소" readonly onblur="saveButton()">
-                    <input type="text" class="form-control mb-3" id="addressDetail" name="addressDetail" placeholder="상세주소">
+                    <input type="text" class="form-control mb-3" id="address" name="address" placeholder="기본주소" readonly>
+                    <input type="text" class="form-control mb-3" id="addressDetail" name="addressDetail" placeholder="상세주소" onkeyup="saveButton_able()">
                 </div>
             </div>
-            <div class="mb-5 text-center">
+            <hr>
+            <div class="mb-3 text-center">
                 <label class="form-check-label" for="defaultAddress">
                     기본 배송지로 설정
                 </label>
                 <input class="form-check-inline" type="checkbox" id="defaultAddress">
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" id="addressSave" class="btn btn-primary" data-bs-dismiss="modal" onclick="save_address()">저장</button>
+                <button type="button" id="addressSave" class="btn btn-primary" data-bs-dismiss="modal" onclick="save_address()" disabled>저장</button>
             </div>
         </div>
     </div>
     <script th:inline="javascript">
+        const saveButton_able = () => {
+            const addressName = document.getElementById("addressName").value;
+            const address = document.getElementById("address").value;
+            const addressDetail = document.getElementById("addressDetail").value;
+            const postCode = document.getElementById("postCode").value;
+            const addressSave = document.getElementById("addressSave")
+            console.log("addressName " + addressName);
+            console.log("postCode " + postCode);
+            console.log("address " + address);
+            console.log("addressDetail " + addressDetail);
+            if(addressName!="" && address!="" && addressDetail!="" && postCode!=""){
+                addressSave.removeAttribute("disabled")
+            }
+        }
+
         const searchAddress = () => {
             const address = document.getElementById("address")
             const postCode = document.getElementById("postCode")
-
             new daum.Postcode({
                 oncomplete: function (data) {
                     postCode.value = data.zonecode;
@@ -52,20 +67,9 @@
                     } else {
                         address.value = data.address;
                     }
+                    saveButton_able();
                 }
             }).open();
-            saveButton();
-        }
-
-        function saveButton() {
-            const addressName = document.getElementById("addressName").value;
-            const address = document.getElementById("address").value;
-            const addressDetail = document.getElementById("addressDetail").value;
-            const postCode = document.getElementById("postCode").value;
-            const addressSave = document.getElementById("addressSave")
-            if(addressName!="" && address!="" && addressDetail!="" && postCode!=""){
-                addressSave.disabled = false;
-            }
         }
     </script>
 </div>

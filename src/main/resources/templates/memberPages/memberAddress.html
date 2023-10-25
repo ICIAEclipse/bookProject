@@ -22,15 +22,18 @@
         <div id="addressList">
             <div class="row justify-content-between px-4" th:each="address : ${addressList}">
                 <div class="col">
-                    <h6 th:text="${address.getAddressName()}"></h6>
-                    <h6 th:text="${address.getPostCode()}"></h6>
-                    <h6 th:text="${address.getAddress()} + ' ' + ${address.getAddressDetail()}"></h6>
+                    <h6 th:text="${address.addressStatus == 1} ? |${address.addressName}(기본배송지)| : ${address.addressName}"></h6>
+                    <h6 th:text="${address.postCode}"></h6>
+                    <h6 th:text="${address.address} + ' ' + ${address.addressDetail}"></h6>
                 </div>
                 <div class="col text-end align-self-center">
-                    <input type="radio" name="defaultAddress">
+                    <input type="radio" name="defaultAddress" th:value="${address.id}">
                 </div>
                 <hr>
             </div>
+        </div>
+        <div>
+            <button class="btn btn-primary px-5" onclick="set_defaultAddress()">기본주송지 등록</button>
         </div>
     </div>
 </div>
@@ -46,6 +49,7 @@
         let address = document.getElementById("address").value;
         let addressDetail = document.getElementById("addressDetail").value;
         let postCode = document.getElementById("postCode").value;
+        let defaultAddressChecked = document.getElementById("defaultAddress").checked;
         const memberEmail = [[${session.loginEmail}]]
         const addressList = document.getElementById("addressList")
         axios({
@@ -56,21 +60,40 @@
                 address :address,
                 addressDetail : addressDetail,
                 postCode : postCode},
-            params:{memberEmail, memberEmail},
+            params:{memberEmail, memberEmail,
+                defaultAddressChecked : defaultAddressChecked},
         }).then(res => {
-            addressList.insertAdjacentHTML('afterbegin',
-                `<div class="row justify-content-between">
-                    <div class="col">
-                        <h6>${res.data.addressName}</h6>
-                        <h6>${res.data.postCode}</h6>
-                        <h6>${res.data.address} ${res.data.addressDetail}</h6>
-                    </div>
-                    <div class="col text-end align-self-center pe-4">
-                        <input type="radio" name="defaultAddress">
-                    </div>
-                    <hr>
-                </div>`
-            )
+            addressList.innerHTML = "";
+            res.data.forEach(data => {
+                console.log(data)
+                if(data.addressStatus == 1){
+                    addressList.innerHTML +=
+                        `<div class="row justify-content-between px-4">
+                            <div class="col">
+                                <h6>${data.addressName}(기본배송지)</h6>
+                                <h6>${data.postCode}</h6>
+                                <h6>${data.address} ${data.addressDetail}</h6>
+                            </div>
+                            <div class="col text-end align-self-center pe-4">
+                                <input type="radio" name="defaultAddress" id="${data.id}">
+                            </div>
+                            <hr>
+                        </div>`
+                }else {
+                    addressList.innerHTML +=
+                        `<div class="row justify-content-between px-4">
+                            <div class="col">
+                                <h6>${data.addressName}</h6>
+                                <h6>${data.postCode}</h6>
+                                <h6>${data.address} ${data.addressDetail}</h6>
+                            </div>
+                            <div class="col text-end align-self-center pe-4">
+                                <input type="radio" name="defaultAddress" id="${data.id}">
+                            </div>
+                            <hr>
+                        </div>`
+                }
+            })
             addressName = "";
             address ="";
             addressDetail="";
@@ -78,6 +101,24 @@
         }).catch(err => {
 
         })
+    }
+
+    const set_defaultAddress = () =>{
+        const defaultCheck = document.querySelector("[name ='defaultAddress']")
+        if(!defaultCheck.checked){
+            alert("기본배송지로 등록될 주소를 선택해주세요")
+        }else {
+            console.log(defaultCheck.value)
+/*            axios({
+                method:"post",
+                url:"",
+                params:{id : defaultCheck.checked.id}
+            }).then(res =>{
+
+            }).catch(err =>{
+
+            })*/
+        }
     }
 </script>
 </html>

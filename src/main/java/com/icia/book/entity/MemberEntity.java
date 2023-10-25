@@ -74,6 +74,7 @@ public class MemberEntity {
     private List<SearchEntity> searchEntityList;
 
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OrderBy("addressStatus desc, id desc")
     private List<AddressEntity> addressEntityList;
 
     @OneToOne(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
