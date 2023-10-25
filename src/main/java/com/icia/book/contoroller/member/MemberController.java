@@ -161,9 +161,17 @@ public class MemberController {
     }
 
     @GetMapping("/delete")
-    public String delete(MemberDTO memberDTO){
+    public String delete(MemberDTO memberDTO, Model model) {
+        MemberDTO memberDTO1 = memberService.findById(memberDTO.getId());
+        System.out.println("여기는 딜리트의 계곡입니다. " + memberDTO1);
+        model.addAttribute("member", memberDTO1);
         return "memberPages/memberDelete";
     }
 
+    @PostMapping("delete")
+    public String delete(MemberDTO memberDTO) {
+        memberService.update(memberDTO);
+        return "index";
+    }
 }
 

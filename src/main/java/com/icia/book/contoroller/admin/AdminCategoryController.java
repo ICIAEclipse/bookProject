@@ -49,13 +49,25 @@ public class AdminCategoryController {
 
     @PutMapping
     public ResponseEntity update(@RequestBody CategoryDTO categoryDTO) {
+        /**
+         * 미분류 카테고리는 수정 불가
+         */
+        if(categoryDTO.getCategoryId().equals("000")){
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         categoryService.update(categoryDTO);
         return new ResponseEntity(HttpStatus.OK);
     }
 
     @DeleteMapping
-    public ResponseEntity delete(@RequestBody CategoryDTO CategoryDTO) {
-        categoryService.delete(CategoryDTO.getId());
+    public ResponseEntity delete(@RequestBody CategoryDTO categoryDTO) {
+        /**
+         * 미분류 카테고리는 삭제 불가
+         */
+        if(categoryDTO.getCategoryId().equals("000")){
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+        categoryService.delete(categoryDTO.getId());
         return new ResponseEntity(HttpStatus.OK);
     }
 }
