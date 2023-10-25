@@ -8,18 +8,17 @@
 <div th:replace="~{component/nav :: nav}"></div>
 
 
-<div class="container m-5">
-    <div class="row">
+    <div class="row m-5">
         <div id="side-bar" class="col-3">
             <a href="/member/passCheck">회원정보 수정</a>
             <a href="/member/address">배송지등록</a>
-
         </div>
         <div id="contents" class="col">
             <p th:text="${member.memberName}"></p>
         </div>
     </div>
-</div>
+
+
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
 </html>
