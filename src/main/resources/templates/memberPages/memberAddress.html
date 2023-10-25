@@ -10,23 +10,26 @@
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
-<div class="container m-5">
-    <div class="row">
-        <div class="col">
-            <div class="text-end mb-3">
-                <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#registerAddress">
-                    &plus; 새 배송지 등록
-                </button>
-            </div>
-            <hr>
-            <h4 th:if="${addressList.size() == 0}">등록된 배송지가 없습니다.</h4>
-            <div id="addressList">
-                <div  th:each="address : ${addressList}">
+<div class="row m-5">
+    <div class="col">
+        <div class="text-end mb-3">
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#registerAddress">
+                &plus; 새 배송지 등록
+            </button>
+        </div>
+        <hr>
+        <h4 th:if="${addressList.size() == 0}">등록된 배송지가 없습니다.</h4>
+        <div id="addressList">
+            <div class="row justify-content-between px-4" th:each="address : ${addressList}">
+                <div class="col">
                     <h6 th:text="${address.getAddressName()}"></h6>
                     <h6 th:text="${address.getPostCode()}"></h6>
                     <h6 th:text="${address.getAddress()} + ' ' + ${address.getAddressDetail()}"></h6>
-                    <hr>
                 </div>
+                <div class="col text-end align-self-center">
+                    <input type="radio" name="defaultAddress">
+                </div>
+                <hr>
             </div>
         </div>
     </div>
@@ -36,4 +39,45 @@
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
+
+<script th:inline="javascript">
+    const save_address = () => {
+        let addressName = document.getElementById("addressName").value;
+        let address = document.getElementById("address").value;
+        let addressDetail = document.getElementById("addressDetail").value;
+        let postCode = document.getElementById("postCode").value;
+        const memberEmail = [[${session.loginEmail}]]
+        const addressList = document.getElementById("addressList")
+        axios({
+            method:"post",
+            url:"/member/address",
+            data:{
+                addressName : addressName,
+                address :address,
+                addressDetail : addressDetail,
+                postCode : postCode},
+            params:{memberEmail, memberEmail},
+        }).then(res => {
+            addressList.insertAdjacentHTML('afterbegin',
+                `<div class="row justify-content-between">
+                    <div class="col">
+                        <h6>${res.data.addressName}</h6>
+                        <h6>${res.data.postCode}</h6>
+                        <h6>${res.data.address} ${res.data.addressDetail}</h6>
+                    </div>
+                    <div class="col text-end align-self-center pe-4">
+                        <input type="radio" name="defaultAddress">
+                    </div>
+                    <hr>
+                </div>`
+            )
+            addressName = "";
+            address ="";
+            addressDetail="";
+            postCode="";
+        }).catch(err => {
+
+        })
+    }
+</script>
 </html>

@@ -7,30 +7,28 @@
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <table class = "table table-striped">
-            <tr>
-                <th>id</th>
-                <th>이메일</th>
-                <th>이름</th>
-                <th>전화번호</th>
-                <th></th>
-            </tr>
-            <tr th:each="member: ${memberList}">
-                <td th:text="${member.id}"></td>
-                <td>
-                    <a th:href="@{|/admin/member/${member.id}|}" th:text="${member.memberEmail}"></a>
-                </td>
-                <td th:text="${member.memberName}"></td>
-                <td th:text="${member.memberMobile}"></td>
-                <td>
-                    <button class="btn btn-danger" th:onclick="member_delete([[${member.id}]])">삭제</button>
-                </td>
-            </tr>
-            </table>
-        </div>
+<div class="row m-5">
+    <div class="col">
+        <table class = "table table-striped">
+        <tr>
+            <th>id</th>
+            <th>이메일</th>
+            <th>이름</th>
+            <th>전화번호</th>
+            <th></th>
+        </tr>
+        <tr th:each="member: ${memberList}">
+            <td th:text="${member.id}"></td>
+            <td>
+                <a th:href="@{|/admin/member/${member.id}|}" th:text="${member.memberEmail}"></a>
+            </td>
+            <td th:text="${member.memberName}"></td>
+            <td th:text="${member.memberMobile}"></td>
+            <td>
+                <button class="btn btn-danger" th:onclick="member_delete([[${member.id}]])">삭제</button>
+            </td>
+        </tr>
+        </table>
     </div>
 </div>
 

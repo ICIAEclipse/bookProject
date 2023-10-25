@@ -7,28 +7,26 @@
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <table class = "table table-striped">
-            <tr>
-                <th>id</th>
-                <td th:text="${member.id}"></td>
-            </tr>
-            <tr>
-                <th>이메일</th>
-                <td th:text="${member.memberEmail}"></td>
-            </tr>
-            <tr>
-                <th>이름</th>
-                <td th:text="${member.memberName}"></td>
-            </tr>
-            <tr>
-                <th>전화번호</th>
-                <td th:text="${member.memberMobile}"></td>
-            </tr>
-            </table>
-        </div>
+<div class="row m-5">
+    <div class="col">
+        <table class = "table table-striped">
+        <tr>
+            <th>id</th>
+            <td th:text="${member.id}"></td>
+        </tr>
+        <tr>
+            <th>이메일</th>
+            <td th:text="${member.memberEmail}"></td>
+        </tr>
+        <tr>
+            <th>이름</th>
+            <td th:text="${member.memberName}"></td>
+        </tr>
+        <tr>
+            <th>전화번호</th>
+            <td th:text="${member.memberMobile}"></td>
+        </tr>
+        </table>
     </div>
 </div>
 

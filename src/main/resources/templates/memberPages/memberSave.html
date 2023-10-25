@@ -7,34 +7,32 @@
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
-<div class="container">
-    <div class="row m-5">
-        <div class="col">
-            <div id="error-type" style="color: red">
-            </div>
-            <form name="save-form" action="/member/save" method="post">
-                <div>
-                    <span style="display: inline-block; width: 100px">Email</span>
-                    <input type="text" name="memberEmail" onblur="duplicate_check(this.value)">
-                </div>
-                <div id="EmailCheckResult"></div>
-                <div>
-                    <sapn style="display: inline-block; width: 100px">비밀번호</sapn>
-                    <input type="text" name="memberPassword">
-                </div>
-                <div>
-                    <span style="display: inline-block; width: 100px">이름</span>
-                    <input type="text" name="memberName">
-                </div>
-                <div>
-                    <span style="display: inline-block; width: 100px">전화번호</span>
-                    <input type="text" name="memberMobile">
-                </div>
-                <div>
-                    <input type="button" value="저장" onclick="save_fn()">
-                </div>
-            </form>
+<div class="row m-5">
+    <div class="col">
+        <div id="error-type" style="color: red">
         </div>
+        <form name="save-form" action="/member/save" method="post">
+            <div>
+                <span style="display: inline-block; width: 100px">Email</span>
+                <input type="text" name="memberEmail" onblur="duplicate_check(this.value)">
+            </div>
+            <div id="EmailCheckResult"></div>
+            <div>
+                <sapn style="display: inline-block; width: 100px">비밀번호</sapn>
+                <input type="text" name="memberPassword">
+            </div>
+            <div>
+                <span style="display: inline-block; width: 100px">이름</span>
+                <input type="text" name="memberName">
+            </div>
+            <div>
+                <span style="display: inline-block; width: 100px">전화번호</span>
+                <input type="text" name="memberMobile">
+            </div>
+            <div>
+                <input type="button" value="저장" onclick="save_fn()">
+            </div>
+        </form>
     </div>
 </div>
 
