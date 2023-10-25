@@ -7,19 +7,28 @@
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
-<div class="row m-5">
-    <div class="col">
-        <form name="update-form" action="/member/update" method="post">
-            회원번호 <input type="text" name="id" th:value="${member.id}" readonly> <br>
-            이메일 <input type="text" name="memberEmail" th:value="${member.memberEmail}" readonly> <br>
-            비밀번호 <input type="text" name="memberPassword" th:value="${member.memberPassword}"> <br>
-            이름 <input type="text" name="memberName" th:value="${member.memberName}"> <br>
-            핸드폰 <input type="text" name="memberMobile" th:value="${member.memberMobile}"> <br>
-            회원상태 <input type="text" name="memberStatus" th:value="${member.memberStatus}" readonly> <br>
-            <input type="submit" value="수정">
-        </form>
+
+
+    <div class="row m-5">
+        <div class="col">
+            <div class="card">
+                <form name="update-form" action="/member/update" method="post">
+                    회원번호 <input type="text" name="id" th:value="${member.id}" readonly> <br>
+                    이메일 <input type="text" name="memberEmail" th:value="${member.memberEmail}" readonly> <br>
+                    비밀번호 <input type="text" name="memberPassword" th:value="${member.memberPassword}"> <br>
+                    이름 <input type="text" name="memberName" th:value="${member.memberName}"> <br>
+                    핸드폰 <input type="text" name="memberMobile" th:value="${member.memberMobile}"> <br>
+                    회원상태 <input type="text" name="memberStatus" th:value="${member.memberStatus}" readonly> <br>
+                    <input type="submit" value="수정">
+                </form>
+            </div>
+            <form action="/member/delete">
+
+                <input type="submit" value="회원탈퇴">
+            </form>
+        </div>
     </div>
-</div>
+
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
