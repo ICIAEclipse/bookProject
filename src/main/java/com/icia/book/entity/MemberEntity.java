@@ -98,4 +98,11 @@ public class MemberEntity {
         memberEntity.setMemberStatus(memberDTO.getMemberStatus());
         return memberEntity;
     }
+
+    public static MemberEntity toDeleteEntity(MemberDTO memberDTO) {
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setId(memberDTO.getId());
+        memberEntity.setMemberStatus(memberDTO.getMemberStatus());
+        return memberEntity;
+    }
 }

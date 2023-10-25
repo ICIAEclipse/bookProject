@@ -70,6 +70,12 @@ public class MemberService {
         memberRepository.save(memberEntity);
     }
 
+    public void updateDel(MemberDTO memberDTO) {
+        System.out.println("마지막 체크 " + memberDTO);
+        MemberEntity memberEntity = MemberEntity.toDeleteEntity(memberDTO);
+        memberRepository.save(memberEntity);
+    }
+
     ///////////////////////////////////////////////////////
 
     private final AddressRepository addressRepository;

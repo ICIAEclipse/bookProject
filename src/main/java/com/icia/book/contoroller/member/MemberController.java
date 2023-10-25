@@ -155,18 +155,26 @@ public class MemberController {
 
     @PostMapping("/address")
     public ResponseEntity saveAddress(@RequestBody AddressDTO addressDTO,
-                                      @RequestParam("memberEmail") String memberEmail){
+                                      @RequestParam("memberEmail") String memberEmail) {
         AddressDTO savedAddressDTO = memberService.saveAddress(addressDTO, memberEmail);
 //        for(AddressDTO addressDTO1 : addressDTOList){
 //            System.out.println(addressDTO1);
 //        }
-        return new ResponseEntity<>(savedAddressDTO,HttpStatus.OK);
+        return new ResponseEntity<>(savedAddressDTO, HttpStatus.OK);
     }
 
     @GetMapping("/delete")
-    public String delete(MemberDTO memberDTO){
+    public String delete(MemberDTO memberDTO, Model model) {
+        MemberDTO memberDTO1 = memberService.findById(memberDTO.getId());
+        System.out.println("여기는 딜리트의 계곡입니다. " + memberDTO1);
+        model.addAttribute("member", memberDTO1);
         return "memberPages/memberDelete";
     }
 
+    @PostMapping("delete")
+    public String delete(MemberDTO memberDTO) {
+        memberService.update(memberDTO);
+        return "index";
+    }
 }
 
