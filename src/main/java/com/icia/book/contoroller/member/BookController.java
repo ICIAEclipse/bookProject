@@ -22,4 +22,9 @@ public class BookController {
         model.addAttribute("bookList", bookDTOList);
         return "bookPages/bookList";
     }
+
+    @GetMapping
+    public String findAll() {
+        return "bookPages/bookList";
+    }
 }

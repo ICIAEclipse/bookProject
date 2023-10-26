@@ -33,7 +33,7 @@ public class BookEntity {
     @Column(length = 20)
     private String bookDate;
 
-    @Column(length = 200)
+    @Column(length = 1000)
     private String bookProfile;
 
     @Column
