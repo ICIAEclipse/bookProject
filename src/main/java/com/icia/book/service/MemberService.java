@@ -7,13 +7,13 @@ import com.icia.book.entity.MemberEntity;
 import com.icia.book.repository.AddressRepository;
 import com.icia.book.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @Service
@@ -93,38 +93,44 @@ public class MemberService {
     }
 
     @Transactional
-    public List<AddressDTO> saveAddress(AddressDTO addressDTO, String memberEmail, boolean defaultAddressChecked) {
-        // memberEntity를 가져온다.
+    public void saveAddress(AddressDTO addressDTO, String memberEmail, boolean defaultAddressChecked) {
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
-        // 기본배송지로 설정시
+
         if(defaultAddressChecked){
-            // addressDTO의 status를 1로 고침
             addressDTO.setAddressStatus(1);
-            // 기존 addressEntity를 찾아서
             for(AddressEntity savedAddress : memberEntity.getAddressEntityList()){
-                // status가 1인 값을
                 if(savedAddress.getAddressStatus()==1){
-                    // 0으로 고침
                     savedAddress = AddressEntity.changeStatusTo0(savedAddress);
-                    // 고친 addressEntity를 업데이트
                     addressRepository.save(savedAddress);
                 }
             }
         }
-        // addressDTO를 addressEntity로 고침
-        AddressEntity addressEntity = AddressEntity.toSaveEntity(addressDTO, memberEntity);
-        // addressDTO를 새로 등록
-        addressRepository.save(addressEntity);
-//        // addressEntity를 다시 가져오기위해 memberEntity를 갱신
-//        memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
-//        // addressEntity를 다시 가져옴
-        List<AddressEntity> addressEntityList = addressRepository.findAllByMemberEntity(memberEntity, Sort.by(Sort.Direction.DESC, "id"));
 
-        List<AddressDTO> addressDTOList = new ArrayList<>();
-        addressEntityList.forEach(savedEntity ->{
-            addressDTOList.add(AddressDTO.toDTO(savedEntity));
-        });
-        return addressDTOList;
+        AddressEntity addressEntity = AddressEntity.toSaveEntity(addressDTO, memberEntity);
+        addressRepository.save(addressEntity);
+
+//        List<AddressEntity> addressEntityList = addressRepository.findAllByMemberEntity(memberEntity, Sort.by(Sort.Direction.DESC, "id"));
+//        List<AddressDTO> addressDTOList = new ArrayList<>();
+//        addressEntityList.forEach(savedEntity ->{
+//            addressDTOList.add(AddressDTO.toDTO(savedEntity));
+//        });
+//        return addressDTOList;
     }
-  
+
+    @Transactional
+    public void setDefaultAddress(String memberEmail, Long addressId) {
+        Optional<AddressEntity> optionalAddressEntity = addressRepository.findById(addressId);
+        if(optionalAddressEntity.isPresent()){
+            MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
+            memberEntity.getAddressEntityList().forEach(addressEntity ->{
+                if(addressEntity.getAddressStatus() == 1){
+                    addressEntity = AddressEntity.changeStatusTo0(addressEntity);
+                    addressRepository.save(addressEntity);
+                }
+            });
+            AddressEntity addressEntity = optionalAddressEntity.get();
+            addressEntity = AddressEntity.changeStatusTo1(addressEntity);
+            addressRepository.save(addressEntity);
+        }
+    }
 }

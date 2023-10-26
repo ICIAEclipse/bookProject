@@ -156,7 +156,16 @@ public class MemberController {
     public ResponseEntity saveAddress(@RequestBody AddressDTO addressDTO,
                                       @RequestParam("memberEmail") String memberEmail,
                                       @RequestParam("defaultAddressChecked") boolean defaultAddressChecked){
-        List<AddressDTO> addressDTOList = memberService.saveAddress(addressDTO, memberEmail, defaultAddressChecked);
+        memberService.saveAddress(addressDTO, memberEmail, defaultAddressChecked);
+        List<AddressDTO> addressDTOList = memberService.findAddressByMemberEmail(memberEmail);
+        return new ResponseEntity<>(addressDTOList,HttpStatus.OK);
+    }
+
+    @PostMapping("/address/default")
+    public ResponseEntity setDefaultAddress(@RequestParam("memberEmail") String memberEmail,
+                                            @RequestParam("addressId") Long addressId){
+        memberService.setDefaultAddress(memberEmail, addressId);
+        List<AddressDTO> addressDTOList = memberService.findAddressByMemberEmail(memberEmail);
         return new ResponseEntity<>(addressDTOList,HttpStatus.OK);
     }
 
