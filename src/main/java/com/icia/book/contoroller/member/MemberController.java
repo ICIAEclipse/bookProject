@@ -95,6 +95,11 @@ public class MemberController {
     public String login(@ModelAttribute MemberDTO memberDTO,
                         Model model,
                         HttpSession session) {
+        MemberDTO deleteMember = memberService.findByMemberEmail(memberDTO.getMemberEmail());
+
+        if(deleteMember.getMemberStatus() == 1)
+            return "redirect:/member/login?error=error1";
+
         try {
             boolean result = memberService.login(memberDTO);
             if (result) {
