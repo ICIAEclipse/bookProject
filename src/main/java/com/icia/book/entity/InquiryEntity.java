@@ -35,6 +35,10 @@ public class InquiryEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cscenter_category_id")
+    private CscenterCategoryEntity cscenterCategoryEntity;
+
     @OneToMany(mappedBy = "inquiryEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<InquiryCommentEntity> inquiryCommentEntityList;
 
