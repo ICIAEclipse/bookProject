@@ -16,7 +16,9 @@
                     <div class="input-group">
                         <select name="categoryId" class="form-select">
                             <option value="">전체보기</option>
-                            <option th:each="category :${categoryList}" th:text="${category.categoryName}" th:value="${category.categoryId}" th:selected="${categoryId == category.categoryId}"></option>
+                            <option th:each="category :${categoryList}" th:text="${category.categoryName}"
+                                    th:value="${category.categoryId}"
+                                    th:selected="${categoryId == category.categoryId}"></option>
                         </select>
                         <input name="q" class="form-control">
                         <button class="btn btn-primary">검색</button>
@@ -43,7 +45,7 @@
                 <td th:text="${book.bookAuthor}"></td>
                 <td style="width: 150px;">
                     <div class="input-group">
-                        <select name="bookStatus" class="form-select">
+                        <select th:id="|bookStatus${book.isbn}|" class="form-select">
                             <option value="0" th:selected="${book.bookStatus == 0}">품절</option>
                             <option value="1" th:selected="${book.bookStatus == 1}">판매중</option>
                             <option value="2" th:selected="${book.bookStatus == 2}">판매중지</option>
@@ -52,15 +54,19 @@
                 </td>
                 <td>
                     <div class="input-group">
-                        <input class="form-control" name="bookCount" th:value="${book.bookCount}" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        <input class="form-control" th:id="|bookCount${book.isbn}|" th:value="${book.bookCount}"
+                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                     </div>
                 </td>
                 <td>
-                    <select name="updateCategoryId" class="form-select">
-                        <option th:each="category :${categoryList}" th:text="${category.categoryName}" th:value="${category.id}" th:selected="${book.categoryId == category.id}"></option>
+                    <select th:id="|categoryId${book.isbn}|" class="form-select">
+                        <option th:each="category :${categoryList}" th:text="${category.categoryName}"
+                                th:value="${category.id}" th:selected="${book.categoryId == category.id}"></option>
                     </select>
                 </td>
-                <td><button class="btn btn-primary">수정</button></td>
+                <td>
+                    <button class="btn btn-primary" th:onclick="update_fn([[${book.isbn}]])">수정</button>
+                </td>
             </tr>
         </table>
         <div class="container">
@@ -115,8 +121,31 @@
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
 <script th:inline="javascript">
+    const page = [[${bookList.number + 1}]];
+    const searchCategoryId = [[${categoryId}]];
+    const q = [[${q}]];
     const bookSave = () => {
         location.href = "/admin/book/save";
+    };
+
+    const update_fn = (isbn) => {
+        const bookStatus = document.querySelector("#bookStatus" + isbn).value;
+        const bookCount = document.querySelector("#bookCount" + isbn).value;
+        const categoryId = document.querySelector("#categoryId" + isbn).value;
+        axios({
+            method: "put",
+            url: "/admin/book",
+            data: {
+                isbn: isbn,
+                bookStatus: bookStatus,
+                bookCount: bookCount,
+                categoryId: categoryId
+            }
+        }).then(res => {
+            location.href = `/admin/book?page=${page}&categoryId=${searchCategoryId}&q=${q}`;
+        }).catch(err => {
+            alert("수정실패");
+        })
     }
 </script>
 </html>

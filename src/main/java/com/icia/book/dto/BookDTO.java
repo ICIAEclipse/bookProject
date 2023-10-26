@@ -2,15 +2,14 @@ package com.icia.book.dto;
 
 
 import com.icia.book.entity.BookEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BookDTO {
 
     private Long id;

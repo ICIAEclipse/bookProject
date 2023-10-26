@@ -23,7 +23,7 @@ public class BookService {
     private final CategoryRepository categoryRepository;
 
     public boolean save(BookDTO bookDTO) {
-        if(!bookRepository.findByIsbn(bookDTO.getIsbn()).isEmpty()){
+        if (!bookRepository.findByIsbn(bookDTO.getIsbn()).isEmpty()) {
             return false;
         }
         CategoryEntity categoryEntity = categoryRepository.findById(bookDTO.getCategoryId()).orElseThrow(() -> new NoSuchElementException());
@@ -45,8 +45,9 @@ public class BookService {
         } else if (!q.equals("") && categoryId.equals("")) {
             bookEntityPage = bookRepository.findByBookAuthorContainingOrBookNameContaining(q, q, PageRequest.of(page, pageLimit));
         } else {
+            System.out.println("질의어 + 카테고리");
             CategoryEntity categoryEntity = categoryRepository.findByCategoryId(categoryId).orElseThrow(() -> new NoSuchElementException());
-            bookEntityPage = bookRepository.findByBookAuthorContainingOrBookNameContainingAndCategoryEntity(q, q, categoryEntity, PageRequest.of(page, pageLimit));
+            bookEntityPage = bookRepository.findByCategoryEntityAndBookAuthorContainingOrBookNameContaining(categoryEntity, q, q, PageRequest.of(page, pageLimit));
         }
         Page<BookDTO> bookDTOPage = bookEntityPage.map(bookEntity ->
                 BookDTO.builder()
@@ -71,9 +72,16 @@ public class BookService {
     public List<BookDTO> findAll() {
         List<BookEntity> bookEntityList = bookRepository.findAll();
         List<BookDTO> bookDTOList = new ArrayList<>();
-        for(BookEntity bookEntity: bookEntityList){
+        for (BookEntity bookEntity : bookEntityList) {
             bookDTOList.add(BookDTO.toDTO(bookEntity));
         }
         return bookDTOList;
+    }
+
+    public void update(BookDTO bookDTO) {
+        BookEntity bookEntity = bookRepository.findByIsbn(bookDTO.getIsbn()).orElseThrow(() -> new NoSuchElementException());
+        CategoryEntity categoryEntity = categoryRepository.findById(bookDTO.getCategoryId()).orElseThrow(() -> new NoSuchElementException());
+        bookEntity = BookEntity.toUpdateEntity(bookEntity, bookDTO, categoryEntity);
+        bookRepository.save(bookEntity);
     }
 }
