@@ -40,4 +40,9 @@ public class BookController {
     }
 
 
+    @GetMapping
+    public String findAll() {
+        return "bookPages/bookList";
+    }
+
 }
