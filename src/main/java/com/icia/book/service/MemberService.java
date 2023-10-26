@@ -7,6 +7,9 @@ import com.icia.book.entity.MemberEntity;
 import com.icia.book.repository.AddressRepository;
 import com.icia.book.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,14 +79,30 @@ public class MemberService {
     private final AddressRepository addressRepository;
 
     @Transactional
-    public List<AddressDTO> findAddressByMemberEmail(String memberEmail){
+    public Page<AddressDTO> findAddressByMemberEmail(String memberEmail, int page){
+        int pageLimit = 5;
+
+
+        // page가 1이면 startPage=1, endPage=5 혹은 최대페이지
+
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
-        List<AddressEntity> addressEntityList = memberEntity.getAddressEntityList();
-        List<AddressDTO> addressDTOList = new ArrayList<>();
-        for(AddressEntity addressEntity : addressEntityList){
-            addressDTOList.add(AddressDTO.toDTO(addressEntity));
-        }
-        return addressDTOList;
+
+//        List<AddressEntity> addressEntityList = memberEntity.getAddressEntityList();
+
+        Page<AddressEntity> addressEntityPage = addressRepository.findAllByMemberEntity(memberEntity, PageRequest.of(page-1,pageLimit, Sort.by(Sort.Order.desc("addressStatus"), Sort.Order.desc("id"))));
+
+
+        Page<AddressDTO> addressDTOPage = addressEntityPage.map(addressEntity ->
+            AddressDTO.builder()
+                    .id(addressEntity.getId())
+                    .postCode(addressEntity.getPostCode())
+                    .addressName(addressEntity.getAddressName())
+                    .address(addressEntity.getAddress())
+                    .addressDetail(addressEntity.getAddressDetail())
+                    .addressStatus(addressEntity.getAddressStatus())
+                    .memberId(addressEntity.getMemberEntity().getId())
+                    .build());
+        return addressDTOPage;
     }
 
     @Transactional
@@ -102,13 +121,6 @@ public class MemberService {
 
         AddressEntity addressEntity = AddressEntity.toSaveEntity(addressDTO, memberEntity);
         addressRepository.save(addressEntity);
-
-//        List<AddressEntity> addressEntityList = addressRepository.findAllByMemberEntity(memberEntity, Sort.by(Sort.Direction.DESC, "id"));
-//        List<AddressDTO> addressDTOList = new ArrayList<>();
-//        addressEntityList.forEach(savedEntity ->{
-//            addressDTOList.add(AddressDTO.toDTO(savedEntity));
-//        });
-//        return addressDTOList;
     }
 
     @Transactional
@@ -126,5 +138,9 @@ public class MemberService {
             addressEntity = AddressEntity.changeStatusTo1(addressEntity);
             addressRepository.save(addressEntity);
         }
+    }
+
+    public void deleteAddress(Long id) {
+        addressRepository.deleteById(id);
     }
 }

@@ -5,6 +5,12 @@
 
     <!-- 다음API 주소검색 -->
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+    <style>
+        hr {
+            margin-bottom: 0;
+        }
+    </style>
 </head>
 <body>
 <div th:replace="~{component/header :: header}"></div>
@@ -18,23 +24,51 @@
             </button>
         </div>
         <hr>
-        <h4 th:if="${addressList.size() == 0}">등록된 배송지가 없습니다.</h4>
-        <div id="addressList">
+        <h4 th:if="${addressList.empty}">등록된 배송지가 없습니다.</h4>
+        <div id="addressList" th:if="${!addressList.empty}">
             <div class="row justify-content-between px-4" th:each="address : ${addressList}">
-                <div class="col">
-                    <h6 th:text="${address.addressStatus == 1} ? |${address.addressName}(기본배송지)| : ${address.addressName}"></h6>
-                    <h6 th:text="${address.postCode}"></h6>
-                    <h6 th:text="${address.address} + ' ' + ${address.addressDetail}"></h6>
+                <div class="col-auto ms-3 text-center align-self-center">
+                    <input type="radio" name="newDefaultAddress" th:value="${address.id}">
                 </div>
-                <div class="col-2 text-end align-self-center">
-                    <input type="radio" name="newDefaultAddress" th:id="${address.id}">
+                <div class="col my-3">
+                    <div>
+                        <h6 th:text="${address.addressStatus == 1} ? |${address.addressName}(기본배송지)| : ${address.addressName}"></h6>
+                        <h6 th:text="${address.postCode}"></h6>
+                        <h6 th:text="${address.address} + ' ' + ${address.addressDetail}"></h6>
+                    </div>
+                </div>
+                <div class="col-3 me-3 col-md-auto text-end align-self-center">
+                    <button class="btn btn-sm btn-outline-secondary m-1">수정</button>
+                    <button class="btn btn-sm btn-outline-secondary m-1" th:if="${address.addressStatus != 1}" th:onclick="delete_address_fn([[${address.id}]])">삭제</button>
                 </div>
                 <hr>
             </div>
         </div>
-        <div>
-            <button class="btn btn-primary px-5" onclick="set_defaultAddress()">기본주송지 등록</button>
+        <div class="my-3 text-center">
+            <button class="btn btn-primary px-5" onclick="set_defaultAddress_fn()">기본주송지 등록</button>
         </div>
+
+        <div id="paging" class="container text-center">
+            <ul class="pagination">
+                <li id="FirstPage" th:class="${addressList.first}? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="@{/member/address(page=1)}">&lt;&lt;</a>
+                </li>
+                <li id="PrevPage" th:class="${addressList.first}? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="@{/member/address(page=${page}-1)}">&lt;</a>
+                </li>
+                <li id="pages" th:each="pages : ${#numbers.sequence(startPage,endPage)}" th:class="${pages == addressList.number + 1}? 'page-item active'" class="page-item">
+                    <a th:id="|${pages}page|" th:if="${pages != addressList.number + 1}" class="page-link" th:href="@{/member/address(page=${pages})}" th:text="${pages}"></a>
+                    <sapn th:if="${pages == addressList.number + 1}" class="page-link" th:text="${pages}"></sapn>
+                </li>
+                <li id="NextPage" th:class="${addressList.last}? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="@{/member/address(page=${page}+1)}">&gt;</a>
+                </li>
+                <li id="LastPage" th:class="${addressList.last}? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="@{/member/address(page=${addressList.totalPages})}">&gt;&gt;</a>
+                </li>
+            </ul>
+        </div>
+
     </div>
 </div>
 
@@ -44,14 +78,55 @@
 </body>
 
 <script th:inline="javascript">
-    const save_address = () => {
+    const update_list = (res) =>{
+        const addressList = document.getElementById("addressList")
+        addressList.innerHTML = "";
+        res.data.content.forEach(address => {
+            if(address.addressStatus == 1){
+                addressList.innerHTML +=
+                    `<div class="row justify-content-between px-4">
+                        <div class="col-auto ms-3 text-center align-self-center">
+                            <input type="radio" name="defaultAddress" id="${address.id}">
+                        </div>
+                        <div class="col my-3">
+                            <h6>${address.addressName}(기본배송지)</h6>
+                            <h6>${address.postCode}</h6>
+                            <h6>${address.address} ${address.addressDetail}</h6>
+                        </div>
+                        <div class="col-3 me-3 col-md-auto text-end align-self-center">
+                            <button class="btn btn-sm btn-outline-secondary m-1">수정</button>
+                        </div>
+                        <hr>
+                    </div>`
+            }else {
+                addressList.innerHTML +=
+                    `<div class="row justify-content-between px-4">
+                        <div class="col-auto ms-3 text-center align-self-center">
+                            <input type="radio" name="defaultAddress" id="${address.id}">
+                        </div>
+                        <div class="col my-3">
+                            <h6>${address.addressName}</h6>
+                            <h6>${address.postCode}</h6>
+                            <h6>${address.address} ${address.addressDetail}</h6>
+                        </div>
+                        <div class="col-3 me-3 col-md-auto text-end align-self-center">
+                            <button class="btn btn-sm btn-outline-secondary m-1">수정</button>
+                            <button class="btn btn-sm btn-outline-secondary m-1"onclick="delete_address_fn(${address.id})">삭제</button>
+                        </div>
+                        <hr>
+                    </div>`
+            }
+        })
+    }
+
+    const save_address_fn = () => {
         let addressName = document.getElementById("addressName").value;
         let address = document.getElementById("address").value;
         let addressDetail = document.getElementById("addressDetail").value;
         let postCode = document.getElementById("postCode").value;
         let defaultAddressChecked = document.getElementById("defaultAddress").checked;
+        let addressTotalPage = [[${addressList.totalPages}]]
         const memberEmail = [[${session.loginEmail}]]
-        const addressList = document.getElementById("addressList")
         axios({
             method:"post",
             url:"/member/address",
@@ -63,51 +138,24 @@
             params:{memberEmail, memberEmail,
                 defaultAddressChecked : defaultAddressChecked},
         }).then(res => {
-            addressList.innerHTML = "";
-            res.data.forEach(data => {
-                if(data.addressStatus == 1){
-                    addressList.innerHTML +=
-                        `<div class="row justify-content-between px-4">
-                            <div class="col">
-                                <h6>${data.addressName}(기본배송지)</h6>
-                                <h6>${data.postCode}</h6>
-                                <h6>${data.address} ${data.addressDetail}</h6>
-                            </div>
-                            <div class="col-2 text-end align-self-center pe-4">
-                                <input type="radio" name="defaultAddress" id="${data.id}">
-                            </div>
-                            <hr>
-                        </div>`
-                }else {
-                    addressList.innerHTML +=
-                        `<div class="row justify-content-between px-4">
-                            <div class="col">
-                                <h6>${data.addressName}</h6>
-                                <h6>${data.postCode}</h6>
-                                <h6>${data.address} ${data.addressDetail}</h6>
-                            </div>
-                            <div class="col text-end align-self-center pe-4">
-                                <input type="radio" name="defaultAddress" id="${data.id}">
-                            </div>
-                            <hr>
-                        </div>`
-                }
-            })
-            addressName = "";
-            address ="";
-            addressDetail="";
-            postCode="";
-        }).catch(err => {
+            update_list(res);
+            console.log(res.data);
+            if(addressTotalPage != res.data.content.totalPages){
 
+            }
+            document.getElementById("addressName").value = "";
+            document.getElementById("address").value = "";
+            document.getElementById("addressDetail").value = "";
+            document.getElementById("postCode").value = "";
+        }).catch(err => {
+            alert("저장에 실패했습니다.")
         })
     }
 
-    const set_defaultAddress = () =>{
+    const set_defaultAddress_fn = () =>{
         const defaultCheck = document.querySelector("input[name ='newDefaultAddress']:checked")
-        const addressList = document.getElementById("addressList")
         const memberEmail = [[${session.loginEmail}]]
-        const addressId = defaultCheck.getAttribute("id");
-        console.log(memberEmail)
+        const addressId = defaultCheck.value;
         console.log(addressId)
         if(defaultCheck==null){
             alert("기본배송지로 등록될 주소를 선택해주세요")
@@ -118,38 +166,24 @@
                 params:{addressId : addressId,
                         memberEmail : memberEmail},
             }).then(res =>{
-                addressList.innerHTML = "";
-                res.data.forEach(data => {
-                    if(data.addressStatus == 1){
-                        addressList.innerHTML +=
-                            `<div class="row justify-content-between px-4">
-                            <div class="col">
-                                <h6>${data.addressName}(기본배송지)</h6>
-                                <h6>${data.postCode}</h6>
-                                <h6>${data.address} ${data.addressDetail}</h6>
-                            </div>
-                            <div class="col-2 text-end align-self-center pe-4">
-                                <input type="radio" name="defaultAddress" id="${data.id}">
-                            </div>
-                            <hr>
-                        </div>`
-                    }else {
-                        addressList.innerHTML +=
-                            `<div class="row justify-content-between px-4">
-                            <div class="col">
-                                <h6>${data.addressName}</h6>
-                                <h6>${data.postCode}</h6>
-                                <h6>${data.address} ${data.addressDetail}</h6>
-                            </div>
-                            <div class="col text-end align-self-center pe-4">
-                                <input type="radio" name="defaultAddress" id="${data.id}">
-                            </div>
-                            <hr>
-                        </div>`
-                    }
-                })
+                update_list(res);
             }).catch(err =>{
+                alert("배송지를 찾을 수 없습니다.")
+            })
+        }
+    }
 
+    const delete_address_fn = (addressId) =>{
+        console.log(addressId)
+        if(confirm("선택한배송지를 삭제하시겠습니까?")){
+            axios({
+                method:"delete",
+                url:"/member/address",
+                params:{addressId : addressId},
+            }).then(res =>{
+                update_list(res);
+            }).catch(err =>{
+                alert("배송지를 찾을 수 없습니다.")
             })
         }
     }
