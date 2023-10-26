@@ -21,7 +21,7 @@ public class BookEntity {
     @Column(length = 10, unique = true, nullable = false)
     private String isbn;
 
-    @Column(length = 200, nullable = false)
+    @Column(length = 500, nullable = false)
     private String bookName;
 
     @Column(length = 100, nullable = false)

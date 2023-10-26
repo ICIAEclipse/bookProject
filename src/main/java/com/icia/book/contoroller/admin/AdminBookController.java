@@ -35,7 +35,7 @@ public class AdminBookController {
         int startPage = (((int) (Math.ceil((double) page / blockLimit))) - 1) * blockLimit + 1;
         int endPage = ((startPage + blockLimit - 1) < bookDTOList.getTotalPages()) ? startPage + blockLimit - 1 : bookDTOList.getTotalPages();
         model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
+        model.addAttribute( "endPage", endPage);
         model.addAttribute("page", page);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("q", q);

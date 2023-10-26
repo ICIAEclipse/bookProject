@@ -1,13 +1,14 @@
 package com.icia.book.dto;
 
 import com.icia.book.entity.AddressEntity;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Setter
 @Getter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AddressDTO {
     private Long id;
     private String addressName;
