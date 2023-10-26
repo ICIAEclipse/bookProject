@@ -24,4 +24,7 @@ public class CscenterCategoryEntity {
 
     @OneToMany(mappedBy = "cscenterCategoryEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<FaqEntity> faqEntityList;
+
+    @OneToMany(mappedBy = "cscenterCategoryEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private List<InquiryEntity> inquiryEntityList;
 }
