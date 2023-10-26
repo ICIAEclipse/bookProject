@@ -46,8 +46,13 @@ public class AddressEntity {
         return addressEntity;
     }
 
-    public static AddressEntity changeStatusTo0(AddressEntity savedAddress) {
-        savedAddress.setAddressStatus(0);
-        return savedAddress;
+    public static AddressEntity changeStatusTo0(AddressEntity addressEntity) {
+        addressEntity.setAddressStatus(0);
+        return addressEntity;
+    }
+
+    public static AddressEntity changeStatusTo1(AddressEntity addressEntity) {
+        addressEntity.setAddressStatus(1);
+        return addressEntity;
     }
 }

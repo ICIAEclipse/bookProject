@@ -26,8 +26,8 @@
                     <h6 th:text="${address.postCode}"></h6>
                     <h6 th:text="${address.address} + ' ' + ${address.addressDetail}"></h6>
                 </div>
-                <div class="col text-end align-self-center">
-                    <input type="radio" name="defaultAddress" th:value="${address.id}">
+                <div class="col-2 text-end align-self-center">
+                    <input type="radio" name="newDefaultAddress" th:id="${address.id}">
                 </div>
                 <hr>
             </div>
@@ -65,7 +65,6 @@
         }).then(res => {
             addressList.innerHTML = "";
             res.data.forEach(data => {
-                console.log(data)
                 if(data.addressStatus == 1){
                     addressList.innerHTML +=
                         `<div class="row justify-content-between px-4">
@@ -74,7 +73,7 @@
                                 <h6>${data.postCode}</h6>
                                 <h6>${data.address} ${data.addressDetail}</h6>
                             </div>
-                            <div class="col text-end align-self-center pe-4">
+                            <div class="col-2 text-end align-self-center pe-4">
                                 <input type="radio" name="defaultAddress" id="${data.id}">
                             </div>
                             <hr>
@@ -104,20 +103,54 @@
     }
 
     const set_defaultAddress = () =>{
-        const defaultCheck = document.querySelector("[name ='defaultAddress']")
-        if(!defaultCheck.checked){
+        const defaultCheck = document.querySelector("input[name ='newDefaultAddress']:checked")
+        const addressList = document.getElementById("addressList")
+        const memberEmail = [[${session.loginEmail}]]
+        const addressId = defaultCheck.getAttribute("id");
+        console.log(memberEmail)
+        console.log(addressId)
+        if(defaultCheck==null){
             alert("기본배송지로 등록될 주소를 선택해주세요")
         }else {
-            console.log(defaultCheck.value)
-/*            axios({
+            axios({
                 method:"post",
-                url:"",
-                params:{id : defaultCheck.checked.id}
+                url:"/member/address/default",
+                params:{addressId : addressId,
+                        memberEmail : memberEmail},
             }).then(res =>{
-
+                addressList.innerHTML = "";
+                res.data.forEach(data => {
+                    if(data.addressStatus == 1){
+                        addressList.innerHTML +=
+                            `<div class="row justify-content-between px-4">
+                            <div class="col">
+                                <h6>${data.addressName}(기본배송지)</h6>
+                                <h6>${data.postCode}</h6>
+                                <h6>${data.address} ${data.addressDetail}</h6>
+                            </div>
+                            <div class="col-2 text-end align-self-center pe-4">
+                                <input type="radio" name="defaultAddress" id="${data.id}">
+                            </div>
+                            <hr>
+                        </div>`
+                    }else {
+                        addressList.innerHTML +=
+                            `<div class="row justify-content-between px-4">
+                            <div class="col">
+                                <h6>${data.addressName}</h6>
+                                <h6>${data.postCode}</h6>
+                                <h6>${data.address} ${data.addressDetail}</h6>
+                            </div>
+                            <div class="col text-end align-self-center pe-4">
+                                <input type="radio" name="defaultAddress" id="${data.id}">
+                            </div>
+                            <hr>
+                        </div>`
+                    }
+                })
             }).catch(err =>{
 
-            })*/
+            })
         }
     }
 </script>
