@@ -4,6 +4,7 @@ import com.icia.book.dto.AddressDTO;
 import com.icia.book.dto.MemberDTO;
 import com.icia.book.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -150,10 +150,29 @@ public class MemberController {
     }
 
     @GetMapping("/address")
-    public String addressForm(HttpSession session, Model model) {
+    public String addressForm(HttpSession session,
+                              Model model,
+                              @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         String memberEmail = (String) session.getAttribute("loginEmail");
-        List<AddressDTO> addressDTOList = memberService.findAddressByMemberEmail(memberEmail);
-        model.addAttribute("addressList", addressDTOList);
+        Page<AddressDTO> addressDTOPage = memberService.findAddressByMemberEmail(memberEmail,page);
+
+        int blockLimit = 5;
+        int startPage = 1;
+        int endPage = addressDTOPage.getTotalPages();
+        if(addressDTOPage.getTotalPages() >= blockLimit){
+            if(page+(blockLimit/2) <= addressDTOPage.getTotalPages()){
+                endPage = page+(blockLimit/2);
+            }
+            startPage= endPage-(blockLimit-1);
+            if(page-(blockLimit/2)<1){
+                startPage = 1;
+                endPage = 5;
+            }
+        }
+        model.addAttribute("addressList", addressDTOPage);
+        model.addAttribute("page", page);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         return "memberPages/memberAddress";
     }
 
@@ -162,16 +181,26 @@ public class MemberController {
                                       @RequestParam("memberEmail") String memberEmail,
                                       @RequestParam("defaultAddressChecked") boolean defaultAddressChecked){
         memberService.saveAddress(addressDTO, memberEmail, defaultAddressChecked);
-        List<AddressDTO> addressDTOList = memberService.findAddressByMemberEmail(memberEmail);
-        return new ResponseEntity<>(addressDTOList,HttpStatus.OK);
+        Page<AddressDTO> addressDTOPage = memberService.findAddressByMemberEmail(memberEmail,1);
+        return new ResponseEntity<>(addressDTOPage,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/address")
+    public ResponseEntity deleteAddress(@RequestParam("addressId") Long addressId,
+                                        HttpSession session){
+        memberService.deleteAddress(addressId);
+        String memberEmail = (String) session.getAttribute("loginEmail");
+        Page<AddressDTO> addressDTOPage = memberService.findAddressByMemberEmail(memberEmail,1);
+        return new ResponseEntity<>(addressDTOPage,HttpStatus.OK);
     }
 
     @PostMapping("/address/default")
-    public ResponseEntity setDefaultAddress(@RequestParam("memberEmail") String memberEmail,
+    public ResponseEntity setDefaultAddress(HttpSession session,
                                             @RequestParam("addressId") Long addressId){
+        String memberEmail = (String) session.getAttribute("loginEmail");
         memberService.setDefaultAddress(memberEmail, addressId);
-        List<AddressDTO> addressDTOList = memberService.findAddressByMemberEmail(memberEmail);
-        return new ResponseEntity<>(addressDTOList,HttpStatus.OK);
+        Page<AddressDTO> addressDTOPage = memberService.findAddressByMemberEmail(memberEmail,1);
+        return new ResponseEntity<>(addressDTOPage,HttpStatus.OK);
     }
 
     @GetMapping("/delete")
