@@ -70,7 +70,7 @@ public class AdminBookController {
         return "adminPages/bookSave";
     }
 
-    @PostMapping("/save")
+    @PostMapping()
     public ResponseEntity save(@RequestBody BookDTO bookDTO){
         boolean save = bookService.save(bookDTO);
         if(save){
@@ -78,5 +78,11 @@ public class AdminBookController {
         } else {
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
+    }
+
+    @PutMapping
+    public ResponseEntity update(@RequestBody BookDTO bookDTO){
+        bookService.update(bookDTO);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

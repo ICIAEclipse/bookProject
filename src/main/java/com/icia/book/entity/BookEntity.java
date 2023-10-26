@@ -108,4 +108,12 @@ public class BookEntity {
         book.setCategoryEntity(categoryEntity);
         return book;
     }
+
+    public static BookEntity toUpdateEntity(BookEntity bookEntity, BookDTO bookDTO, CategoryEntity categoryEntity) {
+        BookEntity updateEntity = bookEntity;
+        updateEntity.setBookStatus(bookDTO.getBookStatus());
+        updateEntity.setBookCount(bookDTO.getBookCount());
+        updateEntity.setCategoryEntity(categoryEntity);
+        return updateEntity;
+    }
 }
