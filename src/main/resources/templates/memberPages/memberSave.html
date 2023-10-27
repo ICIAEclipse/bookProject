@@ -13,20 +13,26 @@
         </div>
         <form name="save-form" action="/member/save" method="post">
             <div>
-                <span style="display: inline-block; width: 100px">Email</span>
+                <span style="display: inline-block; width: 120px">Email</span>
                 <input type="text" name="memberEmail" onblur="duplicate_check(this.value)">
             </div>
             <div id="EmailCheckResult"></div>
             <div>
-                <sapn style="display: inline-block; width: 100px">비밀번호</sapn>
-                <input type="text" name="memberPassword">
+                <sapn style="display: inline-block; width: 120px">비밀번호</sapn>
+                <input type="text" name="memberPassword" >
             </div>
+            <div id="passCheckResult"></div>
             <div>
-                <span style="display: inline-block; width: 100px">이름</span>
+                <sapn style="display: inline-block; width: 120px">비밀번호 확인</sapn>
+                <input type="text" name="verifyPassword" onblur="verify_password(this.value)">
+            </div>
+            <div id="verifyPasswordResult"></div>
+            <div>
+                <span style="display: inline-block; width: 120px">이름</span>
                 <input type="text" name="memberName">
             </div>
             <div>
-                <span style="display: inline-block; width: 100px">전화번호</span>
+                <span style="display: inline-block; width: 120px">전화번호</span>
                 <input type="text" name="memberMobile">
             </div>
             <div>
@@ -40,11 +46,14 @@
 </body>
 <script th:inline="javascript">
     let emailDupleCheck = false;
+    let passwordCheck = false;
+    let verifyPassCheck = false;
 
     const save_fn = () =>{
         const saveForm = document.querySelector("[name = 'save-form']");
         const memberEmail = document.querySelector("[name='memberEmail']");
         const memberPassword = document.querySelector("[name='memberPassword']");
+        const verifyPassword = document.querySelector("[name='verifyPassword']");
         const memberName = document.querySelector("[name='memberName']")
         const memberMobile = document.querySelector("[name='memberMobile']");
         const errorType = document.getElementById("error-type");
@@ -54,14 +63,23 @@
         }else if (!emailDupleCheck){
             alert("중복되는 이메일입니다. 이메일을 변경해주세요.")
             memberEmail.focus();
-        } else if(memberPassword.value == ""){
-            errorType.innerHTML = `<p>비밀번호를 입력해주세요</p>`
+        }else if(memberPassword.value == ""){
+            errorType.innerHTML = `<p>비밀번호를 입력해주세요.</p>`
             memberPassword.focus();
+        /*}else if (!passwordCheck){
+            alert("비밀번호는 8~16자로 영문, 숫자, 특수기호를 조합해서 사용해주세요.")
+            memberPassword.focus();*/
+        }else if (verifyPassword.value == ""){
+            errorType.innerHTML = `<p>비밀번호 확인란을 입력해주세요</p>`
+            memberEmail.focus();
+        }else if (!verifyPassCheck){
+            alert("비밀번호가 일치하지 않습니다.")
+            memberEmail.focus();
         }else if(memberName.value == ""){
-            errorType.innerHTML = `<p>이름을 입력해주세요</p>`
+            errorType.innerHTML = `<p>이름을 입력해주세요.</p>`
             memberName.focus();
         }else if(memberMobile == ""){
-            errorType.innerHTML = `<p>전화번호를 입력해주세요</p>`
+            errorType.innerHTML = `<p>전화번호를 입력해주세요.</p>`
             memberMobile.focus();
         }else {
             saveForm.submit();
@@ -87,6 +105,35 @@
                 emailCheckResult.style.color = "red";
                 emailCheckResult.innerHTML = `<p>중복되는 이메일입니다.</p>`
             });
+        }
+    }
+
+    // 비밀번호 정규식 확인
+    const password_check = (password) => {
+        const passreg = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&=+-]).{8,15}$/;
+        const passCheckResult = document.getElementById("verifyPasswordResult");
+        if(passreg.test(password)){
+            passwordCheck = true;
+            passCheckResult.style.color = "green";
+            passCheckResult.innerHTML = `<p>사용할 수 있는 비밀번호입니다.</p>`
+        }else {
+            passwordCheck = false;
+            passCheckResult.style.color = "red";
+            passCheckResult.innerHTML = `<p>비밀번호가 형식에 맞지 않습니다.</p>`
+        }
+    }
+
+    const verify_password = (verifyPassword) => {
+        const password = document.querySelector("[name='memberPassword']").value;
+        const verifyPasswordResult = document.getElementById("verifyPasswordResult");
+        if(password == verifyPassword){
+            verifyPassCheck = true;
+            verifyPasswordResult.style.color = "green";
+            verifyPasswordResult.innerHTML = `<p>비밀번호 확인 완료&check;</p>`
+        }else {
+            verifyPassCheck = false;
+            verifyPasswordResult.style.color = "red";
+            verifyPasswordResult.innerHTML = `<p>비밀번호가 일치하지 않습니다.</p>`
         }
     }
 </script>

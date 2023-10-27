@@ -7,15 +7,17 @@
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
-    <div class="row m-5">
-        <div class="col">
+<div class="row m-5 justify-content-center">
+    <div class="col">
+        <div>
             <div id="error-type" style="color: red">
-                <p th:if="${error== 'error1'}">아이디 혹은 비밀번호가 틀렸습니다.</p>
+                <p th:if="${error== 'error1'}">등록되지 않은 아이디이거나 아이디 혹은 비밀번호를 잘못 입력했습니다..</p>
             </div>
             <form name="login-form" action="/member/login" method="post">
+                <input type="hidden" name="continued" th:value="${continued}">
                 <div>
                     <span style="display: inline-block; width: 100px">Email</span>
-                    <input type="text" name="memberEmail">
+                    <input type="text" name="memberEmail" onkeyup="enterkey_press(this.name)">
                 </div>
                 <div>
                     <sapn style="display: inline-block; width: 100px">비밀번호</sapn>
@@ -27,6 +29,7 @@
             </form>
         </div>
     </div>
+</div>
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
@@ -43,6 +46,17 @@
             errorType.innerHTML = `<p>비밀번호를 입력해주세요.</p>`
         }else {
             loginForm.submit();
+        }
+    }
+
+    const enterkey_press = (name) =>{
+        if (window.event.keyCode == 13){
+            if(name== "memberEmail"){
+                $("input[name=memberPassword]").focus();
+            }else if(name == "memberPassword"){
+                document.querySelector("[name = 'login-form']").submit();
+            }
+
         }
     }
 </script>

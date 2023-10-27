@@ -7,15 +7,13 @@
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
-<div class="container">
-    <div class="row m-5">
-        <div class="col">
-            <form action="/member/passCheck" method="post">
-                <input type="hidden" name="memberEmail" th:value="${session.loginEmail}">
-                <input type="text" name="memberPassword" placeholder="비밀번호">
-                <input type="submit" value="비밀번호 체크">
-            </form>
-        </div>
+<div class="row m-5">
+    <div class="col">
+        <form action="/member/passCheck" method="post">
+            <input type="hidden" name="memberEmail" th:value="${session.loginEmail}">
+            <input type="text" name="memberPassword" placeholder="비밀번호">
+            <input type="submit" value="비밀번호 체크">
+        </form>
     </div>
 </div>
 
