@@ -1,6 +1,7 @@
 package com.icia.book.service;
 
 import com.icia.book.dto.BookDTO;
+import com.icia.book.dto.CategoryDTO;
 import com.icia.book.entity.BookEntity;
 import com.icia.book.entity.CategoryEntity;
 import com.icia.book.repository.BookRepository;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,18 @@ public class BookService {
         if (!bookRepository.findByIsbn(bookDTO.getIsbn()).isEmpty()) {
             return false;
         }
-        CategoryEntity categoryEntity = categoryRepository.findById(bookDTO.getCategoryId()).orElseThrow(() -> new NoSuchElementException());
+        Optional<CategoryEntity> optionalCategoryEntity = categoryRepository.findById(bookDTO.getCategoryId());
+        CategoryEntity categoryEntity = null;
+        if(optionalCategoryEntity.isEmpty()){
+            CategoryDTO categoryDTO = new CategoryDTO();
+            categoryDTO.setCategoryId("000");
+            categoryDTO.setCategoryName("미분류");
+            categoryEntity = CategoryEntity.toSaveCategoryEntity(categoryDTO);
+            Long id = categoryRepository.save(categoryEntity).getId();
+            categoryEntity = categoryRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        } else {
+            categoryEntity = optionalCategoryEntity.get();
+        }
         BookEntity bookEntity = BookEntity.toSaveBookEntity(bookDTO, categoryEntity);
         bookRepository.save(bookEntity);
         return true;
