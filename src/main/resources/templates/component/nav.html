@@ -42,7 +42,7 @@
                         <a class="nav-link" href="/member/save">회원가입</a>
                     </li>
                     <li class="nav-item" th:if="${session.loginEmail} == null">
-                        <a class="nav-link" href="/member/login">로그인</a>
+                        <a class="nav-link" href="javascript:to_login()">로그인</a>
                     </li>
                     <li class="nav-item" th:if="${session.loginEmail} != null">
                         <a class="nav-link" href="/member/mypage" th:text="${session.loginEmail}"></a>
@@ -59,6 +59,17 @@
     </nav>
 
     <script th:inline="javascript">
+            const pathname = window.location.pathname;
+            const url = window.location.pathname + window.location.search;
+            console.log(pathname)
+            console.log(url)
+            const to_login = () =>{
+                if(pathname == "/member/save" || pathname == "/member/login"){
+                    location.href = "/member/login"
+                }else{
+                    location.href = "/member/login?continued="+url;
+                }
+            }
     </script>
 
 </div>

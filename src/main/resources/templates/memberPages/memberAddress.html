@@ -44,11 +44,11 @@
                 <hr>
             </div>
         </div>
-        <div class="my-3 text-center">
+        <div class="my-3 text-center" th:if="${!addressList.empty}">
             <button class="btn btn-primary px-5" onclick="set_defaultAddress_fn()">기본주송지 등록</button>
         </div>
 
-        <div id="paging" class="container text-center">
+        <div id="paging" class="container text-center" th:if="${!addressList.empty}">
             <ul class="pagination">
                 <li th:class="${addressList.first}? 'disabled'" class="page-item">
                     <a class="page-link" th:href="@{/member/address(page=1)}">&lt;&lt;</a>

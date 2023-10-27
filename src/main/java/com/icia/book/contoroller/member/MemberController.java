@@ -86,20 +86,17 @@ public class MemberController {
 
     @GetMapping("/login")
     public String loginForm(@RequestParam(value = "error", required = false, defaultValue = "") String error,
+                            @RequestParam(value = "continued", required = false, defaultValue = "/") String continued,
                             Model model) {
+        model.addAttribute("continued", continued);
         model.addAttribute("error", error);
         return "memberPages/login";
     }
 
     @PostMapping("/login")
     public String login(@ModelAttribute MemberDTO memberDTO,
-                        Model model,
+                        @RequestParam(value = "continued", required = false, defaultValue = "/") String continued,
                         HttpSession session) {
-        MemberDTO deleteMember = memberService.findByMemberEmail(memberDTO.getMemberEmail());
-
-        if(deleteMember.getMemberStatus() == 1)
-            return "redirect:/member/login?error=error1";
-
         try {
             boolean result = memberService.login(memberDTO);
             if (result) {
@@ -108,13 +105,13 @@ public class MemberController {
                 if (memberDTO.getMemberEmail().equals("admin")) {
                     return "redirect:/admin";
                 } else {
-                    return "redirect:/";
+                    return "redirect:"+continued;
                 }
             } else {
-                return "redirect:/member/login?error=error1";
+                return "redirect:/member/login?error=error1&continued="+continued;
             }
         } catch (Exception e) {
-            return "redirect:/member/login?error=error1";
+            return "redirect:/member/login?error=error1&continued="+continued;
         }
     }
 
@@ -217,7 +214,7 @@ public class MemberController {
     @PostMapping("delete")
     public String delete(MemberDTO memberDTO) {
         memberService.update(memberDTO);
-        return "index";
+        return "redirect:/member/logout";
     }
 }
 

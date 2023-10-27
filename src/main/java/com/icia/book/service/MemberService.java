@@ -32,7 +32,9 @@ public class MemberService {
 
     public boolean login(MemberDTO memberDTO) {
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberDTO.getMemberEmail()).orElseThrow(() -> new NoSuchElementException());
-        if(memberDTO.getMemberPassword().equals(memberEntity.getMemberPassword())){
+        if(memberEntity.getMemberStatus() == 1){
+            return false;
+        } else if(memberDTO.getMemberPassword().equals(memberEntity.getMemberPassword())){
             return true;
         }else{
             return false;
