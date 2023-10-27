@@ -24,42 +24,32 @@
                 </form>
             </div>
         </div>
-        <table class="table">
-            <tr>
-                <th>isbn</th>
-                <th>제목</th>
-                <th>작가</th>
-                <th>출판사</th>
-                <th>출판일</th>
-                <th>표지</th>
-                <th>정가</th>
-                <th>할인가</th>
-                <th>선택</th>
-            </tr>
-            <tr th:each="book : ${bookList}">
-                <td th:text="${book.isbn}"></td>
-                <td th:text="${book.bookName}" style="width: 300px;"></td>
-                <td th:text="${book.bookAuthor}"></td>
-                <td th:text="${book.bookPublisher}"></td>
-                <td th:text="${book.bookDate}"></td>
-                <td th:src="${book.bookProfile}"></td>
-                <td th:text="${book.bookPrice}"></td>
-                <td th:text="${book.bookSalePrice}"></td>
-                <td>
-                    <div class="input-group">
-                        <input class="form-control" th:id="|bookCount${book.isbn}|" th:value="${book.bookCount}"
-                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
-                    </div>
-                </td>
-                <td>
-                    <select th:id="|categoryId${book.isbn}|" class="form-select">
-                        <option th:each="category :${categoryList}" th:text="${category.categoryName}"
-                                th:value="${category.id}" th:selected="${book.categoryId == category.id}"></option>
-                    </select>
-                </td>
-            </tr>
-        </table>
+        <div class="card">
 
+            <table class="table" th:each="book: ${bookList}">
+                <tr>
+                    <td rowspan="5">
+                        <img th:src="${book.bookProfile}">
+                    </td>
+                    <td th:text="${book.bookName}"></td>
+                </tr>
+                <tr>
+                    <td th:text="${book.bookAuthor}"></td>
+                </tr>
+                <tr>
+                    <td th:text="|${book.bookSalePrice}(${book.bookPrice})|"></td>
+                </tr>
+                <tr>
+                    <td th:text="${book.bookContents}"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="button" value="찜" onclick="jjim_fn()">
+                    </td>
+                </tr>
+
+            </table>
+        </div>
         <div class="container">
             <ul class="pagination justify-content-center">
                 <li class="page-item">
@@ -110,5 +100,11 @@
     </div>
 </div>
 <div th:replace="~{component/footer :: footer}"></div>
+
 </body>
+<script th:inline="javascript">
+    const jjim_fn = () => {
+        const
+    }
+</script>
 </html>
