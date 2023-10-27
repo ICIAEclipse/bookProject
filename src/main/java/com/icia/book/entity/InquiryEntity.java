@@ -37,9 +37,13 @@ public class InquiryEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cscenter_category_id")
-    private CscenterCategoryEntity cscenterCategoryEntity;
+    private CsCenterCategoryEntity cscenterCategoryEntity;
 
     @OneToMany(mappedBy = "inquiryEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<InquiryCommentEntity> inquiryCommentEntityList;
 
+    public static InquiryEntity toDeleteCategory(InquiryEntity inquiryEntity) {
+        inquiryEntity.setCscenterCategoryEntity(null);
+        return inquiryEntity;
+    }
 }

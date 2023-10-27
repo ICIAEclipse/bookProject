@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
+    <div class="col">
+        <div class="text-end">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categorySave">등록</button>
+        </div>
+        <div class="modal fade" id="categorySave" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">고객센터 카테고리 등록</h1>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Id</span>
+                            <input class="form-control" name="centerCategoryId">
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">이름</span>
+                            <input class="form-control" name="centerName">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-primary" onclick="categorySave()">등록</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Id</th>
+                <th>이름</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+            <tr th:each="csCategory : ${csCenterCategoryList}">
+                <td><input th:name="|centerCategoryId${csCategory.id}|" class="form-control" th:value="${csCategory.centerCategoryId}">
+                </td>
+                <td><input th:name="|centerName${csCategory.id}|" class="form-control"
+                           th:value="${csCategory.centerName}"></td>
+                <td>
+                    <button class="btn btn-secondary" th:onclick="update_fn([[${csCategory.id}]])">수정</button>
+                </td>
+                <td>
+                    <button class="btn btn-danger" th:onclick="delete_fn([[${csCategory.id}]])">삭제</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const categorySave = () => {
+        const centerCategoryId = document.querySelector('[name="centerCategoryId"]').value;
+        const centerName = document.querySelector('[name="centerName"]').value;
+        if (centerCategoryId.length == 3) {
+            if (centerName.length != 0) {
+                axios({
+                    method: "post",
+                    url: "/admin/cscenter/category",
+                    data: {
+                        centerCategoryId: centerCategoryId,
+                        centerName: centerName
+                    }
+                }).then(res => {
+                    location.href = "/admin/cscenter/category";
+                }).catch(err => {
+                    alert(err.response.data);
+                })
+            } else {
+                alert("이름을 입력하세요.")
+                document.querySelector('[name="centerCategoryId"]').focus();
+            }
+        } else {
+            alert("id는 3자리입니다.")
+            document.querySelector('[name="centerName"]').focus();
+        }
+    }
+
+    const update_fn = (id) => {
+        const centerCategoryId = document.querySelector('[name="centerCategoryId' + id + '"]').value;
+        const centerName = document.querySelector('[name="centerName' + id + '"]').value;
+        if (confirm("해당 카테고리를 수정하시겠습니까?")) {
+            if (centerCategoryId.length == 3) {
+                if (centerName.length != 0) {
+                    axios({
+                        method: "put",
+                        url: "/admin/cscenter/category",
+                        data: {
+                            id: id,
+                            centerCategoryId: centerCategoryId,
+                            centerName: centerName
+                        }
+                    }).then(res => {
+                        location.href = "/admin/cscenter/category";
+                    }).catch(err => {
+                        alert(err.response.data);
+                    })
+                } else {
+                    alert("이름을 입력하세요.")
+                    document.querySelector('[name="categoryName"]').focus();
+                }
+            } else {
+                alert("id는 3자리입니다.")
+                document.querySelector('[name="categoryId"]').focus();
+            }
+        }
+    }
+    const delete_fn = (id) => {
+        const centerCategoryId = document.querySelector('[name="centerCategoryId' + id + '"]').value;
+        const centerName = document.querySelector('[name="centerName' + id + '"]').value;
+        if (confirm("해당 카테고리를 삭제하시겠습니까?")) {
+            axios({
+                method: "delete",
+                url: "/admin/cscenter/category",
+                data: {
+                    id: id,
+                    centerCategoryId: centerCategoryId,
+                    centerName: centerName
+                }
+            }).then(res => {
+                location.href = "/admin/cscenter/category";
+            }).catch(err => {
+                alert("삭제실패");
+            })
+        }
+    }
+</script>
+</html>

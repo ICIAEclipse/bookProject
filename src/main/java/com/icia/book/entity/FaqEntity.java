@@ -26,6 +26,6 @@ public class FaqEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cscenter_category_id")
-    private CscenterCategoryEntity cscenterCategoryEntity;
+    private CsCenterCategoryEntity cscenterCategoryEntity;
 
 }
