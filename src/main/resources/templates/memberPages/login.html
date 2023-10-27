@@ -15,11 +15,11 @@
             <form name="login-form" action="/member/login" method="post">
                 <div>
                     <span style="display: inline-block; width: 100px">Email</span>
-                    <input type="text" name="memberEmail">
+                    <input type="text" name="memberEmail" onkeyup="enterkey_press(this.name)">
                 </div>
                 <div>
                     <sapn style="display: inline-block; width: 100px">비밀번호</sapn>
-                    <input type="text" name="memberPassword">
+                    <input type="text" name="memberPassword" onkeyup="enterkey_press(this.name)">
                 </div>
                 <div>
                     <input type="button" value="login" onclick="login_fn()">
@@ -43,6 +43,17 @@
             errorType.innerHTML = `<p>비밀번호를 입력해주세요.</p>`
         }else {
             loginForm.submit();
+        }
+    }
+
+    const enterkey_press = (name) =>{
+        if (window.event.keyCode == 13){
+            if(name== "memberEmail"){
+                $("input[name=memberPassword]").focus();
+            }else if(name == "memberPassword"){
+                document.querySelector("[name = 'login-form']").submit();
+            }
+
         }
     }
 </script>
