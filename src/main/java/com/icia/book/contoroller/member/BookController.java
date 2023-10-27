@@ -39,10 +39,4 @@ public class BookController {
         return "bookPages/bookList";
     }
 
-
-    @GetMapping
-    public String findAll() {
-        return "bookPages/bookList";
-    }
-
 }
