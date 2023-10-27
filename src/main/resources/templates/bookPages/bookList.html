@@ -27,6 +27,9 @@
         <div class="card">
 
             <table class="table" th:each="book: ${bookList}">
+                <tr style="display: none">
+                    <td id="bookIsbn" th:text="${book.isbn}"></td>
+                </tr>
                 <tr>
                     <td rowspan="5">
                         <img th:src="${book.bookProfile}">
@@ -102,9 +105,22 @@
 <div th:replace="~{component/footer :: footer}"></div>
 
 </body>
-<script th:inline="javascript">
-    const jjim_fn = () => {
-        const
-    }
-</script>
+<!--<script th:inline="javascript">-->
+<!--    const jjim_fn = () => {-->
+<!--        const isbn = document.getElementById("bookIsbn");-->
+<!--        const memberId = [[${session.loginId}]]-->
+<!--        axios({-->
+<!--            method: "post",-->
+<!--            url: "/member/book",-->
+<!--            data: {-->
+<!--                isbn: isbn,-->
+<!--                id: memberId,-->
+<!--            }-->
+<!--        }).then(res => {-->
+<!--            alert("찜 되었습니다")-->
+<!--        }).catch(err => {-->
+<!--            alert("찜에 실패했습니다")-->
+<!--        })-->
+<!--    }-->
+<!--</script>-->
 </html>
