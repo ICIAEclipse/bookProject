@@ -146,7 +146,16 @@ public class MemberService {
         }
     }
 
-    public void deleteAddress(Long id) {
-        addressRepository.deleteById(id);
+    @Transactional
+    public boolean deleteAddress(Long id, String memberEmail) {
+        System.out.println(id);
+        System.out.println(memberEmail);
+        AddressEntity addressEntity = addressRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        if(addressEntity.getMemberEntity().getMemberEmail().equals(memberEmail)){
+            addressRepository.deleteById(id);
+            return true;
+        }else {
+            return false;
+        }
     }
 }

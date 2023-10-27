@@ -178,20 +178,23 @@ public class MemberController {
 
     @PostMapping("/address")
     public ResponseEntity saveAddress(@RequestBody AddressDTO addressDTO,
-                                      @RequestParam("memberEmail") String memberEmail,
+                                      HttpSession session,
                                       @RequestParam("defaultAddressChecked") boolean defaultAddressChecked){
+        String memberEmail = (String) session.getAttribute("loginEmail");
         memberService.saveAddress(addressDTO, memberEmail, defaultAddressChecked);
-        Page<AddressDTO> addressDTOPage = memberService.findAddressByMemberEmail(memberEmail,1);
-        return new ResponseEntity<>(addressDTOPage,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/address")
     public ResponseEntity deleteAddress(@RequestParam("addressId") Long addressId,
                                         HttpSession session){
-        memberService.deleteAddress(addressId);
         String memberEmail = (String) session.getAttribute("loginEmail");
-        Page<AddressDTO> addressDTOPage = memberService.findAddressByMemberEmail(memberEmail,1);
-        return new ResponseEntity<>(addressDTOPage,HttpStatus.OK);
+        boolean result = memberService.deleteAddress(addressId, memberEmail);
+        if(result){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PostMapping("/address/default")
