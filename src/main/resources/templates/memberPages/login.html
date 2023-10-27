@@ -34,13 +34,15 @@
 <script th:inline="javascript">
     const login_fn = () =>{
         const loginForm = document.querySelector("[name = 'login-form']");
-        const loginEmail = document.querySelector("[name = 'memberEmail']").value;
+        const loginEmail = document.querySelector("[name = 'memberEmail']");
         const loginPassword = document.querySelector("[name = 'memberPassword']").value;
         const errorType = document.getElementById("error-type")
-        if(loginEmail == ''){
+        if(loginEmail.value == ''){
             errorType.innerHTML = `<p>아이디를 입력해주세요.</p>`
+            loginEmail.focus();
         }else if (loginPassword == "") {
             errorType.innerHTML = `<p>비밀번호를 입력해주세요.</p>`
+            loginEmail.focus();
         }else {
             loginForm.submit();
         }
@@ -51,7 +53,7 @@
             if(name== "memberEmail"){
                 $("input[name=memberPassword]").focus();
             }else if(name == "memberPassword"){
-                document.querySelector("[name = 'login-form']").submit();
+                login_fn();
             }
 
         }
