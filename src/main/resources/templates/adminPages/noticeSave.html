@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
+    <div class="col">
+        <div class="card p-3">
+            <form action="/admin/notice/save" method="post" enctype="multipart/form-data">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">제목</span>
+                    <input class="form-control" name="noticeTitle">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">작성자</span>
+                    <input name="noticeWriter" class="form-control" rows="20" th:value="${session.loginEmail}">
+                </div>
+                <div class="input-group mb-3">
+                    <textarea name="noticeContents" class="form-control" rows="20"></textarea>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" name="noticeFile" multiple>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-primary">작성</button>
+                    <button type="button" class="btn btn-secondary">취소</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+</html>
