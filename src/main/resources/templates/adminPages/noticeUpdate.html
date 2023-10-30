@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+  <div class="col-3">
+    <div th:replace="~{component/adminNav :: adminNav}"></div>
+  </div>
+  <div class="col">
+      <form action="/admin/notice/update" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="id" th:value="${notice.id}">
+          <div class="input-group mb-3">
+            <span class="input-group-text">
+                글제목
+            </span>
+              <input type="text" class="form-control" name="noticeTitle" th:value="${notice.noticeTitle}">
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text">
+                작성자
+            </span>
+              <input type="text" class="form-control" name="noticeWriter" th:value="${notice.noticeWriter}" readonly>
+          </div>
+          <div class="input-group mb-3">
+              <textarea class="form-control" name="noticeContents" rows="5" th:text="${notice.noticeContents}"></textarea>
+          </div>
+          <div class="input-group mb-3" th:if="${notice.fileAttached == 1}">
+              <span class="input-group-text">삭제할 파일</span>
+              <span class="form-control">
+                    <span th:each="noticeFile: ${notice.noticeFileList}">
+                        <input type="checkbox" name="deleteFile" th:value="${noticeFile.storedFileName}" th:text="${noticeFile.originalFileName}">
+                    </span>
+                </span>
+          </div>
+          <div class="input-group mb-3">
+              <input type="file" name="noticeFile" class="form-control" multiple>
+          </div>
+          <div class="text-center">
+              <button class="btn btn-primary">수정</button>
+              <button type="button" class="btn btn-secondary" onclick="cancel_fn()">취소</button>
+          </div>
+      </form>
+  </div>
+</div>
+
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const cancel_fn = () => {
+        location.href = `/admin/notice`
+    }
+</script>
+</html>

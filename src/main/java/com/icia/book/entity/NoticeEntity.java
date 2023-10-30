@@ -1,5 +1,6 @@
 package com.icia.book.entity;
 
+import com.icia.book.dto.NoticeDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,18 +24,21 @@ public class NoticeEntity {
     @ColumnDefault("'admin'")
     private String noticeWriter;
 
+    @Column(length = 50, nullable = false)
+    private String noticeTitle;
+
     @Column(length = 5000, nullable = false)
     private String noticeContents;
 
     @CreationTimestamp
-    @Column()
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @Column()
     private int noticeHits;
 
     @Column()
-    private int fineAttached;
+    private int fileAttached;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -43,4 +47,24 @@ public class NoticeEntity {
     @OneToMany(mappedBy = "noticeEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<NoticeFileEntity> noticeFileEntityList;
 
+    public static NoticeEntity toSaveEntity(NoticeDTO noticeDTO, MemberEntity memberEntity) {
+        NoticeEntity noticeEntity = new NoticeEntity();
+        noticeEntity.setNoticeTitle(noticeDTO.getNoticeTitle());
+        noticeEntity.setNoticeWriter(noticeDTO.getNoticeWriter());
+        noticeEntity.setNoticeContents(noticeDTO.getNoticeContents());
+        noticeEntity.setFileAttached(noticeDTO.getFileAttached());
+        noticeEntity.setMemberEntity(memberEntity);
+        return noticeEntity;
+    }
+
+    public static NoticeEntity toUpdateEntity(NoticeDTO noticeDTO, MemberEntity memberEntity) {
+        NoticeEntity noticeEntity = new NoticeEntity();
+        noticeEntity.setId(noticeDTO.getId());
+        noticeEntity.setNoticeTitle(noticeDTO.getNoticeTitle());
+        noticeEntity.setNoticeWriter(noticeDTO.getNoticeWriter());
+        noticeEntity.setNoticeContents(noticeDTO.getNoticeContents());
+        noticeEntity.setFileAttached(noticeDTO.getFileAttached());
+        noticeEntity.setMemberEntity(memberEntity);
+        return noticeEntity;
+    }
 }
