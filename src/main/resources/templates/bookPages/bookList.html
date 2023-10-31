@@ -109,7 +109,49 @@
 <script th:inline="javascript">
 
     const to_purchase = (bookId) => {
+        const booKIdList = [];
+        const countList = [];
+        booKIdList[0] = bookId;
+        countList[0] = 1;
 
+        let requestData = {
+            booKIdList: booKIdList,
+            countList: countList
+        };
+
+        const url = `/order/createNumber`
+        axios({
+            method:"post",
+            url: url,
+            data: requestData,
+        }).then(res => {
+            requestData = res.data;
+            // 1번 방법 : queryParameter를 작성후 url에 redirect
+            let queryParameters = `?booKIdList=${res.data.booKIdList.join(',')}&countList=${res.data.countList.join(',')}&orderCode=${res.data.orderCode}`;
+            location.href = "/order/order" + queryParameters
+
+            // 2번 방법 : JSON데이터로 파싱 후 전달
+            // 파싱한 데이터를 가져오는 과정 필요
+            // let jsonData = JSON.stringify(res.data);
+            // let url = `/order/order?requestdata=${jsonData}`;
+            // axios.get(url).then(res =>{
+            //     alert("장바구니페이지로 넘어갑니다.")
+            // }).catch(err => {
+            //     console.log(err)
+            // })
+            //
+            // axios({
+            //     method:"post",
+            //     url: `/order/order`,
+            //     data : {requestData},
+            // }).then(res => {
+            //     alert("주문페이지로 이동합니다.")
+            // }).catch(err => {
+            //     console.log(err)
+            // })
+        }).catch(err => {
+            console.log(err)
+        });
     }
 
     // const jjim_fn = () => {
