@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
+    <div class="col">
+        <div class="text-end">
+            <button class="btn btn-primary" onclick="save_fn()">FAQ등록</button>
+        </div>
+        <table class="table">
+            <tr>
+                <th>카테고리</th>
+                <th>제목</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+            <tr th:each="faq: ${faqList}">
+                <td th:each="cscenterCategory : ${cscenterCategoryList}" th:if="${cscenterCategory.id == faq.cscenterCategoryId}" th:text="${cscenterCategory.centerName}"></td>
+                <td th:text="${faq.faqTitle}"></td>
+                <td><button class="btn btn-secondary" th:onclick="undate_fn([[${faq.id}]])">수정</button></td>
+                <td><button class="btn btn-danger" th:onclick="delete_fn([[${faq.id}]])">삭제</button></td>
+            </tr>
+        </table>
+        <div class="container">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <!--첫페이지 요청 링크 /board?page=1 -->
+                    <a class="page-link" th:href="@{/admin/faq(page=1, categoryId=${categoryId}, q=${q})}">
+                        <span>First</span>
+                    </a>
+                </li>
+                <li th:class="${faqList.first} ? 'disabled'" class="page-item">
+                    <!--boardList.first: isFirst()
+                        boardList.number: getNumber()-->
+                    <a class="page-link"
+                       th:href="${faqList.first} ? '#' : @{/admin/faq(page=${faqList.number}, categoryId=${categoryId}, q=${q})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=2 -->
+                        <span><</span> <!-- < -->
+                    </a>
+                </li>
+
+                <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할
+                    for(int page=startPage; page<=endPage; page++) -->
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:class="${page == faqList.number + 1} ? 'page-item active'" class="page-item">
+                    <a class="page-link" th:text="${page}"
+                       th:href="@{/admin/faq(page=${page}, categoryId=${categoryId}, q=${q})}"></a>
+                </li>
+
+                <!-- 다음 페이지 요청
+                    현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+                    getNumber() 값은 2임.
+                    따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+                <li th:class="${faqList.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="${faqList.last} ? '#' : @{/admin/faq(page=${faqList.number + 2}, categoryId=${categoryId}, q=${q})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=4 -->
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/admin/faq(page=${faqList.totalPages}, categoryId=${categoryId}, q=${q})}">
+                        <span>Last</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const save_fn = () => {
+        location.href = "/admin/faq/save"
+    }
+</script>
+</html>

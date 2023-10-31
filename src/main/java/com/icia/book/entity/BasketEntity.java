@@ -1,10 +1,12 @@
 package com.icia.book.entity;
 
+import com.icia.book.dto.BookDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.awt.print.Book;
 
 @Getter
 @Setter(AccessLevel.PRIVATE)
@@ -16,10 +18,14 @@ public class BasketEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "book_isbn")
     private BookEntity bookEntity;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_memberEmail")
     private MemberEntity memberEntity;
+
+
+
 }
