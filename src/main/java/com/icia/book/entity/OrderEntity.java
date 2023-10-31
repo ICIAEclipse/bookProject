@@ -19,6 +19,9 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 19, nullable = false, unique = true)
+    private String orderCode;
+
     @Column(length = 20, nullable = false)
     private String orderMemberName;
 
