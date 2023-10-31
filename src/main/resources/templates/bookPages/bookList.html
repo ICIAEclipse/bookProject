@@ -25,33 +25,38 @@
             </div>
         </div>
 
-
-        <table class="table" th:each="book: ${bookList}">
-                <tr style="display: none">
-                    <td id="bookIsbn" th:text="${book.isbn}"></td>
-                </tr>
-                <tr>
-                    <td rowspan="5">
-                        <img th:src="${book.bookProfile}">
-                    </td>
-                    <td th:text="${book.bookName}"></td>
-                </tr>
-                <tr>
-                    <td th:text="${book.bookAuthor}"></td>
-                </tr>
-                <tr>
-                    <td th:text="|${book.bookSalePrice}(${book.bookPrice})|"></td>
-                </tr>
-                <tr>
-                    <td th:text="${book.bookContents}"></td>
-                </tr>
-                <tr>
+        <div class="card">
+            <div class="row" th:each="book: ${bookList}">
+                <div class="col">
+                    <table class="table">
+                        <tr style="display: none">
+                            <td id="bookIsbn" th:text="${book.isbn}"></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="5">
+                                <img th:src="${book.bookProfile}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td th:text="${book.bookName}"></td>
+                        </tr>
+                        <tr>
+                            <td th:text="${book.bookAuthor}"></td>
+                        </tr>
+                        <tr>
+                            <td th:text="|${book.bookSalePrice}(${book.bookPrice})|"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-12 col-md-auto">
                     <td>
                         <input type="button" value="찜" th:onclick="jim_fn([[${book.isbn}]])">
                     </td>
-                </tr>
-
-        </table>
+                    <button>장바구니</button>
+                    <button type="button" th:onclick="to_purchase([[${book.id}]])">바로구매</button>
+                </div>
+            </div>
+        </div>
 
         <div class="container">
             <ul class="pagination justify-content-center">
@@ -106,6 +111,7 @@
 
 </body>
 <script th:inline="javascript">
+
     const jim_fn = (isbn) => {
         axios({
             method: "post",
@@ -119,5 +125,6 @@
             alert("찜에 실패했습니다" + isbn)
         })
     }
+
 </script>
 </html>

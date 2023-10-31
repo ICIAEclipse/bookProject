@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
+    <div class="col">
+        <form action="/admin/faq/save" method="post">
+            <div class="input-group">
+                <span class="input-group-text">제목</span>
+                <input class="form-control" name="faqTitle">
+            </div>
+            <div class="input-group">
+                <span class="input-group-text">카테고리</span>
+                <select class="form-select" name="cscenterCategoryId">
+                    <option th:each="cscenterCategory: ${cscenterCategoryList}" th:value="${cscenterCategory.id}"
+                            th:text="${cscenterCategory.centerName}"></option>
+                </select>
+            </div>
+            <div class="input-group">
+                <textarea rows="10" class="form-control" name="faqContents"></textarea>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary">등록</button>
+                <button type="button" class="btn btn-secondary" onclick="cancel_fn()">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const cancel_fn = () =>{
+        location.href = "/admin/faq";
+    }
+</script>
+</html>

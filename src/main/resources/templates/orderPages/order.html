@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+
+<div class="row m-5">
+    <div class="col">
+        <div class="card">
+            <h6 th:text="|${defaultAddress.addressName} [${defaultAddress.postCode}]|"></h6>
+            <h6 th:text="${defaultAddress.address} ${defaultAddress.addressDetail}"></h6>
+            <h6></h6>
+        </div>
+        <div class="card">
+            <div class="card-header p-4">
+                <h5><b>주문상품</b></h5>
+                <span th:text="${bookList.size()}"><b></b></span>
+            </div>
+            <div class="card-body">
+                <table>
+                    <tr th:each="book : ${bookList}">
+                        <td>
+                            <img th:src="${book.bookProfile}">
+                        </td>
+                        <td>
+                            <p th:text="${book.bookName}"></p>
+                        </td>
+                        <td>
+                            <p th:text="|"></p>
+                        </td>
+                        <td>
+                            <p th:text="${book.bookSalePrice * 1}"></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="card-footer">
+
+            </div>
+        </div>
+        <div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+</html>
