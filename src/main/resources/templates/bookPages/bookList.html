@@ -24,6 +24,7 @@
                 </form>
             </div>
         </div>
+
         <div class="card">
             <div class="row" th:each="book: ${bookList}">
                 <div class="col">
@@ -48,12 +49,15 @@
                     </table>
                 </div>
                 <div class="col-12 col-md-auto">
-                    <button type="button" onclick="jjim_fn()">찜</button>
+                    <td>
+                        <input type="button" value="찜" th:onclick="jim_fn([[${book.isbn}]])">
+                    </td>
                     <button>장바구니</button>
                     <button type="button" th:onclick="to_purchase([[${book.id}]])">바로구매</button>
                 </div>
             </div>
         </div>
+
         <div class="container">
             <ul class="pagination justify-content-center">
                 <li class="page-item">
@@ -108,25 +112,19 @@
 </body>
 <script th:inline="javascript">
 
-    const to_purchase = (bookId) => {
-
+    const jim_fn = (isbn) => {
+        axios({
+            method: "post",
+            url: "/basket",
+            data: {
+                isbn: isbn
+            }
+        }).then(res => {
+            alert("찜 되었습니다" + isbn)
+        }).catch(err => {
+            alert("찜에 실패했습니다" + isbn)
+        })
     }
 
-    // const jjim_fn = () => {
-    //     const isbn = document.getElementById("bookIsbn");
-    //     const memberId = [[${session.loginId}]]
-    //     axios({
-    //         method: "post",
-    //         url: "/member/book",
-    //         data: {
-    //             isbn: isbn,
-    //             id: memberId,
-    //         }
-    //     }).then(res => {
-    //         alert("찜 되었습니다")
-    //     }).catch(err => {
-    //         alert("찜에 실패했습니다")
-    //     })
-    // }
 </script>
 </html>
