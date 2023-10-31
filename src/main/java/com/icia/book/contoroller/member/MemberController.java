@@ -1,6 +1,7 @@
 package com.icia.book.contoroller.member;
 
 import com.icia.book.dto.AddressDTO;
+import com.icia.book.dto.BookDTO;
 import com.icia.book.dto.MemberDTO;
 import com.icia.book.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -101,7 +102,6 @@ public class MemberController {
             boolean result = memberService.login(memberDTO);
             if (result) {
                 session.setAttribute("loginEmail", memberDTO.getMemberEmail());
-                session.setAttribute("loginId", memberDTO.getId());
                 if (memberDTO.getMemberEmail().equals("admin")) {
                     return "redirect:/admin";
                 } else {
@@ -216,5 +216,7 @@ public class MemberController {
         memberService.update(memberDTO);
         return "redirect:/member/logout";
     }
+
+
 }
 

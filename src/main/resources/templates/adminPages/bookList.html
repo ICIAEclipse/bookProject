@@ -64,9 +64,7 @@
                                 th:value="${category.id}" th:selected="${book.categoryId == category.id}"></option>
                     </select>
                 </td>
-                <td>
-                    <button class="btn btn-primary" th:onclick="update_fn([[${book.isbn}]])">수정</button>
-                </td>
+
             </tr>
         </table>
         <div class="container">

@@ -1,6 +1,8 @@
 package com.icia.book.entity;
 
+import com.icia.book.dto.CartDTO;
 import lombok.AccessLevel;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
@@ -27,4 +29,11 @@ public class CartEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
+
+    public static CartEntity toCartEntity(CartDTO cartDTO){
+        CartEntity cartEntity = new CartEntity();
+        cartEntity.setId(cartDTO.getId());
+        cartEntity.setCount(cartDTO.getCount());
+        return cartEntity;
+    }
 }

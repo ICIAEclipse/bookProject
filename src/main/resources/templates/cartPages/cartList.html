@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped">
+                <tr>
+                    <th>주문번호</th>
+                    <th>도서번호</th>
+                    <th>주문자이메일</th>
+                    <th>주문수량</th>
+                </tr>
+                <tr th:each="cart : ${cartList}">
+                    <td th:text="${cart.id}"></td>
+                    <td th:text="${cart.bookId}"></td>
+                    <td th:text="${cart.memberEmail}"></td>
+                    <td th:text="${cart.count}"></td>
+                    <td>
+                        <button class="btn btn-danger" th:onclick="cart_delete([[${cart.id}]])">삭제</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const cart_delete = (id) => {
+        axios({
+            method: "delete",
+            url: `/cart/delete/${id}`
+        }).then(res => {
+            alert("삭제 성공");
+            location.href = "/cart";
+        }).catch(err => {
+            alert("삭제 실패");
+        })
+    }
+</script>
+</html>
