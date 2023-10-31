@@ -112,36 +112,36 @@
 </body>
 <script th:inline="javascript">
     const cart_fn = () => {
-            axios({
-                method: "post",
-                url: `/cart/save`,
-                data: {
-                  
-                }
-            }).then(res => {
-                alert("장바구니 이동 성공");
-                location.href = "/cart";
-            }).catch(err => {
-                alert("장바구니 이동 실패");
-            })
+        axios({
+            method: "post",
+            url: `/cart/save`,
+            data: {}
+        }).then(res => {
+            alert("장바구니 이동 성공");
+            location.href = "/cart";
+        }).catch(err => {
+            alert("장바구니 이동 실패");
+        })
     }
     const to_purchase = (bookId) => {
 
 
-    const jim_fn = (isbn) => {
-        axios({
-            method: "post",
-            url: "/basket",
-            data: {
-                isbn: isbn
-            }
-        }).then(res => {
-            alert("찜 되었습니다" + isbn)
-        }).catch(err => {
-            alert("찜에 실패했습니다" + isbn)
-        })
+        const jim_fn = (isbn) => {
+            axios({
+                method: "post",
+                url: "/basket",
+                data: {
+                    isbn: isbn
+                }
+            }).then(res => {
+                alert("찜 되었습니다" + isbn)
+            }).catch(err => {
+                alert("찜에 실패했습니다" + isbn)
+            })
 
+        }
     }
+
 
 </script>
 </html>
