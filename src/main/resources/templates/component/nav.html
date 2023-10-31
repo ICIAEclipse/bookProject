@@ -61,8 +61,6 @@
     <script th:inline="javascript">
             const pathname = window.location.pathname;
             const url = window.location.pathname + window.location.search;
-            console.log(pathname)
-            console.log(url)
             const to_login = () =>{
                 if(pathname == "/member/save" || pathname == "/member/login"){
                     location.href = "/member/login"

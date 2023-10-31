@@ -90,9 +90,6 @@ public class MemberService {
     public Page<AddressDTO> findAddressByMemberEmail(String memberEmail, int page){
         int pageLimit = 5;
 
-
-        // page가 1이면 startPage=1, endPage=5 혹은 최대페이지
-
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
 
 //        List<AddressEntity> addressEntityList = memberEntity.getAddressEntityList();
@@ -156,6 +153,16 @@ public class MemberService {
             return true;
         }else {
             return false;
+        }
+    }
+
+    public AddressDTO findDefaultAddressByMemberEmail(String memberEmail) {
+        MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
+        Optional<AddressEntity> optionalAddressEntity = addressRepository.findByMemberEntityAndAddressStatus(memberEntity, 1);
+        if(optionalAddressEntity.isPresent()){
+            return AddressDTO.toDTO(optionalAddressEntity.get());
+        }else {
+            return null;
         }
     }
 }

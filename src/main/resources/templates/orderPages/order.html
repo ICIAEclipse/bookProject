@@ -10,35 +10,64 @@
 <div class="row m-5">
     <div class="col">
         <div class="card">
-            <h6 th:text="|${defaultAddress.addressName} [${defaultAddress.postCode}]|"></h6>
-            <h6 th:text="${defaultAddress.address} ${defaultAddress.addressDetail}"></h6>
-            <h6></h6>
+            <div th:unless="${defaultAddress == null}">
+                <h6 th:text="${defaultAddress.addressName} ${defaultAddress.postCode}"></h6>
+                <h6 th:text="${defaultAddress.address} ${defaultAddress.addressDetail}"></h6>
+                <h6></h6>
+                <input type="button" value="배송지 변경하기">
+            </div>
+            <div th:if="${defaultAddress == null}">
+                <input type="button" value="배송지 등록하기">
+            </div>
         </div>
         <div class="card">
             <div class="card-header p-4">
-                <h5><b>주문상품</b></h5>
-                <span th:text="${bookList.size()}"><b></b></span>
+                <h5 class="me-5" style="display: inline"><b>주문상품</b></h5>
+                <span th:text="${orderList.size()}"><b></b></span>
             </div>
-            <div class="card-body">
-                <table>
-                    <tr th:each="book : ${bookList}">
+            <div class="card-body p-4">
+                <table class="table">
+                    <tr th:each="order : ${orderList}">
                         <td>
-                            <img th:src="${book.bookProfile}">
+                            <img th:src="${order.bookProfile}">
                         </td>
                         <td>
-                            <p th:text="${book.bookName}"></p>
+                            <p th:text="${order.bookName}"></p>
                         </td>
                         <td>
-                            <p th:text="|"></p>
+                            <p th:text="${order.getBookCount()}"></p>
                         </td>
                         <td>
-                            <p th:text="${book.bookSalePrice * 1}"></p>
+                            <p class="sale-price" th:value="${order.bookPrice * 1}" th:text="${order.bookPrice * 1}"></p>
                         </td>
                     </tr>
                 </table>
             </div>
-            <div class="card-footer">
-
+            <div class="card-footer p-4">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6>배송 예정일</h6>
+                    </div>
+                    <div id="delivery-date">
+                        <script th:inline="javascript">
+                            let deliveryDate = new Date();
+                            deliveryDate.setDate(deliveryDate.getDate() + 2);
+                            document.getElementById("delivery-date").innerHTML = `<h5><b>${deliveryDate.getMonth()}월 ${deliveryDate.getDate()}일</b></h5>`;
+                        </script>
+                    </div>
+                    <div id="total-price" class="text-end">
+                        <script th:inline="javascript">
+                            let totalPrice = 0;
+                            let salePrice = document.getElementsByClassName("sale-price")
+                            for(let i = 0; i<salePrice.length; i++){
+                                console.log($(salePrice[i]).val());
+                                totalPrice += salePrice[i].value;
+                            }
+                            console.log(totalPrice)
+                            document.getElementById("total-price").innerHTML = `<h6><b>${totalPrice}원</b></h6>`
+                        </script>
+                    </div>
+                </div>
             </div>
         </div>
         <div>
