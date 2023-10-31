@@ -49,7 +49,7 @@
                 </div>
                 <div class="col-12 col-md-auto">
                     <button type="button" onclick="jjim_fn()">찜</button>
-                    <button>장바구니</button>
+                    <button type="button" onclick="cart_fn()">장바구니</button>
                     <button type="button" th:onclick="to_purchase([[${book.id}]])">바로구매</button>
                 </div>
             </div>
@@ -107,7 +107,20 @@
 
 </body>
 <script th:inline="javascript">
+    const cart_fn = () => {
+            axios({
+                method: "post",
+                url: `/cart/save`,
+                data: {
 
+                }
+            }).then(res => {
+                alert("장바구니 이동 성공");
+                location.href = "/cart";
+            }).catch(err => {
+                alert("장바구니 이동 실패");
+            })
+    }
     const to_purchase = (bookId) => {
 
     }
