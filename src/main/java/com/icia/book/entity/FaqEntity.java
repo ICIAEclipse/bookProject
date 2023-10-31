@@ -1,5 +1,6 @@
 package com.icia.book.entity;
 
+import com.icia.book.dto.FaqDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,4 +29,12 @@ public class FaqEntity {
     @JoinColumn(name = "cscenter_category_id")
     private CsCenterCategoryEntity cscenterCategoryEntity;
 
+    public static FaqEntity toSaveEntity(FaqDTO faqDTO, CsCenterCategoryEntity csCenterCategoryEntity) {
+        FaqEntity faqEntity = new FaqEntity();
+        faqEntity.setFaqTitle(faqDTO.getFaqTitle());
+        faqEntity.setFaqContents(faqDTO.getFaqContents());
+        faqEntity.setFaqHits(0);
+        faqEntity.setCscenterCategoryEntity(csCenterCategoryEntity);
+        return faqEntity;
+    }
 }
