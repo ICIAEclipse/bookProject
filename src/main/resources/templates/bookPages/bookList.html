@@ -24,9 +24,9 @@
                 </form>
             </div>
         </div>
-        <div class="card">
 
-            <table class="table" th:each="book: ${bookList}">
+
+        <table class="table" th:each="book: ${bookList}">
                 <tr style="display: none">
                     <td id="bookIsbn" th:text="${book.isbn}"></td>
                 </tr>
@@ -47,12 +47,12 @@
                 </tr>
                 <tr>
                     <td>
-                        <input type="button" value="찜" onclick="jjim_fn()">
+                        <input type="button" value="찜" th:onclick="jim_fn([[${book.isbn}]])">
                     </td>
                 </tr>
 
-            </table>
-        </div>
+        </table>
+
         <div class="container">
             <ul class="pagination justify-content-center">
                 <li class="page-item">
@@ -105,22 +105,19 @@
 <div th:replace="~{component/footer :: footer}"></div>
 
 </body>
-<!--<script th:inline="javascript">-->
-<!--    const jjim_fn = () => {-->
-<!--        const isbn = document.getElementById("bookIsbn");-->
-<!--        const memberId = [[${session.loginId}]]-->
-<!--        axios({-->
-<!--            method: "post",-->
-<!--            url: "/member/book",-->
-<!--            data: {-->
-<!--                isbn: isbn,-->
-<!--                id: memberId,-->
-<!--            }-->
-<!--        }).then(res => {-->
-<!--            alert("찜 되었습니다")-->
-<!--        }).catch(err => {-->
-<!--            alert("찜에 실패했습니다")-->
-<!--        })-->
-<!--    }-->
-<!--</script>-->
+<script th:inline="javascript">
+    const jim_fn = (isbn) => {
+        axios({
+            method: "post",
+            url: "/basket",
+            data: {
+                isbn: isbn
+            }
+        }).then(res => {
+            alert("찜 되었습니다" + isbn)
+        }).catch(err => {
+            alert("찜에 실패했습니다" + isbn)
+        })
+    }
+</script>
 </html>
