@@ -1,6 +1,7 @@
 package com.icia.book.entity;
 
 
+import com.icia.book.dto.OrderDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,4 +54,17 @@ public class OrderEntity {
 
     @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<OrderDetailEntity> orderDetailEntityList;
+
+    public static OrderEntity toSaveEntity(OrderDTO orderDTO, MemberEntity memberEntity) {
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setOrderCode(orderDTO.getOrderCode());
+        orderEntity.setOrderTotal(orderDTO.getOrderTotal());
+        orderEntity.setOrderPostCode(orderDTO.getOrderPostCode());
+        orderEntity.setOrderAddress(orderDTO.getOrderAddress());
+        orderEntity.setOrderAddressDetail(orderDTO.getOrderAddressDetail());
+        orderEntity.setOrderMemberName(orderDTO.getOrderMemberName());
+        orderEntity.setOrderMemberMobile(orderDTO.getOrderMemberMobile());
+        orderEntity.setMemberEntity(memberEntity);
+        return orderEntity;
+    }
 }

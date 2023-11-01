@@ -1,9 +1,6 @@
 package com.icia.book.contoroller.member;
 
-import com.icia.book.dto.AddressDTO;
-import com.icia.book.dto.MemberDTO;
-import com.icia.book.dto.OrderDetailDTO;
-import com.icia.book.dto.OrderRequestDTO;
+import com.icia.book.dto.*;
 import com.icia.book.service.BookService;
 import com.icia.book.service.MemberService;
 import com.icia.book.service.OrderService;
@@ -63,11 +60,20 @@ public class OrderController {
             model.addAttribute("defaultAddress", defaultAddressDTO);
         }
         model.addAttribute("orderCode", orderCode);
-
-        System.out.println(defaultAddressDTO);
-        System.out.println(memberDTO);
-        System.out.println(orderDetailDTOList);
-
         return "orderPages/order";
     }
+
+    @PostMapping("/order")
+    public ResponseEntity payment(@RequestBody OrderDTO orderDTO,
+                                  @RequestParam("memberEmail") String memberEmail,
+                                  HttpSession session){
+        if(memberEmail.equals(session.getAttribute("loginEmail"))){
+            orderService.saveOrder(orderDTO, memberEmail);
+            return new ResponseEntity(HttpStatus.OK);
+        }else {
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+    }
+
+
 }

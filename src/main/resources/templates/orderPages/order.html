@@ -9,23 +9,28 @@
 
 <div class="row m-5">
     <div class="col">
-        <div class="card">
-            <div th:unless="${defaultAddress == null}">
-                <h6 th:text="${defaultAddress.addressName} ${defaultAddress.postCode}"></h6>
-                <h6 th:text="${defaultAddress.address} ${defaultAddress.addressDetail}"></h6>
-                <h6></h6>
-                <input type="button" value="배송지 변경하기">
-            </div>
-            <div th:if="${defaultAddress == null}">
-                <input type="button" value="배송지 등록하기">
+        <div class="card mb-4">
+            <div class="card-body p-5">
+                <div th:if="${defaultAddress != null}">
+                    <h6 id="addressName" th:text="${defaultAddress.addressName}" style="display:inline;">&nbsp;&emsp;[</h6><h6 id="postCode" th:text="${defaultAddress.postCode}" style="display:inline;"></h6>]
+                    <input type="button" class="btn btn-sm btn-outline-info" value="변경">
+                    <br>
+                    <h6 id="address" th:text="${defaultAddress.address}" style="display:inline;"></h6>&nbsp;<h6 id="addressDetail" th:text="${defaultAddress.addressDetail}" style="display:inline;"></h6>
+                    <br>
+                    <input type="text" id="memberName" th:value="${member.memberName}">
+                    <input type="text" id="memberMobile" th:value="${member.memberMobile}">
+                </div>
+                <div th:if="${defaultAddress == null}">
+                    <input type="button" class="form-control btn-outline-info" value="배송지 등록하기">
+                </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-header p-4">
+        <div class="card mb-4">
+            <div class="card-header p-5">
                 <h5 class="me-5" style="display: inline"><b>주문상품</b></h5>
                 <span th:text="${orderList.size()}"><b></b></span>
             </div>
-            <div class="card-body p-4">
+            <div class="card-body p-5">
                 <table class="table">
                     <tr th:each="order : ${orderList}">
                         <td>
@@ -38,12 +43,12 @@
                             <p th:text="${order.getBookCount()}"></p>
                         </td>
                         <td>
-                            <p class="sale-price" th:value="${order.bookPrice * 1}" th:text="${order.bookPrice * 1}"></p>
+                            <p class="sale-price" th:price="${order.bookPrice * 1}" th:text="${order.bookPrice * 1}"></p>
                         </td>
                     </tr>
                 </table>
             </div>
-            <div class="card-footer p-4">
+            <div class="card-footer p-5">
                 <div class="d-flex justify-content-between">
                     <div>
                         <h6>배송 예정일</h6>
@@ -52,7 +57,7 @@
                         <script th:inline="javascript">
                             let deliveryDate = new Date();
                             deliveryDate.setDate(deliveryDate.getDate() + 2);
-                            document.getElementById("delivery-date").innerHTML = `<h5><b>${deliveryDate.getMonth()}월 ${deliveryDate.getDate()}일</b></h5>`;
+                            document.getElementById("delivery-date").innerHTML = `<h5><b>${deliveryDate.getMonth()+1}월 ${deliveryDate.getDate()}일</b></h5>`;
                         </script>
                     </div>
                     <div id="total-price" class="text-end">
@@ -60,22 +65,76 @@
                             let totalPrice = 0;
                             let salePrice = document.getElementsByClassName("sale-price")
                             for(let i = 0; i<salePrice.length; i++){
-                                console.log($(salePrice[i]).val());
-                                totalPrice += salePrice[i].value;
+                                totalPrice += Number(salePrice[i].getAttribute("price"));
                             }
-                            console.log(totalPrice)
-                            document.getElementById("total-price").innerHTML = `<h6><b>${totalPrice}원</b></h6>`
+                            document.getElementById("total-price").innerHTML = `<h6><b>${totalPrice}원</b></h6>`;
+                            document.getElementById("total-price").setAttribute("value", totalPrice);
                         </script>
                     </div>
                 </div>
             </div>
         </div>
-        <div>
-
+        <div class="card mb-4">
+            <div class="card-header p-5">
+                <h5><b>결제수단</b></h5>
+            </div>
+            <div class="card-body p-5">
+                <button class="btn btn-lg btn-outline-secondary btn-payment-etc" id="kakaoPay" onclick="activation(this)"><img src="/images/payment_icon_yellow_small.png"><span hidden>카카오페이</span></button>
+                <button class="btn btn-lg btn-outline-secondary btn-payment-etc" id="naverPay" onclick="activation(this)"><span>네이버페이</span></button>
+                <button class="btn btn-lg btn-outline-secondary btn-payment-etc" id="samsungPay" onclick="activation(this)"><span>삼성페이</span></button>
+            </div>
+            <div class="card-footer p-5">
+                <input id="paymentButton" type="button" class="form-control btn-outline-secondary" disabled value="결제하기" onclick="payment_fn()">
+            </div>
         </div>
     </div>
 </div>
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
+<script th:inline="javascript">
+
+    const activation = (selectedButton) =>{
+        const paymentETC = document.getElementsByClassName("btn-payment-etc");
+        const paymentButton = document.getElementById("paymentButton");
+        for(let i = 0; i < paymentETC.length; i++){
+            paymentETC[i].classList.remove("active");
+            paymentButton.removeAttribute("disabled");
+        }
+        selectedButton.classList += " active"
+    }
+
+    const payment_fn = () =>{
+        const paymentETC= document.getElementsByClassName("btn-payment-etc active")
+        const address = document.getElementById("address").textContent;
+        const addressDetail = document.getElementById("addressDetail").textContent;
+        const postCode = document.getElementById("postCode").textContent;
+        const memberMobil = document.getElementById("memberMobile").value;
+        const memberName = document.getElementById("memberName").value;
+        const orderTotal = document.getElementById("total-price").getAttribute("value");
+        const orderDetailList = [[${orderList}]]
+        const orderCode = [[${orderCode}]]
+        console.log(orderDetailList)
+        axios({
+            method:"post",
+            url:"/order/order",
+            data:{
+                orderMemberMobile : memberMobil,
+                orderMemberName : memberName,
+                orderTotal : orderTotal,
+                orderAddressDetail : addressDetail,
+                orderAddress : address,
+                orderPostCode : postCode,
+                orderCode : orderCode,
+                orderDetailDTOList : orderDetailList,
+            },
+            params:{memberEmail : [[${member.memberEmail}]]}
+        }).then(res => {
+            alert("주문이 성공되었습니다.")
+            location.href = "/member/mypage"
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+</script>
 </html>

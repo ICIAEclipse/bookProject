@@ -134,11 +134,9 @@
             booKIdList: booKIdList,
             countList: countList
         };
-
-        const url = `/order/createNumber`
         axios({
             method:"post",
-            url: url,
+            url: `/order/createNumber`,
             data: requestData,
         }).then(res => {
             requestData = res.data;

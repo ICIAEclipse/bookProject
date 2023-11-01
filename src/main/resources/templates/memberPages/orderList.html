@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+
+
+<div class="row m-5">
+    <div class="col">
+        <table class="table">
+            <tr>
+                <th>주문번호</th>
+                <th>주문자</th>
+                <th>전화번호</th>
+                <th>총액</th>
+                <th>주소</th>
+                <th>주문일</th>
+                <th>주문상태</th>
+            </tr>
+            <tr th:each="order : ${orderList}">
+                <td th:text="${order.orderCode}"></td>
+                <td th:text="${order.orderMemberName}"></td>
+                <td th:text="${order.orderMemberMobile}"></td>
+                <td th:text="${order.orderTotal}"></td>
+                <td th:text="|${order.orderAddress} ${order.orderAddressDetail}|"></td>
+                <td th:text="${order.orderDate}"></td>
+                <td th:text="${order.orderStatus}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+</html>
