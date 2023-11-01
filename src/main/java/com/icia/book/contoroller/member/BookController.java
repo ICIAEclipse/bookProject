@@ -26,7 +26,6 @@ public class BookController {
                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                           Model model){
         Page<BookDTO> bookDTOList = bookService.findAll(q, categoryId, page);
-        System.out.println("출력되는 값 확인" + bookDTOList);
         int blockLimit = 3;
         int startPage = (((int) (Math.ceil((double) page / blockLimit))) - 1) * blockLimit + 1;
         int endPage = ((startPage + blockLimit - 1) < bookDTOList.getTotalPages()) ? startPage + blockLimit - 1 : bookDTOList.getTotalPages();

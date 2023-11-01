@@ -49,11 +49,21 @@
                     </table>
                 </div>
                 <div class="col-12 col-md-auto">
-                    <td>
-                        <input type="button" value="찜" th:onclick="jim_fn([[${book.isbn}]])">
-                    </td>
-                    <button type="button" onclick="cart_fn()">장바구니</button>
-                    <button type="button" th:onclick="to_purchase([[${book.id}]])">바로구매</button>
+                    <tr>
+                        <td>
+                            <input type="button" onclick="cart_fn()" value="장바구니">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="button" th:onclick="to_purchase([[${book.id}]])" value="바로구매">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="button" th:onclick="basket_fn([[${book.isbn}]])" value="찜">
+                        </td>
+                    </tr>
                 </div>
             </div>
         </div>
@@ -137,7 +147,7 @@
 
         const url = `/order/createNumber`
         axios({
-            method:"post",
+            method: "post",
             url: url,
             data: requestData,
         }).then(res => {
@@ -170,12 +180,12 @@
         });
 
 
-        const jim_fn = (isbn) => {
+        const basket_fn = (isbn) => {
             axios({
                 method: "post",
                 url: "/basket",
                 data: {
-                    isbn: isbn
+                    isbn: 1,
                 }
             }).then(res => {
                 alert("찜 되었습니다" + isbn)
@@ -183,7 +193,7 @@
                 alert("찜에 실패했습니다" + isbn)
             })
 
-        }
+        };
 
     }
 
