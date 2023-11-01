@@ -1,9 +1,10 @@
 package com.icia.book.contoroller.member;
 
 import com.icia.book.dto.AddressDTO;
-import com.icia.book.dto.BookDTO;
 import com.icia.book.dto.MemberDTO;
+import com.icia.book.dto.OrderDTO;
 import com.icia.book.service.MemberService;
+import com.icia.book.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ import java.util.NoSuchElementException;
 @Controller
 public class MemberController {
     private final MemberService memberService;
+    private final OrderService orderService;
 
     @GetMapping("/save")
     public String saveForm() {
@@ -217,6 +220,15 @@ public class MemberController {
         return "redirect:/member/logout";
     }
 
+    @GetMapping("/order")
+    public String orderList(HttpSession session,
+                            Model model){
+        MemberDTO memberDTO = memberService.findByMemberEmail((String) session.getAttribute("loginEmail"));
+        model.addAttribute("member", memberDTO);
+        List<OrderDTO> orderDTOList = orderService.findAllByMemberEntity(memberDTO.getId());
+        model.addAttribute("orderList", orderDTOList);
+        return "memberPages/orderList";
+    }
 
 }
 

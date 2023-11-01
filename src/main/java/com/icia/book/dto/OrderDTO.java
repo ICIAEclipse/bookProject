@@ -1,0 +1,49 @@
+package com.icia.book.dto;
+
+import com.icia.book.entity.OrderDetailEntity;
+import com.icia.book.entity.OrderEntity;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@ToString
+public class OrderDTO {
+    private Long id;
+    private String orderCode;
+    private String orderMemberName;
+    private String orderMemberMobile;
+    private int orderTotal;
+    private String orderAddress;
+    private String orderAddressDetail;
+    private String orderPostCode;
+    private int orderStatus;
+    private LocalDateTime orderDate;
+    private Long memberId;
+    private List<OrderDetailDTO> orderDetailDTOList;
+
+    public static OrderDTO toDTO(OrderEntity orderEntity) {
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setId(orderEntity.getId());
+        orderDTO.setOrderCode(orderEntity.getOrderCode());
+        orderDTO.setOrderMemberName(orderEntity.getOrderMemberName());
+        orderDTO.setOrderMemberMobile(orderEntity.getOrderMemberMobile());
+        orderDTO.setOrderTotal(orderEntity.getOrderTotal());
+        orderDTO.setOrderAddress(orderEntity.getOrderAddress());
+        orderDTO.setOrderAddressDetail(orderEntity.getOrderAddressDetail());
+        orderDTO.setOrderPostCode(orderEntity.getOrderPostCode());
+        orderDTO.setOrderStatus(orderEntity.getOrderStatus());
+        orderDTO.setOrderDate(orderEntity.getOrderDate());
+        orderDTO.setMemberId(orderEntity.getMemberEntity().getId());
+        List<OrderDetailDTO> orderDetailDTOList = new ArrayList<>();
+        for(OrderDetailEntity orderDetailEntity : orderEntity.getOrderDetailEntityList()){
+            orderDetailDTOList.add(OrderDetailDTO.toDTO(orderDetailEntity));
+        }
+        return orderDTO;
+    }
+}

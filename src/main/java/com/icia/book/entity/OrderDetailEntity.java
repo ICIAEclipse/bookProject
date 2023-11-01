@@ -1,5 +1,6 @@
 package com.icia.book.entity;
 
+import com.icia.book.dto.OrderDetailDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,9 @@ public class OrderDetailEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(length = 1000)
+    private String bookProfile;
 
     @Column(length = 30, nullable = false)
     private String bookName;
@@ -36,5 +40,14 @@ public class OrderDetailEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-
+    public static OrderDetailEntity toSaveEntity(OrderDetailDTO orderDetailDTO, MemberEntity memberEntity, BookEntity bookEntity, OrderEntity orderEntity){
+        OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
+        orderDetailEntity.setBookName(orderDetailDTO.getBookName());
+        orderDetailEntity.setBookPrice(orderDetailDTO.getBookPrice());
+        orderDetailEntity.setBookCount(orderDetailDTO.getBookCount());
+        orderDetailEntity.setMemberEntity(memberEntity);
+        orderDetailEntity.setBookEntity(bookEntity);
+        orderDetailEntity.setOrderEntity(orderEntity);
+        return orderDetailEntity;
+    }
 }
