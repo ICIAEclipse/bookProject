@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,11 +17,11 @@ import javax.servlet.http.HttpSession;
 public class BasketController {
 
     @PostMapping
-    public ResponseEntity jjim(@RequestBody String isbn, HttpSession session) {
+    public ResponseEntity basket (@RequestBody String isbn, HttpSession session) {
         System.out.println("찜 테스트중 " + isbn);
         String loginEmail = (String) session.getAttribute("loginEmail");
         BasketService.save(isbn, loginEmail);
-        return new ResponseEntity("test", HttpStatus.OK);
+        return new ResponseEntity("basket", HttpStatus.OK);
 
     }
 }

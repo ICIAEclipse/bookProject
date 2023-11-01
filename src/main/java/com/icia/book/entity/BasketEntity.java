@@ -1,5 +1,6 @@
 package com.icia.book.entity;
 
+import com.icia.book.dto.BasketDTO;
 import com.icia.book.dto.BookDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,6 +27,12 @@ public class BasketEntity {
     @JoinColumn(name = "member_memberEmail")
     private MemberEntity memberEntity;
 
+
+    public static BasketEntity toSaveEntity(BasketDTO basketDTO) {
+        BasketEntity basketEntity = new BasketEntity();
+        basketEntity.setId(basketDTO.getId());
+        return basketEntity;
+    }
 
 
 }
