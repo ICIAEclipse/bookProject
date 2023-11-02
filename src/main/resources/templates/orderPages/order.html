@@ -133,7 +133,17 @@
             alert("주문이 성공되었습니다.")
             location.href = "/member/order/list"
         }).catch(err => {
-            console.log(err);
+            if(err.response.data == "countless"){
+                alert("품목의 수량이 부족합니다." +
+                    "이전페이지로 이동합니다.")
+                location.href = document.referrer
+            }else if(err.response.data == "not_equal_purchaser") {
+                alert("구매자의 정보와 일치하지 않습니다.")
+            }else{
+
+            }
+
+
         })
     }
 </script>

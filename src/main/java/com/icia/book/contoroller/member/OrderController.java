@@ -30,6 +30,9 @@ public class OrderController {
             String orderCode = "O" + System.currentTimeMillis();
             boolean result = orderService.findByOrderCode(orderCode);
             if(result){
+                String memberEmail = (String) session.getAttribute("loginEmail");
+                AddressDTO defaultAddressDTO = memberService.findDefaultAddressByMemberEmail(memberEmail);
+                List<OrderDetailDTO> orderDetailDTOList = orderService.findAllByBookIds(orderRequestDTO.getBooKIdList(), orderRequestDTO.getCountList());
                 orderRequestDTO.setOrderCode(orderCode);
                 orderRequestDTO.setMemberEmail((String) session.getAttribute("loginEmail"));
                 return new ResponseEntity<>(orderRequestDTO, HttpStatus.OK);
@@ -68,10 +71,15 @@ public class OrderController {
                                   @RequestParam("memberEmail") String memberEmail,
                                   HttpSession session){
         if(memberEmail.equals(session.getAttribute("loginEmail"))){
-            orderService.saveOrder(orderDTO, memberEmail);
-            return new ResponseEntity(HttpStatus.OK);
+            boolean result = orderService.checkCount(orderDTO);
+            if(result){
+                orderService.saveOrder(orderDTO, memberEmail);
+                return new ResponseEntity(HttpStatus.OK);
+            }else{
+                return new ResponseEntity("countless" ,HttpStatus.BAD_REQUEST);
+            }
         }else {
-            return new ResponseEntity(HttpStatus.CONFLICT);
+            return new ResponseEntity("not_equal_purchaser",HttpStatus.CONFLICT);
         }
     }
 
