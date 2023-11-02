@@ -134,7 +134,7 @@
         };
         axios({
 
-            method:"post",
+            method: "post",
             url: `/order/createNumber`,
             data: requestData,
         }).then(res => {
@@ -169,19 +169,24 @@
 
     const basket_fn = (isbn) => {
         const loginEmail = [[${session.loginEmail}]];
-        console.log(isbn)
-        axios({
-            method: "post",
-            url: "/basket",
-            data: {
-                isbn: isbn,
-                memberEmail: loginEmail
-            }
-        }).then(res => {
-            alert("찜 되었습니다" + isbn)
-        }).catch(err => {
-            alert("찜에 실패했습니다" + isbn)
-        });
+        if (loginEmail != null) {
+            console.log(isbn)
+            axios({
+                method: "post",
+                url: "/basket",
+                data: {
+                    isbn: isbn,
+                    memberEmail: loginEmail
+                }
+            }).then(res => {
+                alert("찜 되었습니다" + isbn)
+            }).catch(err => {
+                alert("찜에 실패했습니다" + isbn)
+            });
+        } else {
+            alert("로그인페이지로 이동합니다.")
+            location.href = "/member/login"
+        }
     }
 
 
