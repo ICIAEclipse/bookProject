@@ -37,4 +37,14 @@ public class FaqEntity {
         faqEntity.setCscenterCategoryEntity(csCenterCategoryEntity);
         return faqEntity;
     }
+
+    public static FaqEntity toUpdateEntity(FaqDTO faqDTO, CsCenterCategoryEntity csCenterCategoryEntity) {
+        FaqEntity faqEntity = new FaqEntity();
+        faqEntity.setId(faqDTO.getId());
+        faqEntity.setFaqTitle(faqDTO.getFaqTitle());
+        faqEntity.setFaqContents(faqDTO.getFaqContents());
+        faqEntity.setFaqHits(faqDTO.getFaqHits());
+        faqEntity.setCscenterCategoryEntity(csCenterCategoryEntity);
+        return faqEntity;
+    }
 }

@@ -6,6 +6,8 @@ import com.icia.book.service.CsCenterCategoryService;
 import com.icia.book.service.FaqService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -50,5 +52,26 @@ public class AdminFaqController {
     public String save(@ModelAttribute FaqDTO faqDTO){
         faqService.save(faqDTO);
         return "redirect:/admin/faq";
+    }
+
+    @GetMapping("/{id}")
+    public String updateForm(@PathVariable("id") Long id, Model model){
+        List<CscenterCategoryDTO> cscenterCategoryDTOList = csCenterCategoryService.findAll();
+        FaqDTO faqDTO = faqService.findById(id);
+        model.addAttribute("faq", faqDTO);
+        model.addAttribute("cscenterCategoryList", cscenterCategoryDTOList);
+        return "adminPages/adminFaqUpdate";
+    }
+
+    @PutMapping()
+    public ResponseEntity update(@RequestBody FaqDTO faqDTO){
+        faqService.update(faqDTO);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@PathVariable("id") Long id){
+        faqService.delete(id);
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

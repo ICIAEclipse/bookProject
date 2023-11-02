@@ -12,18 +12,18 @@
     </div>
     <div class="col">
         <form action="/admin/faq/save" method="post">
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <span class="input-group-text">제목</span>
                 <input class="form-control" name="faqTitle">
             </div>
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <span class="input-group-text">카테고리</span>
                 <select class="form-select" name="cscenterCategoryId">
                     <option th:each="cscenterCategory: ${cscenterCategoryList}" th:value="${cscenterCategory.id}"
                             th:text="${cscenterCategory.centerName}"></option>
                 </select>
             </div>
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <textarea rows="10" class="form-control" name="faqContents"></textarea>
             </div>
             <div class="text-center">
@@ -38,6 +38,6 @@
 <script th:inline="javascript">
     const cancel_fn = () =>{
         location.href = "/admin/faq";
-    }
+    };
 </script>
 </html>

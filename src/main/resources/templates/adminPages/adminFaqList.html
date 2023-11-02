@@ -24,7 +24,7 @@
             <tr th:each="faq: ${faqList}">
                 <td th:each="cscenterCategory : ${cscenterCategoryList}" th:if="${cscenterCategory.id == faq.cscenterCategoryId}" th:text="${cscenterCategory.centerName}"></td>
                 <td th:text="${faq.faqTitle}"></td>
-                <td><button class="btn btn-secondary" th:onclick="undate_fn([[${faq.id}]])">수정</button></td>
+                <td><button class="btn btn-secondary" th:onclick="update_fn([[${faq.id}]])">수정</button></td>
                 <td><button class="btn btn-danger" th:onclick="delete_fn([[${faq.id}]])">삭제</button></td>
             </tr>
         </table>
@@ -81,6 +81,22 @@
 <script th:inline="javascript">
     const save_fn = () => {
         location.href = "/admin/faq/save"
-    }
+    };
+
+    const update_fn = (id) => {
+        location.href = `/admin/faq/${id}`;
+    };
+
+    const delete_fn = (id) => {
+        axios({
+            method:"delete",
+            url:`/admin/faq/${id}`,
+        }).then(res => {
+            location.href = "/admin/faq"
+        }).catch(err => {
+            alert("삭제실패");
+            console.log(err);
+        })
+    };
 </script>
 </html>
