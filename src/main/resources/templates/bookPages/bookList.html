@@ -56,8 +56,8 @@
                     </div>
                     <div class="text-center" th:unless="${book.bookCount == 0}">
 
-                        <input type="button" class="btn btn-sm btn-outline-info" th:onclick="basket_fn([[${book.isbn}]])" value="찜">
-                        <input type="button" class="btn btn-sm btn-outline-info my-3" onclick="cart_fn()" value="장바구니">
+                        <input type="button" class="btn btn-sm btn-outline-info" th:onclick="basket_fn([[${book.isbn}]])" value="찜"> <br>
+                        <input type="button" class="btn btn-sm btn-outline-info my-3" onclick="cart_fn()" value="장바구니"> <br>
                         <input type="button" class="btn btn-sm btn-outline-info" th:onclick="to_purchase([[${book.id}]])" value="바로구매">
                     </div>
                 </div>
