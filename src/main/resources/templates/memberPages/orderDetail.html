@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+
+
+<div class="row m-5">
+    <div class="col">
+        <div class="card">
+
+        </div>
+        <div th:each="orderDetail : ${orderDetailList}">
+            <table class="table table-borderless">
+                <tr width="120">
+                    <td width="120" rowspan="4">
+                        <img th:src="${orderDetail.bookProfile}" width="120">
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="${orderDetail.bookName}"></td>
+                </tr>
+                <tr>
+                    <td th:text="${orderDetail.bookCount}"></td>
+                </tr>
+                <tr>
+                    <td th:text="|${orderDetail.bookPrice * orderDetail.bookCount}원|"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+</html>
