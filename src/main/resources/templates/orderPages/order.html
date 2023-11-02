@@ -131,7 +131,7 @@
             params:{memberEmail : [[${member.memberEmail}]]}
         }).then(res => {
             alert("주문이 성공되었습니다.")
-            location.href = "/member/mypage"
+            location.href = "/member/order/list"
         }).catch(err => {
             console.log(err);
         })

@@ -220,7 +220,7 @@ public class MemberController {
         return "redirect:/member/logout";
     }
 
-    @GetMapping("/order")
+    @GetMapping("/order/list")
     public String orderList(HttpSession session,
                             Model model){
         MemberDTO memberDTO = memberService.findByMemberEmail((String) session.getAttribute("loginEmail"));
