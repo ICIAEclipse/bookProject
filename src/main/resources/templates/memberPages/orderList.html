@@ -16,18 +16,18 @@
                     <h5 th:text="|${order.orderDate} 주문|" style="display: inline"></h5>
                     <h5 th:text="${order.orderStatus}" style="display: inline"></h5>
                 </div>
-                <div class="col">
+                <div class="col text-end">
                     <a class="btn btn-outline-info" th:href="@{|/member/order/${order.id}|}">주문 상세조회</a>
                 </div>
             </div>
-            <div class="card my-3" th:each="orderDetail : ${order.getOrderDetailDTOList()}">
+            <div class="card my-3 p-4" th:each="orderDetail : ${order.getOrderDetailDTOList()}">
                 <div class="row">
                     <div class="col-auto">
-                        <img th:src="${orderDetail.bookProfile}" width="120">
+                        <img th:src="${orderDetail.bookProfile}" width="80">
                     </div>
                     <div class="col">
-                        <h6 th:text="${orderDetail.bookName}"></h6>
-                        <p th:text="|${orderDetail.bookPrice} 원 ${orderDetail.bookCount} 개|"></p>
+                        <h5 th:text="${orderDetail.bookName}"></h5>
+                        <p th:text="|${orderDetail.bookPrice} 원 · ${orderDetail.bookCount} 개|"></p>
                     </div>
                 </div>
             </div>
