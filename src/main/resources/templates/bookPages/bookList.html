@@ -168,12 +168,14 @@
     }
 
     const basket_fn = (isbn) => {
+        const loginEmail = [[${session.loginEmail}]];
         console.log(isbn)
         axios({
             method: "post",
             url: "/basket",
             data: {
                 isbn: isbn,
+                memberEmail: loginEmail
             }
         }).then(res => {
             alert("찜 되었습니다" + isbn)
