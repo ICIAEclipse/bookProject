@@ -57,4 +57,27 @@ public class BasketService {
 //        }
 //    }
     }
+
+    public boolean findById(String isbn, String memberEmail) {
+        Optional<BookEntity> bookEntityOptional = bookRepository.findByIsbn(isbn);
+        Optional<MemberEntity> memberEntityOptional = memberRepository.findByMemberEmail(memberEmail);
+        if (bookEntityOptional.isPresent() && memberEntityOptional.isPresent()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void delete(String isbn, String memberEmail) {
+        Optional<BookEntity> bookEntityOptional = bookRepository.findByIsbn(isbn);
+        Optional<MemberEntity> memberEntityOptional = memberRepository.findByMemberEmail(memberEmail);
+        if (bookEntityOptional.isPresent() && memberEntityOptional.isPresent()) {
+            BookEntity bookEntity = bookEntityOptional.get();
+            MemberEntity memberEntity = memberEntityOptional.get();
+            BasketEntity basketEntity = BasketEntity.toSaveEntity(bookEntity, memberEntity);
+           basketRepository.delete(basketEntity);
+        } else {
+
+        }
+    }
 }
