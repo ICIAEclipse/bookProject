@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
+    <div class="col">
+        <form name="faq_update">
+            <input type="hidden" name="id" th:value="${faq.id}">
+            <input type="hidden" name="faqHits" th:value="${faq.faqHits}">
+            <div class="input-group mb-3">
+                <span class="input-group-text">제목</span>
+                <input class="form-control" name="faqTitle" th:value="${faq.faqTitle}">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">카테고리</span>
+                <select class="form-select" name="cscenterCategoryId">
+                    <option th:each="cscenterCategory: ${cscenterCategoryList}" th:value="${cscenterCategory.id}"
+                            th:text="${cscenterCategory.centerName}" th:selected="${faq.cscenterCategoryId == cscenterCategory.id}"></option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <textarea rows="10" class="form-control" name="faqContents" th:text="${faq.faqContents}"></textarea>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary">수정</button>
+                <button type="button" class="btn btn-secondary" onclick="cancel_fn()">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const cancel_fn = () =>{
+        location.href = "/admin/faq";
+    }
+
+    document.querySelector("[name='faq_update']").addEventListener("submit", e => {
+        e.preventDefault();
+        const id = document.querySelector('[name="id"]').value;
+        const faqTitle = document.querySelector('[name="faqTitle"]').value;
+        const cscenterCategoryId = document.querySelector('[name="cscenterCategoryId"]').value;
+        const faqContents = document.querySelector('[name="faqContents"]').value;
+        const faqHits = document.querySelector('[name="faqHits"]').value;
+        if(faqTitle == ""){
+            alert("제목을 입력해주세요!");
+            document.querySelector('[name="faqTitle"]').focus();
+        }else if(faqContents == ""){
+            alert("내용을 입력해주세요!");
+            document.querySelector('[name="faqContents"]').focus();
+        }else {
+            axios({
+                method:"put",
+                url:`/admin/faq`,
+                data:{
+                    id:id,
+                    faqTitle: faqTitle,
+                    cscenterCategoryId: cscenterCategoryId,
+                    faqContents: faqContents,
+                    faqHits: faqHits
+                }
+            }).then(res => {
+                location.href = "/admin/faq";
+            }).catch(err => {
+                alert("수정실패");
+                console.log(err);
+            })
+        }
+    })
+</script>
+</html>

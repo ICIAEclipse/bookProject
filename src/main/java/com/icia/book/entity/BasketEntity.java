@@ -19,18 +19,19 @@ public class BasketEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_isbn")
+    @JoinColumn(name = "book_id")
     private BookEntity bookEntity;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_memberEmail")
+    @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
 
-    public static BasketEntity toSaveEntity(BasketDTO basketDTO) {
+    public static BasketEntity toSaveEntity(BookEntity bookEntity, MemberEntity memberEntity) {
         BasketEntity basketEntity = new BasketEntity();
-        basketEntity.setId(basketDTO.getId());
+        basketEntity.setBookEntity(bookEntity);
+        basketEntity.setMemberEntity(memberEntity);
         return basketEntity;
     }
 

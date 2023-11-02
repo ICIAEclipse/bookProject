@@ -1,5 +1,6 @@
 package com.icia.book.contoroller.member;
 
+import com.icia.book.dto.BasketDTO;
 import com.icia.book.dto.BookDTO;
 import com.icia.book.service.BasketService;
 import lombok.RequiredArgsConstructor;
@@ -10,18 +11,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @RequestMapping("/basket")
 @Controller
 public class BasketController {
+    private final BasketService basketService;
 
     @PostMapping
-    public ResponseEntity basket (@RequestBody String isbn, HttpSession session) {
-        System.out.println("찜 테스트중 " + isbn);
-        String loginEmail = (String) session.getAttribute("loginEmail");
-        BasketService.save(isbn, loginEmail);
-        return new ResponseEntity("basket", HttpStatus.OK);
+    public ResponseEntity basket (@RequestBody BasketDTO basketDTO) {
+
+        try {
+            basketService.save(basketDTO.getIsbn(), basketDTO.getMemberEmail());
+            return new ResponseEntity<>("basket", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("책 또는 회원을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);
+        }
+
+//        basketService.save(isbn, loginEmail);
+//        return new ResponseEntity("basket", HttpStatus.OK);
 
     }
 }

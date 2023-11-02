@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 
@@ -51,5 +52,22 @@ public class FaqService {
                     .build()
         );
         return faqDTOPage;
+    }
+
+    @Transactional
+    public FaqDTO findById(Long id) {
+        FaqEntity faqEntity = faqRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        FaqDTO faqDTO = FaqDTO.toDTO(faqEntity);
+        return faqDTO;
+    }
+
+    public void update(FaqDTO faqDTO) {
+        CsCenterCategoryEntity csCenterCategoryEntity = csCenterCategoryRepository.findById(faqDTO.getCscenterCategoryId()).orElseThrow(() -> new NoSuchElementException());
+        FaqEntity faqEntity = FaqEntity.toUpdateEntity(faqDTO, csCenterCategoryEntity);
+        faqRepository.save(faqEntity);
+    }
+
+    public void delete(Long id) {
+        faqRepository.deleteById(id);
     }
 }
