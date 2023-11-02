@@ -28,13 +28,13 @@
         <div class="card">
             <div class="row" th:each="book: ${bookList}">
                 <div class="col">
-                    <table class="table">
-                        <tr style="display: none">
+                    <table class="table table-borderless">
+                        <tr  style="display: none">
                             <td id="bookIsbn" th:text="${book.isbn}"></td>
                         </tr>
-                        <tr>
-                            <td rowspan="5">
-                                <img th:src="${book.bookProfile}">
+                        <tr width="120">
+                            <td width="120" rowspan="5">
+                                <img th:src="${book.bookProfile}" width="120">
                             </td>
                         </tr>
                         <tr>
@@ -44,14 +44,22 @@
                             <td th:text="${book.bookAuthor}"></td>
                         </tr>
                         <tr>
-                            <td th:text="|${book.bookSalePrice}(${book.bookPrice})|"></td>
+                            <td>
+                                <span><del>[[${book.bookPrice}]]원</del></span><span class="mx-3">&rarr;</span><span th:text="|${book.bookSalePrice}원|"></span>
+                            </td>
                         </tr>
                     </table>
                 </div>
                 <div class="col-12 col-md-auto">
-                    <input type="button" onclick="cart_fn()" value="장바구니">
-                    <input type="button" th:onclick="to_purchase([[${book.id}]])" value="바로구매">
-                    <input type="button" th:onclick="basket_fn([[${book.isbn}]])" value="찜">
+                    <div class="text-center" th:if="${book.bookCount == 0}">
+                        <input type="button" class="btn btn-outline-secondary" disabled value="품절">
+                    </div>
+                    <div class="text-center" th:unless="${book.bookCount == 0}">
+
+                        <input type="button" class="btn btn-sm btn-outline-info" th:onclick="basket_fn([[${book.isbn}]])" value="찜">
+                        <input type="button" class="btn btn-sm btn-outline-info my-3" onclick="cart_fn()" value="장바구니">
+                        <input type="button" class="btn btn-sm btn-outline-info" th:onclick="to_purchase([[${book.id}]])" value="바로구매">
+                    </div>
                 </div>
             </div>
         </div>
@@ -121,19 +129,18 @@
             alert("장바구니 이동 실패");
         })
     }
+
     const to_purchase = (bookId) => {
         const booKIdList = [];
         const countList = [];
         booKIdList[0] = bookId;
         countList[0] = 1;
 
-
         let requestData = {
             booKIdList: booKIdList,
             countList: countList
         };
         axios({
-
             method:"post",
             url: `/order/createNumber`,
             data: requestData,
