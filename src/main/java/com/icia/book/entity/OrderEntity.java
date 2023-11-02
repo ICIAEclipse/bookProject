@@ -53,6 +53,7 @@ public class OrderEntity {
     private MemberEntity memberEntity;
 
     @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OrderBy("id desc")
     private List<OrderDetailEntity> orderDetailEntityList;
 
     public static OrderEntity toSaveEntity(OrderDTO orderDTO, MemberEntity memberEntity) {

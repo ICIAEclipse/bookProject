@@ -42,6 +42,7 @@ public class OrderDetailEntity {
 
     public static OrderDetailEntity toSaveEntity(OrderDetailDTO orderDetailDTO, MemberEntity memberEntity, BookEntity bookEntity, OrderEntity orderEntity){
         OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
+        orderDetailEntity.setBookProfile(orderDetailEntity.getBookProfile());
         orderDetailEntity.setBookName(orderDetailDTO.getBookName());
         orderDetailEntity.setBookPrice(orderDetailDTO.getBookPrice());
         orderDetailEntity.setBookCount(orderDetailDTO.getBookCount());

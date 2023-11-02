@@ -28,22 +28,22 @@
         <div class="card mb-4">
             <div class="card-header p-5">
                 <h5 class="me-5" style="display: inline"><b>주문상품</b></h5>
-                <span th:text="${orderList.size()}"><b></b></span>
+                <span th:text="${orderDetailList.size()}"><b></b></span>
             </div>
             <div class="card-body p-5">
                 <table class="table">
-                    <tr th:each="order : ${orderList}">
+                    <tr th:each="orderDetail : ${orderDetailList}">
                         <td>
-                            <img th:src="${order.bookProfile}">
+                            <img th:src="${orderDetail.bookProfile}" th:value="${orderDetail.bookProfile}">
                         </td>
                         <td>
-                            <p th:text="${order.bookName}"></p>
+                            <p th:text="${orderDetail.bookName}"></p>
                         </td>
                         <td>
-                            <p th:text="${order.getBookCount()}"></p>
+                            <p th:text="${orderDetail.getBookCount()}"></p>
                         </td>
                         <td>
-                            <p class="sale-price" th:price="${order.bookPrice * 1}" th:text="${order.bookPrice * 1}"></p>
+                            <p class="sale-price" th:price="${orderDetail.bookPrice * 1}" th:text="${orderDetail.bookPrice * 1}"></p>
                         </td>
                     </tr>
                 </table>
@@ -92,7 +92,7 @@
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
-<script th:inline="javascript">
+<script th:inline="javascript" hidden>
 
     const activation = (selectedButton) =>{
         const paymentETC = document.getElementsByClassName("btn-payment-etc");
@@ -112,9 +112,8 @@
         const memberMobil = document.getElementById("memberMobile").value;
         const memberName = document.getElementById("memberName").value;
         const orderTotal = document.getElementById("total-price").getAttribute("value");
-        const orderDetailList = [[${orderList}]]
+        const orderDetailList = [[${orderDetailList}]]
         const orderCode = [[${orderCode}]]
-        console.log(orderDetailList)
         axios({
             method:"post",
             url:"/order/order",
@@ -131,19 +130,19 @@
             params:{memberEmail : [[${member.memberEmail}]]}
         }).then(res => {
             alert("주문이 성공되었습니다.")
-            location.href = "/member/order/list"
+            location.href = "/member/order"
         }).catch(err => {
             if(err.response.data == "countless"){
                 alert("품목의 수량이 부족합니다." +
                     "이전페이지로 이동합니다.")
                 location.href = document.referrer
             }else if(err.response.data == "not_equal_purchaser") {
-                alert("구매자의 정보와 일치하지 않습니다.")
+                alert("구매자의 정보와 일치하지 않습니다." +
+                    "이전페이지로 이동합니다.")
+                location.href = document.referrer
             }else{
 
             }
-
-
         })
     }
 </script>
