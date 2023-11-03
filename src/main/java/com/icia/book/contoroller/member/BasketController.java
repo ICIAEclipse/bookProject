@@ -45,4 +45,9 @@ public class BasketController {
 //        return new ResponseEntity("basket", HttpStatus.OK);
 
     }
+
+    @GetMapping
+    public String basketFindAll() {
+        return "/bookPages/basketList";
+    }
 }
