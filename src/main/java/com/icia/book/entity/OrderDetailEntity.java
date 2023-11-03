@@ -19,7 +19,7 @@ public class OrderDetailEntity {
     @Column(length = 1000)
     private String bookProfile;
 
-    @Column(length = 30, nullable = false)
+    @Column(length = 500, nullable = false)
     private String bookName;
 
     @Column(nullable = false)
