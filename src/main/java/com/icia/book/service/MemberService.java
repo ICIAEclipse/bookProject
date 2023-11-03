@@ -113,8 +113,10 @@ public class MemberService {
     @Transactional
     public void saveAddress(AddressDTO addressDTO, String memberEmail, boolean defaultAddressChecked) {
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
-
-        if(defaultAddressChecked){
+        System.out.println(memberEntity.getAddressEntityList().size());
+        if(memberEntity.getAddressEntityList().size()==0){
+            addressDTO.setAddressStatus(1);
+        }else if(defaultAddressChecked){
             addressDTO.setAddressStatus(1);
             for(AddressEntity savedAddress : memberEntity.getAddressEntityList()){
                 if(savedAddress.getAddressStatus()==1){
@@ -123,7 +125,6 @@ public class MemberService {
                 }
             }
         }
-
         AddressEntity addressEntity = AddressEntity.toSaveEntity(addressDTO, memberEntity);
         addressRepository.save(addressEntity);
     }

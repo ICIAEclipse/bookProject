@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+
+
+<div class="row m-5">
+    <div class="col">
+        <div class="my-3">
+            <h4>주문상세</h4>
+            <h6></h6>
+        </div>
+
+        <div class="my-3">
+
+        </div>
+
+        <div class="card my-3 py-2 px-4">
+            <table class="table table-borderless">
+                <tr>
+                    <td>수취인</td>
+                    <td th:text="${order.orderMemberName}"></td>
+                </tr>
+                <tr>
+                    <td>연락처</td>
+                    <td th:text="${#strings.replace(order.orderMemberMobile, '(\\d{3})(\\d{4})(\\d{4})', '$1--$2--$3')}"></td>
+                </tr>
+                <tr>
+                    <td>배송지</td>
+                    <td th:text="|(${order.orderPostCode}) ${order.orderAddress} ${order.orderAddressDetail}|"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card my-3 p-3">
+            <table class="table table-borderless" th:each="orderDetail : ${orderDetailList}">
+                <tr width="80">
+                    <td width="80" rowspan="4">
+                        <img th:src="${orderDetail.bookProfile}" width="80">
+                    </td>
+                </tr>
+                <tr>
+                    <td th:text="${orderDetail.bookName}"></td>
+                </tr>
+                <tr>
+                    <td th:text="|${orderDetail.bookPrice} 원 · ${orderDetail.bookCount}개|"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="my-3">
+            <button class="btn btn-outline-info">&lt;주문목록 돌아가기</button>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+</html>

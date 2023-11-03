@@ -57,7 +57,7 @@ public class OrderController {
             model.addAttribute("member", memberDTO);
         }
         if(!orderDetailDTOList.isEmpty()){
-            model.addAttribute("orderList", orderDetailDTOList);
+            model.addAttribute("orderDetailList", orderDetailDTOList);
         }
         if(defaultAddressDTO !=null){
             model.addAttribute("defaultAddress", defaultAddressDTO);
@@ -71,6 +71,9 @@ public class OrderController {
                                   @RequestParam("memberEmail") String memberEmail,
                                   HttpSession session){
         if(memberEmail.equals(session.getAttribute("loginEmail"))){
+            System.out.println(orderDTO.getOrderDetailDTOList().get(0).getBookProfile());
+
+
             boolean result = orderService.checkCount(orderDTO);
             if(result){
                 orderService.saveOrder(orderDTO, memberEmail);

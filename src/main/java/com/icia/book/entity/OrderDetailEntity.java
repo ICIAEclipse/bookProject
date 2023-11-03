@@ -19,7 +19,7 @@ public class OrderDetailEntity {
     @Column(length = 1000)
     private String bookProfile;
 
-    @Column(length = 30, nullable = false)
+    @Column(length = 500, nullable = false)
     private String bookName;
 
     @Column(nullable = false)
@@ -42,6 +42,7 @@ public class OrderDetailEntity {
 
     public static OrderDetailEntity toSaveEntity(OrderDetailDTO orderDetailDTO, MemberEntity memberEntity, BookEntity bookEntity, OrderEntity orderEntity){
         OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
+        orderDetailEntity.setBookProfile(orderDetailDTO.getBookProfile());
         orderDetailEntity.setBookName(orderDetailDTO.getBookName());
         orderDetailEntity.setBookPrice(orderDetailDTO.getBookPrice());
         orderDetailEntity.setBookCount(orderDetailDTO.getBookCount());

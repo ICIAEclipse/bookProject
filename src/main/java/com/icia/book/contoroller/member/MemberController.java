@@ -3,6 +3,7 @@ package com.icia.book.contoroller.member;
 import com.icia.book.dto.AddressDTO;
 import com.icia.book.dto.MemberDTO;
 import com.icia.book.dto.OrderDTO;
+import com.icia.book.dto.OrderDetailDTO;
 import com.icia.book.service.MemberService;
 import com.icia.book.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -220,7 +221,7 @@ public class MemberController {
         return "redirect:/member/logout";
     }
 
-    @GetMapping("/order/list")
+    @GetMapping("/order")
     public String orderList(HttpSession session,
                             Model model){
         MemberDTO memberDTO = memberService.findByMemberEmail((String) session.getAttribute("loginEmail"));
@@ -230,5 +231,17 @@ public class MemberController {
         return "memberPages/orderList";
     }
 
-}
+    @GetMapping("/order/{id}")
+    public String orderDetail(@PathVariable("id") Long orderId,
+                            HttpSession session,
+                            Model model){
+        MemberDTO memberDTO = memberService.findByMemberEmail((String) session.getAttribute("loginEmail"));
+        OrderDTO orderDTO = orderService.findById(orderId);
+        List<OrderDetailDTO> orderDetailDTOList = orderService.findOrderDetailListById(orderId);
 
+        model.addAttribute("orderDetailList", orderDetailDTOList);
+        model.addAttribute("order", orderDTO);
+        model.addAttribute("member", memberDTO);
+        return "memberPages/orderDetail";
+    }
+}

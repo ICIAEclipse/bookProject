@@ -84,4 +84,22 @@ public class OrderService {
         return orderDTOList;
     }
 
+    @Transactional
+    public List<OrderDetailDTO> findOrderDetailListById(Long orderId) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new NoSuchElementException());
+
+        List<OrderDetailDTO> orderDetailDTOList = new ArrayList<>();
+
+        orderEntity.getOrderDetailEntityList().forEach(orderDetailEntity -> {
+            orderDetailDTOList.add(OrderDetailDTO.toDTO(orderDetailEntity));
+        });
+
+        return orderDetailDTOList;
+    }
+
+    @Transactional
+    public OrderDTO findById(Long orderId) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new NoSuchElementException());
+        return OrderDTO.toDTO(orderEntity);
+    }
 }
