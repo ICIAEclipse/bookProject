@@ -1,6 +1,7 @@
 package com.icia.book.service;
 
 import com.icia.book.dto.BookDTO;
+import com.icia.book.dto.MemberDTO;
 import com.icia.book.entity.BasketEntity;
 import com.icia.book.entity.BookEntity;
 import com.icia.book.entity.MemberEntity;
@@ -9,6 +10,7 @@ import com.icia.book.repository.BookRepository;
 import com.icia.book.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -20,64 +22,28 @@ public class BasketService {
     private final BookRepository bookRepository;
     private final MemberRepository memberRepository;
 
-    public void save(String isbn, String loginEmail) {
-        System.out.println("테스트중입니다. 값이 잘 들어왔느뇨? " + isbn + loginEmail);
+    @Transactional
+    public boolean save(String isbn, String loginEmail) {
+        BookEntity bookEntity = bookRepository.findByIsbn(isbn).orElseThrow(() -> new NoSuchElementException()); // book isbb 확인
+        MemberEntity memberEntity = memberRepository.findByMemberEmail(loginEmail).orElseThrow(() -> new NoSuchElementException()); // memberEmail 확인
 
-        Optional<BookEntity> bookEntityOptional = bookRepository.findByIsbn(isbn);
-        Optional<MemberEntity> memberEntityOptional = memberRepository.findByMemberEmail(loginEmail);
+        System.out.println(BookDTO.toDTO(bookEntity));
+        System.out.println(MemberDTO.toDTO(memberEntity));
+
+        Optional<BasketEntity> basketDbEntityOptional = basketRepository.findByMemberEntityAndBookEntity(memberEntity, bookEntity); // 위으 isbn값과 일치하는 id를 bookDbId에 넣음
         System.out.println("실행1");
-        System.out.println(bookEntityOptional.isPresent());
-        System.out.println(memberEntityOptional.isPresent());
-        if(bookEntityOptional.isPresent() && memberEntityOptional.isPresent()) {
-            System.out.println("실행2");
-            BookEntity bookEntity = bookEntityOptional.get();
-            MemberEntity memberEntity = memberEntityOptional.get();
-            BasketEntity basketEntity = BasketEntity.toSaveEntity(bookEntity, memberEntity);
-            basketRepository.save(basketEntity);
-        } else {
-            throw new NoSuchElementException("없다");
-        }
 
-//        BookEntity bookEntity = bookRepository.findByIsbn(isbn).orElseThrow(() -> new NoSuchElementException("에러발생001"));
-//        MemberEntity memberEntity = memberRepository.findByMemberEmail(loginEmail).orElseThrow(() -> new NoSuchElementException("에러발생002"));
-//        BasketEntity basketEntity = BasketEntity.toSaveEntity(bookEntity, memberEntity);
-//        basketRepository.save(basketEntity);
-
-
-//        Optional<BookEntity> bookOptional = bookRepository.findByIsbn(isbn);
-//        Optional<MemberEntity> memberOptional = memberRepository.findByMemberEmail(loginEmail);
-//
-//        if (bookOptional.isPresent() && memberOptional.isPresent()) {
-//            BookEntity bookEntity = bookOptional.get();
-//            MemberEntity memberEntity = memberOptional.get();
-//            BasketEntity basketEntity = BasketEntity.toSaveEntity(bookEntity, memberEntity);
-//            basketRepository.save(basketEntity);
-//        } else {
-//            throw new NoSuchElementException("책 또는 회원 못찾음");
-//        }
-//    }
-    }
-
-    public boolean findById(String isbn, String memberEmail) {
-        Optional<BookEntity> bookEntityOptional = bookRepository.findByIsbn(isbn);
-        Optional<MemberEntity> memberEntityOptional = memberRepository.findByMemberEmail(memberEmail);
-        if (bookEntityOptional.isPresent() && memberEntityOptional.isPresent()) {
-            return true;
-        } else {
+        if(basketDbEntityOptional.isPresent()) { // DB에 이미 있으면
+            // 삭제
+            BasketEntity basketEntity = basketDbEntityOptional.get(); // basket엔티티로 만듦
+            basketRepository.delete(basketEntity);
             return false;
-        }
-    }
-
-    public void delete(String isbn, String memberEmail) {
-        Optional<BookEntity> bookEntityOptional = bookRepository.findByIsbn(isbn);
-        Optional<MemberEntity> memberEntityOptional = memberRepository.findByMemberEmail(memberEmail);
-        if (bookEntityOptional.isPresent() && memberEntityOptional.isPresent()) {
-            BookEntity bookEntity = bookEntityOptional.get();
-            MemberEntity memberEntity = memberEntityOptional.get();
-            BasketEntity basketEntity = BasketEntity.toSaveEntity(bookEntity, memberEntity);
-           basketRepository.delete(basketEntity);
-        } else {
-
+        }else{
+            // 저장
+            BasketEntity basketEntity = BasketEntity.toSaveEntity(bookEntity, memberEntity); // basket엔티티로 만듦
+            basketRepository.save(basketEntity);
+            return true;
         }
     }
 }
+

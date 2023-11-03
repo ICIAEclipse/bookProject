@@ -186,7 +186,11 @@
                     memberEmail: loginEmail
                 }
             }).then(res => {
-                alert("찜 되었습니다" + isbn)
+                if(res.data == true) {
+                    alert("찜 되었습니다")
+                } else {
+                    alert("찜 삭제되었습니다")
+                }
             }).catch(err => {
                 alert("찜에 실패했습니다" + isbn)
             });
