@@ -28,7 +28,7 @@
         <div class="card mb-4">
             <div class="card-header p-5">
                 <h5 class="me-5" style="display: inline"><b>주문상품</b></h5>
-                <span th:text="${orderDetailList.size()}"><b></b></span>
+                <span th:text="|${orderDetailList.size()} 개|"><b></b></span>
             </div>
             <div class="card-body p-5">
                 <table class="table">
@@ -37,7 +37,7 @@
                             <img th:src="${orderDetail.bookProfile}" th:value="${orderDetail.bookProfile}">
                         </td>
                         <td>
-                            <p th:text="${orderDetail.bookName}"></p>
+                            <p class="bookName" th:text="${orderDetail.bookName}"></p>
                         </td>
                         <td>
                             <p th:text="${orderDetail.getBookCount()}"></p>
@@ -105,7 +105,45 @@
     }
 
     const payment_fn = () =>{
-        const paymentETC= document.getElementsByClassName("btn-payment-etc active")
+        const paymentETC= document.getElementsByClassName("btn-payment-etc active")[0].getAttribute("id")
+        const bookName = document.getElementsByClassName("bookName")
+        const quantity = [[${orderDetailList.size()}]]
+        let itemName = "";
+        for (let i=0; i<bookName.length; i++){
+            itemName += bookName[i].textContent;
+            if(i != bookName.length-1){
+                itemName += ", "
+            }
+        }
+        if(paymentETC == "kakaoPay"){
+            console.log(paymentETC)
+            console.log(itemName)
+            console.log(quantity)
+            console.log(totalPrice)
+            axios({
+                method:"post",
+                url:"/order/pay/"+paymentETC,
+                data:{
+                    item_name : itemName,
+                    quantity : quantity,
+                    total_amount : totalPrice,
+                    partner_order_id : [[${orderCode}]],
+                    partner_user_id : [[${session.loginEmail}]]
+                }
+            }).then(res => {
+                console.log(res)
+            }).catch(err => {
+                console.log(err)
+            })
+        }else if(paymentETC == "naverPay"){
+            alert("기능 미구현입니다.")
+        }else if(paymentETC == "samsungPay"){
+            alert("기능 미구현입니다.")
+        }
+    }
+
+
+    const order_fn = () =>{
         const address = document.getElementById("address").textContent;
         const addressDetail = document.getElementById("addressDetail").textContent;
         const postCode = document.getElementById("postCode").textContent;
@@ -114,35 +152,38 @@
         const orderTotal = document.getElementById("total-price").getAttribute("value");
         const orderDetailList = [[${orderDetailList}]]
         const orderCode = [[${orderCode}]]
-        axios({
-            method:"post",
-            url:"/order/order",
-            data:{
-                orderMemberMobile : memberMobil,
-                orderMemberName : memberName,
-                orderTotal : orderTotal,
-                orderAddressDetail : addressDetail,
-                orderAddress : address,
-                orderPostCode : postCode,
-                orderCode : orderCode,
-                orderDetailDTOList : orderDetailList,
-            },
-            params:{memberEmail : [[${member.memberEmail}]]}
-        }).then(res => {
-            alert("주문이 성공되었습니다.")
-            location.href = "/member/order"
-        }).catch(err => {
-            if(err.response.data == "countless"){
-                alert("품목의 수량이 부족합니다." +
-                    "이전페이지로 이동합니다.")
-                location.href = document.referrer
-            }else if(err.response.data == "not_equal_purchaser") {
-                alert("구매자의 정보와 일치하지 않습니다." +
-                    "이전페이지로 이동합니다.")
-                location.href = document.referrer
-            }else{
-            }
-        })
+        if(confirm("잘 되나 보자")){
+            // 상품주문테이블 형성
+            axios({
+                method:"post",
+                url:"/order/order",
+                data:{
+                    orderMemberMobile : memberMobil,
+                    orderMemberName : memberName,
+                    orderTotal : orderTotal,
+                    orderAddressDetail : addressDetail,
+                    orderAddress : address,
+                    orderPostCode : postCode,
+                    orderCode : orderCode,
+                    orderDetailDTOList : orderDetailList,
+                },
+                params:{memberEmail : [[${member.memberEmail}]]}
+            }).then(res => {
+                alert("주문이 성공되었습니다.")
+                location.href = "/member/order"
+            }).catch(err => {
+                if(err.response.data == "countless"){
+                    alert("품목의 수량이 부족합니다." +
+                        "이전페이지로 이동합니다.")
+                    location.href = document.referrer
+                }else if(err.response.data == "not_equal_purchaser") {
+                    alert("구매자의 정보와 일치하지 않습니다." +
+                        "이전페이지로 이동합니다.")
+                    location.href = document.referrer
+                }else{
+                }
+            })
+        }
     }
 </script>
 </html>

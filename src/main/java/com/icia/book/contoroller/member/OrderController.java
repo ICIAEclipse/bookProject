@@ -1,9 +1,9 @@
 package com.icia.book.contoroller.member;
 
 import com.icia.book.dto.*;
-import com.icia.book.service.BookService;
 import com.icia.book.service.MemberService;
 import com.icia.book.service.OrderService;
+import com.icia.book.service.PayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
     private final MemberService memberService;
-    private final BookService bookService;
+    private final PayService payService;
 
     @PostMapping("/createNumber")
     public ResponseEntity createNumber(@RequestBody OrderRequestDTO orderRequestDTO,
@@ -87,4 +87,16 @@ public class OrderController {
     }
 
 
+    @PostMapping("/pay/kakaoPay")
+    public ResponseEntity kakaoPayReady(@RequestBody KakaoPayReadyRequestDTO kakaoPayReadyRequestDTO,
+                                        HttpSession session,
+                                        Model model){
+        String partNerUserId = (String) session.getAttribute("loginEmail");
+        KakaoPayReadyResponseDTO kakaoPayReadyResponseDTO = payService.kakaoPayReady(kakaoPayReadyRequestDTO, partNerUserId);
+
+        System.out.println(kakaoPayReadyResponseDTO.getTid());
+        System.out.println(kakaoPayReadyResponseDTO.getNextRedirectAppUrl());
+
+        return new ResponseEntity<>(kakaoPayReadyResponseDTO,HttpStatus.OK);
+    }
 }
