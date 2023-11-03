@@ -239,10 +239,6 @@ public class MemberController {
         OrderDTO orderDTO = orderService.findById(orderId);
         List<OrderDetailDTO> orderDetailDTOList = orderService.findOrderDetailListById(orderId);
 
-        System.out.println(memberDTO);
-        System.out.println(orderDTO);
-        System.out.println(orderDetailDTOList);
-
         model.addAttribute("orderDetailList", orderDetailDTOList);
         model.addAttribute("order", orderDTO);
         model.addAttribute("member", memberDTO);
