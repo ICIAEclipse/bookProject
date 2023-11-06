@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 @ToString
 public class OrderRequestDTO {
+    private Long id;
     private List<Long> booKIdList;
     private List<Integer> countList;
     private String memberEmail;

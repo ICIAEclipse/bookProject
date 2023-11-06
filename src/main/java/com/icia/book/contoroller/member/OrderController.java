@@ -1,9 +1,9 @@
 package com.icia.book.contoroller.member;
 
 import com.icia.book.dto.*;
-import com.icia.book.service.BookService;
 import com.icia.book.service.MemberService;
 import com.icia.book.service.OrderService;
+import com.icia.book.service.PayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
     private final MemberService memberService;
-    private final BookService bookService;
+    private final PayService payService;
 
     @PostMapping("/createNumber")
     public ResponseEntity createNumber(@RequestBody OrderRequestDTO orderRequestDTO,
@@ -30,6 +30,9 @@ public class OrderController {
             String orderCode = "O" + System.currentTimeMillis();
             boolean result = orderService.findByOrderCode(orderCode);
             if(result){
+                String memberEmail = (String) session.getAttribute("loginEmail");
+                AddressDTO defaultAddressDTO = memberService.findDefaultAddressByMemberEmail(memberEmail);
+                List<OrderDetailDTO> orderDetailDTOList = orderService.findAllByBookIds(orderRequestDTO.getBooKIdList(), orderRequestDTO.getCountList());
                 orderRequestDTO.setOrderCode(orderCode);
                 orderRequestDTO.setMemberEmail((String) session.getAttribute("loginEmail"));
                 return new ResponseEntity<>(orderRequestDTO, HttpStatus.OK);
@@ -54,7 +57,7 @@ public class OrderController {
             model.addAttribute("member", memberDTO);
         }
         if(!orderDetailDTOList.isEmpty()){
-            model.addAttribute("orderList", orderDetailDTOList);
+            model.addAttribute("orderDetailList", orderDetailDTOList);
         }
         if(defaultAddressDTO !=null){
             model.addAttribute("defaultAddress", defaultAddressDTO);
@@ -68,12 +71,32 @@ public class OrderController {
                                   @RequestParam("memberEmail") String memberEmail,
                                   HttpSession session){
         if(memberEmail.equals(session.getAttribute("loginEmail"))){
-            orderService.saveOrder(orderDTO, memberEmail);
-            return new ResponseEntity(HttpStatus.OK);
+            System.out.println(orderDTO.getOrderDetailDTOList().get(0).getBookProfile());
+
+
+            boolean result = orderService.checkCount(orderDTO);
+            if(result){
+                orderService.saveOrder(orderDTO, memberEmail);
+                return new ResponseEntity(HttpStatus.OK);
+            }else{
+                return new ResponseEntity("countless" ,HttpStatus.BAD_REQUEST);
+            }
         }else {
-            return new ResponseEntity(HttpStatus.CONFLICT);
+            return new ResponseEntity("not_equal_purchaser",HttpStatus.CONFLICT);
         }
     }
 
 
+    @PostMapping("/pay/kakaoPay")
+    public ResponseEntity kakaoPayReady(@RequestBody KakaoPayReadyRequestDTO kakaoPayReadyRequestDTO,
+                                        HttpSession session,
+                                        Model model){
+        String partNerUserId = (String) session.getAttribute("loginEmail");
+        KakaoPayReadyResponseDTO kakaoPayReadyResponseDTO = payService.kakaoPayReady(kakaoPayReadyRequestDTO, partNerUserId);
+
+        System.out.println(kakaoPayReadyResponseDTO.getTid());
+        System.out.println(kakaoPayReadyResponseDTO.getNextRedirectAppUrl());
+
+        return new ResponseEntity<>(kakaoPayReadyResponseDTO,HttpStatus.OK);
+    }
 }

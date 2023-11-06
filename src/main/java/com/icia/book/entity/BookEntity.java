@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -117,6 +116,7 @@ public class BookEntity {
         return updateEntity;
     }
 
+
     public static BookEntity toSaveEntity(BookDTO bookDTO) {
         BookEntity booksEntity = new BookEntity();
         booksEntity.setId(bookDTO.getId());
@@ -131,5 +131,11 @@ public class BookEntity {
         booksEntity.setBookSalePrice(bookDTO.getBookSalePrice());
         booksEntity.setBookContents(bookDTO.getBookContents());
         return booksEntity;
+
+    public static BookEntity toCountDownEntity(BookEntity bookEntity, int saleCount) {
+        BookEntity updateEntity = bookEntity;
+        bookEntity.setBookCount(bookEntity.getBookCount() - saleCount);
+        return updateEntity;
+
     }
 }

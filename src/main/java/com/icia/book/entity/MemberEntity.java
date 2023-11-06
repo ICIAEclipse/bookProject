@@ -35,6 +35,7 @@ public class MemberEntity {
     private int memberStatus;
 
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OrderBy("id desc")
     private List<OrderEntity> orderEntityList;
 
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
@@ -104,6 +105,11 @@ public class MemberEntity {
         MemberEntity memberEntity = new MemberEntity();
         memberEntity.setId(memberDTO.getId());
         memberEntity.setMemberStatus(memberDTO.getMemberStatus());
+        return memberEntity;
+    }
+
+    public static MemberEntity toStatusUpdate(MemberEntity memberEntity, int memberStatus) {
+        memberEntity.setMemberStatus(memberStatus);
         return memberEntity;
     }
 }

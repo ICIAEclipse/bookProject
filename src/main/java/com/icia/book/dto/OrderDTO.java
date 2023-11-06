@@ -44,6 +44,7 @@ public class OrderDTO {
         for(OrderDetailEntity orderDetailEntity : orderEntity.getOrderDetailEntityList()){
             orderDetailDTOList.add(OrderDetailDTO.toDTO(orderDetailEntity));
         }
+        orderDTO.setOrderDetailDTOList(orderDetailDTOList);
         return orderDTO;
     }
 }

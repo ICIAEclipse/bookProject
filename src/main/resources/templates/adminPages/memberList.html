@@ -8,40 +8,140 @@
 <div th:replace="~{component/nav :: nav}"></div>
 
 <div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
     <div class="col">
-        <table class = "table table-striped">
-        <tr>
-            <th>id</th>
-            <th>이메일</th>
-            <th>이름</th>
-            <th>전화번호</th>
-            <th></th>
-        </tr>
-        <tr th:each="member: ${memberList}">
-            <td th:text="${member.id}"></td>
-            <td>
-                <a th:href="@{|/admin/member/${member.id}|}" th:text="${member.memberEmail}"></a>
-            </td>
-            <td th:text="${member.memberName}"></td>
-            <td th:text="${member.memberMobile}"></td>
-            <td>
-                <button class="btn btn-danger" th:onclick="member_delete([[${member.id}]])">삭제</button>
-            </td>
-        </tr>
+        <div class="row justify-content-center mb-3">
+            <div class="col-8">
+                <form action="/admin/member">
+                    <div class="input-group">
+                        <select name="type" class="form-select">
+                            <option value="memberEmail">이메일</option>
+                            <option value="memberName">회원이름</option>
+                        </select>
+                        <input class="form-control" name="q">
+                        <button class="btn btn-primary">검색</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <tr>
+                <th>id</th>
+                <th>이메일</th>
+                <th>이름</th>
+                <th>전화번호</th>
+                <th>상태</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+            <tr th:each="member: ${memberList}">
+                <td th:text="${member.id}"></td>
+                <td>
+                    <a th:href="@{|/admin/member/${member.id}|}" th:text="${member.memberEmail}"></a>
+                </td>
+                <td th:text="${member.memberName}"></td>
+                <td th:text="${member.memberMobile}"></td>
+                <td>
+                    <select class="form-select" th:id="|memberStatus${member.id}|">
+                        <option th:selected="${member.memberStatus == 0}" value="0">정상</option>
+                        <option th:selected="${member.memberStatus == 1}" value="1">회원탈퇴</option>
+                    </select>
+                </td>
+                <td>
+                    <button class="btn btn-secondary" th:onclick="member_update([[${member.id}]])">
+                        수정
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-danger" th:onclick="member_delete([[${member.id}]])">삭제</button>
+                </td>
+            </tr>
         </table>
+        <div class="container">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <!--첫페이지 요청 링크 /board?page=1 -->
+                    <a class="page-link" th:href="@{/admin/member(page=1, type=${type}, q=${q})}">
+                        <span>First</span>
+                    </a>
+                </li>
+
+                <li th:class="${memberList.first} ? 'disabled'" class="page-item">
+                    <!--boardList.first: isFirst()
+                        boardList.number: getNumber()-->
+                    <a class="page-link"
+                       th:href="${memberList.first} ? '#' : @{/admin/member(page=${memberList.number}, type=${type}, q=${q})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=2 -->
+                        <span><</span> <!-- < -->
+                    </a>
+                </li>
+
+                <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할
+                    for(int page=startPage; page<=endPage; page++) -->
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:class="${page == memberList.number + 1} ? 'page-item active'" class="page-item">
+                    <a class="page-link" th:text="${page}"
+                       th:href="@{/admin/member(page=${page}, type=${type}, q=${q})}"></a>
+                </li>
+
+                <!-- 다음 페이지 요청
+                    현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+                    getNumber() 값은 2임.
+                    따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+                <li th:class="${memberList.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="${memberList.last} ? '#' : @{/admin/member(page=${memberList.number + 2}, type=${type}, q=${q})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=4 -->
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/admin/member(page=${memberList.totalPages}, type=${type}, q=${q})}">
+                        <span>Last</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
 <script th:inline="javascript">
+    const page = [[${page}]];
+    const type = [[${type}]];
+    const q = [[${q}]];
+
+    const member_update = (id) => {
+        const statusId = "#memberStatus" + id;
+        const status = document.querySelector(statusId).value;
+        axios({
+            method: "put",
+            url: `/admin/member/${id}`,
+            data: {
+                id: id,
+                memberStatus: status
+            }
+        }).then(res => {
+            alert("수정성공");
+            location.href = `/admin/member?page=${page}&type=${type}&q=${q}`
+        }).catch(err => {
+            alert("수정실패");
+            console.log(err);
+        })
+    }
+
     const member_delete = (id) => {
         axios({
             method: "delete",
-            url: `/admin/member/delete/${id}`
+            url: `/admin/member/${id}`
         }).then(res => {
             alert("삭제 성공");
-            location.href = "/admin/member";
+            location.href = `/admin/member?page=${page}&type=${type}&q=${q}`
         }).catch(err => {
             alert("삭제 실패");
         })

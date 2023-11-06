@@ -52,14 +52,26 @@ public class OrderService {
     }
 
     @Transactional
+    public boolean checkCount(OrderDTO orderDTO) {
+        for(OrderDetailDTO orderDetailDTO : orderDTO.getOrderDetailDTOList()){
+            BookEntity bookEntity = bookRepository.findById(orderDetailDTO.getBookId()).orElseThrow(() -> new NoSuchElementException());
+            if(bookEntity.getBookCount()<orderDetailDTO.getBookCount()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Transactional
     public void saveOrder(OrderDTO orderDTO, String memberEmail) {
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
         OrderEntity orderEntity = orderRepository.save(OrderEntity.toSaveEntity(orderDTO,memberEntity));
         for(OrderDetailDTO orderDetailDTO : orderDTO.getOrderDetailDTOList()){
             BookEntity bookEntity = bookRepository.findById(orderDetailDTO.getBookId()).orElseThrow(() -> new NoSuchElementException());
+            bookEntity = BookEntity.toCountDownEntity(bookEntity, orderDetailDTO.getBookCount());
+            bookRepository.save(bookEntity);
             orderDetailRepository.save(OrderDetailEntity.toSaveEntity(orderDetailDTO, memberEntity, bookEntity, orderEntity));
         }
-
     }
 
     @Transactional
@@ -70,5 +82,24 @@ public class OrderService {
             orderDTOList.add(OrderDTO.toDTO(orderEntity));
         });
         return orderDTOList;
+    }
+
+    @Transactional
+    public List<OrderDetailDTO> findOrderDetailListById(Long orderId) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new NoSuchElementException());
+
+        List<OrderDetailDTO> orderDetailDTOList = new ArrayList<>();
+
+        orderEntity.getOrderDetailEntityList().forEach(orderDetailEntity -> {
+            orderDetailDTOList.add(OrderDetailDTO.toDTO(orderDetailEntity));
+        });
+
+        return orderDetailDTOList;
+    }
+
+    @Transactional
+    public OrderDTO findById(Long orderId) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new NoSuchElementException());
+        return OrderDTO.toDTO(orderEntity);
     }
 }
