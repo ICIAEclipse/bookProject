@@ -2,6 +2,7 @@ package com.icia.book.contoroller.member;
 
 import com.icia.book.dto.BasketDTO;
 import com.icia.book.dto.BookDTO;
+import com.icia.book.dto.MemberDTO;
 import com.icia.book.service.BasketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,9 +47,13 @@ public class BasketController {
 
     }
 
-    @GetMapping("/list")
-    public ResponseEntity basketFindAll(@RequestBody String memberEmail) {
-        System.out.println("확인 " + memberEmail);
+    @PostMapping("/list")
+    public ResponseEntity basketFindAll(@RequestBody MemberDTO memberDTO) {
+        System.out.println("확인 " +memberDTO);
+        BasketDTO basketDTO = basketService.findAll(memberDTO);
+
+        System.out.println("확인중입니다 " + basketDTO);
+
         boolean result = true;
         return new ResponseEntity<>(result, HttpStatus.OK);
 

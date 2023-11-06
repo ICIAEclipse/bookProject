@@ -59,43 +59,45 @@
     </nav>
 
     <script th:inline="javascript">
-            const pathname = window.location.pathname;
-            const url = window.location.pathname + window.location.search;
-            const to_login = () =>{
-                if(pathname == "/member/save" || pathname == "/member/login"){
-                    location.href = "/member/login"
-                }else{
-                    location.href = "/member/login?continued="+url;
-                }
+        const pathname = window.location.pathname;
+        const url = window.location.pathname + window.location.search;
+        const to_login = () => {
+            if (pathname == "/member/save" || pathname == "/member/login") {
+                location.href = "/member/login"
+            } else {
+                location.href = "/member/login?continued=" + url;
+            }
+        }
+
+
+        const basketList_fn = () => {
+            const memberEmail = [[${session.loginEmail}]];
+            const loginCheck = [[${session.loginEmail}]]
+            if (loginCheck == null) {
+                alert("로그인 페이지로 이동합니다!")
+                location.href = "/member/login"
+            } else {
+                axios({
+                    method: "post",
+                    url: "/basket/list",
+                    data: {
+                        memberEmail: memberEmail
+                    }
+                }).then(res => {
+                    alert("성공 ㅇㅅㅇ")
+
+                }).catch(err => {
+                    alert("실패 ㅠ_ㅠ")
+                })
             }
 
-            const basketList_fn = () => {
-                const memberEmail = [[${session.loginEmail}]];
-                alert("memberEmail확인 " + memberEmail);
-                const loginCheck = [[${session.loginEmail}]]
-                if (loginCheck == "") {
-                    alert("로그인 페이지로 이동합니다!")
-                    location.href = "/member/login"
-                } else {
-                    axios({
-                        method: "get",
-                        url: "/basket/list",
-                        data: {
-                            memberEmail: memberEmail,
-                        }
-                    }).then(res => {
-                        alert("성공 ㅇㅅㅇ")
-                        location.href = "/basket/list"
-                    }).catch(err => {
-                        alert("실패 ㅠ_ㅠ")
-                    })
-                }
-
-            }
-
+        }
 
     </script>
 
 </div>
 </body>
+<script th:inline="javascript">
+
+</script>
 </html>

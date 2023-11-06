@@ -1,5 +1,6 @@
 package com.icia.book.service;
 
+import com.icia.book.dto.BasketDTO;
 import com.icia.book.dto.BookDTO;
 import com.icia.book.dto.MemberDTO;
 import com.icia.book.entity.BasketEntity;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -46,8 +48,32 @@ public class BasketService {
         }
     }
 
-    public void findAll() {
-        System.out.println("바스켓 작업중");
+    public BasketDTO findAll(MemberDTO memberDTO) {
+        String memberEmail = memberDTO.getMemberEmail();
+        MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
+        System.out.println("무슨 값이 들어있을까? " + MemberDTO.toDTO(memberEntity));
+        MemberDTO memberDTO1 = MemberDTO.toDTO(memberEntity);
+        Long id = memberDTO1.getId();
+        System.out.println("무슨 값이 들어있을까? " + memberDTO1);
+        Optional<BasketEntity> basketEntityOptional = basketRepository.findById(id);
+        System.out.println("무슨 값일까? " + basketEntityOptional);
+        if(basketEntityOptional.isPresent()) {
+            BasketEntity basketEntity = basketEntityOptional.get();
+            BasketDTO basketDTO = BasketDTO.toSaveDTO(basketEntity);
+            return basketDTO;
+
+        } else {
+            return null;
+        }
+
+
+//        basketRepository.findByMemberId(memberId);
+//      MemberEntity memberEntity = memberRepository.findByMemberEmail(loginEmail).orElseThrow(() -> new NoSuchElementException()); // memberEmail 확인
+
+
+
+
+
     }
 }
 
