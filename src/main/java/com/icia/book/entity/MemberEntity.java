@@ -106,4 +106,9 @@ public class MemberEntity {
         memberEntity.setMemberStatus(memberDTO.getMemberStatus());
         return memberEntity;
     }
+
+    public static MemberEntity toStatusUpdate(MemberEntity memberEntity, int memberStatus) {
+        memberEntity.setMemberStatus(memberStatus);
+        return memberEntity;
+    }
 }
