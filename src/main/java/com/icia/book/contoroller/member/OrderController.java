@@ -31,8 +31,8 @@ public class OrderController {
             boolean result = orderService.findByOrderCode(orderCode);
             if(result){
                 String memberEmail = (String) session.getAttribute("loginEmail");
-                AddressDTO defaultAddressDTO = memberService.findDefaultAddressByMemberEmail(memberEmail);
-                List<OrderDetailDTO> orderDetailDTOList = orderService.findAllByBookIds(orderRequestDTO.getBooKIdList(), orderRequestDTO.getCountList());
+//                AddressDTO defaultAddressDTO = memberService.findDefaultAddressByMemberEmail(memberEmail);
+//                List<OrderDetailDTO> orderDetailDTOList = orderService.findAllByBookIds(orderRequestDTO.getBooKIdList(), orderRequestDTO.getCountList());
                 orderRequestDTO.setOrderCode(orderCode);
                 orderRequestDTO.setMemberEmail((String) session.getAttribute("loginEmail"));
                 return new ResponseEntity<>(orderRequestDTO, HttpStatus.OK);
@@ -73,7 +73,7 @@ public class OrderController {
         if(memberEmail.equals(session.getAttribute("loginEmail"))){
             System.out.println(orderDTO.getOrderDetailDTOList().get(0).getBookProfile());
 
-
+            System.out.println(orderDTO.getOrderStatus());
             boolean result = orderService.checkCount(orderDTO);
             if(result){
                 orderService.saveOrder(orderDTO, memberEmail);
@@ -86,7 +86,9 @@ public class OrderController {
         }
     }
 
-
+    /**
+     * 결제요청
+     */
     @PostMapping("/pay/kakaoPay")
     public ResponseEntity kakaoPayReady(@RequestBody KakaoPayReadyRequestDTO kakaoPayReadyRequestDTO,
                                         HttpSession session,
@@ -94,9 +96,42 @@ public class OrderController {
         String partNerUserId = (String) session.getAttribute("loginEmail");
         KakaoPayReadyResponseDTO kakaoPayReadyResponseDTO = payService.kakaoPayReady(kakaoPayReadyRequestDTO, partNerUserId);
 
-        System.out.println(kakaoPayReadyResponseDTO.getTid());
-        System.out.println(kakaoPayReadyResponseDTO.getNextRedirectAppUrl());
+
+        model.addAttribute("kakaoPayApprovalRequestDTO", kakaoPayReadyResponseDTO);
 
         return new ResponseEntity<>(kakaoPayReadyResponseDTO,HttpStatus.OK);
+    }
+
+    /**
+     * 결제 요청 성공
+     */
+    @GetMapping("/pay/success")
+    public String afterPayRequest(@RequestParam("pg_token") String pgToken,
+                                    @ModelAttribute KakaoPayApproveRequestDTO kakaoPayApproveRequestDTO,
+                                  Model model) {
+        System.out.println(kakaoPayApproveRequestDTO);
+
+        KakaoPayApproveResponseDTO kakaoPayApproveResponseDTO = payService.kakaoPayApprove(kakaoPayApproveRequestDTO, pgToken);
+        model.addAttribute("kakaoPayApprove", kakaoPayApproveResponseDTO);
+        model.addAttribute("payment", "success");
+        return "orderPages/successPay";
+    }
+
+    /**
+     * 결제 진행 중 취소
+     */
+    @GetMapping("/pay/cancel")
+    public String cancel(Model model) {
+        model.addAttribute("payment", "cancel");
+        return "orderPages/successPay";
+    }
+
+    /**
+     * 결제 실패
+     */
+    @GetMapping("/pay/fail")
+    public String fail(Model model) {
+        model.addAttribute("payment", "fail");
+        return "orderPages/successPay";
     }
 }

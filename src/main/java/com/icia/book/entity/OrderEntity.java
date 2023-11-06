@@ -63,6 +63,7 @@ public class OrderEntity {
         orderEntity.setOrderPostCode(orderDTO.getOrderPostCode());
         orderEntity.setOrderAddress(orderDTO.getOrderAddress());
         orderEntity.setOrderAddressDetail(orderDTO.getOrderAddressDetail());
+        orderEntity.setOrderStatus(orderDTO.getOrderStatus());
         orderEntity.setOrderMemberName(orderDTO.getOrderMemberName());
         orderEntity.setOrderMemberMobile(orderDTO.getOrderMemberMobile());
         orderEntity.setMemberEntity(memberEntity);
