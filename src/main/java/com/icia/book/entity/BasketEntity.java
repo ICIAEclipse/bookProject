@@ -2,9 +2,11 @@ package com.icia.book.entity;
 
 import com.icia.book.dto.BasketDTO;
 import com.icia.book.dto.BookDTO;
+import com.icia.book.dto.MemberDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.awt.print.Book;
@@ -34,6 +36,13 @@ public class BasketEntity {
         basketEntity.setMemberEntity(memberEntity);
         return basketEntity;
     }
+
+        public static BasketEntity toSaveMemberId(Long id) {
+        BasketEntity basketEntity = new BasketEntity();
+        basketEntity.setId(id);
+        return basketEntity;
+        }
+
 
 
 }
