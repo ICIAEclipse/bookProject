@@ -51,16 +51,22 @@ public class BasketService {
     public BasketDTO findAll(MemberDTO memberDTO) {
         String memberEmail = memberDTO.getMemberEmail();
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
-        System.out.println("무슨 값이 들어있을까? " + MemberDTO.toDTO(memberEntity));
         MemberDTO memberDTO1 = MemberDTO.toDTO(memberEntity);
         Long id = memberDTO1.getId();
-        System.out.println("무슨 값이 들어있을까? " + memberDTO1);
         Optional<BasketEntity> basketEntityOptional = basketRepository.findById(id);
-        System.out.println("무슨 값일까? " + basketEntityOptional);
+        Long id2 = basketEntityOptional.get().getId();
+        System.out.println("id 확인 " + id2);
+
+        basketRepository.findById(id2);
         if(basketEntityOptional.isPresent()) {
+            boolean result = basketEntityOptional.isPresent();
+            System.out.println("값이 있어요? " + result); // true
             BasketEntity basketEntity = basketEntityOptional.get();
-            BasketDTO basketDTO = BasketDTO.toSaveDTO(basketEntity);
-            return basketDTO;
+            System.out.println("확인111 " + basketEntity);
+
+
+
+            return null;
 
         } else {
             return null;
