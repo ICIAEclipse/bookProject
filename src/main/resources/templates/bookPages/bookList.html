@@ -52,16 +52,18 @@
                     </table>
                 </div>
                 <div class="col-12 col-md-auto">
+
                     <div class="text-center" th:if="${book.bookCount == 0}">
                         <input type="button" class="btn btn-outline-secondary" disabled value="품절">
                     </div>
                     <div class="text-center" th:unless="${book.bookCount == 0}">
 
                         <input type="button" class="btn btn-sm btn-outline-info" th:onclick="basket_fn([[${book.isbn}]])" value="찜">
-                        <input type="button" class="btn btn-sm btn-outline-info my-3" onclick="cart_fn()" value="장바구니">
+                        <input type="button" th:onclick="cart_fn([[${book.id}]])" value="장바구니">
 
                         <input type="button" class="btn btn-sm btn-outline-info" th:onclick="to_purchase([[${book.id}]])" value="바로구매">
                     </div>
+
                 </div>
             </div>
         </div>
@@ -119,11 +121,11 @@
 
 </body>
 <script th:inline="javascript">
-    const cart_fn = () => {
+    const cart_fn = (bookId) => {
         axios({
             method: "post",
             url: `/cart/save`,
-            data: {}
+            data: {bookId:bookId}
         }).then(res => {
             alert("장바구니 이동 성공");
             location.href = "/cart";

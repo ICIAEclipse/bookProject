@@ -13,14 +13,15 @@
             <table class="table table-striped">
                 <tr>
                     <th>주문번호</th>
+                    <th>도서표지</th>
                     <th>도서번호</th>
-                    <th>주문자이메일</th>
                     <th>주문수량</th>
+                    <th></th>
                 </tr>
                 <tr th:each="cart : ${cartList}">
                     <td th:text="${cart.id}"></td>
-                    <td th:text="${cart.bookId}"></td>
-                    <td th:text="${cart.memberEmail}"></td>
+                    <td><img th:src="${cart.bookDTO.bookProfile}"></td>
+                    <td th:text="${cart.bookDTO.id}"></td>
                     <td th:text="${cart.count}"></td>
                     <td>
                         <button class="btn btn-danger" th:onclick="cart_delete([[${cart.id}]])">삭제</button>

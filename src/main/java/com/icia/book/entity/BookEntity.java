@@ -116,9 +116,26 @@ public class BookEntity {
         return updateEntity;
     }
 
+
+    public static BookEntity toSaveEntity(BookDTO bookDTO) {
+        BookEntity booksEntity = new BookEntity();
+        booksEntity.setId(bookDTO.getId());
+        booksEntity.setIsbn(bookDTO.getIsbn());
+        booksEntity.setBookName(bookDTO.getBookName());
+        booksEntity.setBookAuthor(bookDTO.getBookAuthor());
+        booksEntity.setBookPublisher(bookDTO.getBookPublisher());
+        booksEntity.setBookDate(bookDTO.getBookDate());
+        booksEntity.setBookProfile(bookDTO.getBookProfile());
+        booksEntity.setBookCount(bookDTO.getBookCount());
+        booksEntity.setBookPrice(bookDTO.getBookPrice());
+        booksEntity.setBookSalePrice(bookDTO.getBookSalePrice());
+        booksEntity.setBookContents(bookDTO.getBookContents());
+        return booksEntity;
+
     public static BookEntity toCountDownEntity(BookEntity bookEntity, int saleCount) {
         BookEntity updateEntity = bookEntity;
         bookEntity.setBookCount(bookEntity.getBookCount() - saleCount);
         return updateEntity;
+
     }
 }
