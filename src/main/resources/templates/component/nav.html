@@ -28,7 +28,7 @@
                         <a class="nav-link" href="/book">책목록</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/basket">찜목록</a>
+                        <a class="nav-link" th:onclick="basketList_fn()">찜목록</a>
                     </li>
                 </ul>
                 <form action="/board" method="get" class="d-flex" role="search">
@@ -68,6 +68,32 @@
                     location.href = "/member/login?continued="+url;
                 }
             }
+
+            const basketList_fn = () => {
+                const memberEmail = [[${session.loginEmail}]];
+                alert("memberEmail확인 " + memberEmail);
+                const loginCheck = [[${session.loginEmail}]]
+                if (loginCheck == "") {
+                    alert("로그인 페이지로 이동합니다!")
+                    location.href = "/member/login"
+                } else {
+                    axios({
+                        method: "get",
+                        url: "/basket/list",
+                        data: {
+                            memberEmail: memberEmail,
+                        }
+                    }).then(res => {
+                        alert("성공 ㅇㅅㅇ")
+                        location.href = "/basket/list"
+                    }).catch(err => {
+                        alert("실패 ㅠ_ㅠ")
+                    })
+                }
+
+            }
+
+
     </script>
 
 </div>

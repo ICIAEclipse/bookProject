@@ -46,8 +46,12 @@ public class BasketController {
 
     }
 
-    @GetMapping
-    public String basketFindAll() {
-        return "/bookPages/basketList";
+    @GetMapping("/list")
+    public ResponseEntity basketFindAll(@RequestBody String memberEmail) {
+        System.out.println("확인 " + memberEmail);
+        boolean result = true;
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
     }
+
 }
