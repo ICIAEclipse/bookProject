@@ -1,13 +1,14 @@
 package com.icia.book.dto;
 
 import com.icia.book.entity.MemberEntity;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberDTO {
     private Long id;
     private String memberEmail;
