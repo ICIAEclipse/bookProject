@@ -116,10 +116,6 @@
             }
         }
         if(paymentETC == "kakaoPay"){
-            console.log(paymentETC)
-            console.log(itemName)
-            console.log(quantity)
-            console.log(totalPrice)
             axios({
                 method:"post",
                 url:"/order/pay/"+paymentETC,
@@ -129,9 +125,10 @@
                     total_amount : totalPrice,
                     partner_order_id : [[${orderCode}]],
                     partner_user_id : [[${session.loginEmail}]]
-                }
+                },
             }).then(res => {
-                console.log(res)
+                const next_url = res.data.next_redirect_pc_url
+                window.open(next_url,"_blank", `width=400, height=500`, "menubar=no, toolbar=no");
             }).catch(err => {
                 console.log(err)
             })
@@ -142,8 +139,15 @@
         }
     }
 
+    function handlePaymentResult(result) {
+        if (result === "success") {
+            order_fn(1); // 주문 처리 실행
+        } else if (result === "cancel" || result === "fail") {
+            alert("주문이 취소되었습니다.")
+        }
+    }
 
-    const order_fn = () =>{
+    const order_fn = (orderStatus) =>{
         const address = document.getElementById("address").textContent;
         const addressDetail = document.getElementById("addressDetail").textContent;
         const postCode = document.getElementById("postCode").textContent;
@@ -152,38 +156,37 @@
         const orderTotal = document.getElementById("total-price").getAttribute("value");
         const orderDetailList = [[${orderDetailList}]]
         const orderCode = [[${orderCode}]]
-        if(confirm("잘 되나 보자")){
             // 상품주문테이블 형성
-            axios({
-                method:"post",
-                url:"/order/order",
-                data:{
-                    orderMemberMobile : memberMobil,
-                    orderMemberName : memberName,
-                    orderTotal : orderTotal,
-                    orderAddressDetail : addressDetail,
-                    orderAddress : address,
-                    orderPostCode : postCode,
-                    orderCode : orderCode,
-                    orderDetailDTOList : orderDetailList,
-                },
-                params:{memberEmail : [[${member.memberEmail}]]}
-            }).then(res => {
-                alert("주문이 성공되었습니다.")
-                location.href = "/member/order"
-            }).catch(err => {
-                if(err.response.data == "countless"){
-                    alert("품목의 수량이 부족합니다." +
-                        "이전페이지로 이동합니다.")
-                    location.href = document.referrer
-                }else if(err.response.data == "not_equal_purchaser") {
-                    alert("구매자의 정보와 일치하지 않습니다." +
-                        "이전페이지로 이동합니다.")
-                    location.href = document.referrer
-                }else{
-                }
-            })
-        }
+        axios({
+            method:"post",
+            url:"/order/order",
+            data:{
+                orderMemberMobile : memberMobil,
+                orderMemberName : memberName,
+                orderTotal : orderTotal,
+                orderAddressDetail : addressDetail,
+                orderAddress : address,
+                orderPostCode : postCode,
+                orderCode : orderCode,
+                orderDetailDTOList : orderDetailList,
+                orderStatus : orderStatus,
+            },
+            params:{memberEmail : [[${member.memberEmail}]]}
+        }).then(res => {
+            alert("주문이 성공되었습니다.")
+            location.href = "/member/order"
+        }).catch(err => {
+            if(err.response.data == "countless"){
+                alert("품목의 수량이 부족합니다." +
+                    "이전페이지로 이동합니다.")
+                location.href = document.referrer
+            }else if(err.response.data == "not_equal_purchaser") {
+                alert("구매자의 정보와 일치하지 않습니다." +
+                    "이전페이지로 이동합니다.")
+                location.href = document.referrer
+            }else{
+            }
+        })
     }
 </script>
 </html>

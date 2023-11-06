@@ -7,15 +7,25 @@
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
+
 <div class="row m-5">
     <div class="col">
-
+        결제성공
     </div>
 </div>
+
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
 <script th:inline="javascript">
-
+    const confirmation = [[${payment}]]
+    if (window.opener) {
+        // 부모 창이 열려 있는 경우
+        window.opener.handlePaymentResult(confirmation);
+        window.close(); // 팝업 창 닫기
+    } else {
+        // 부모 창이 없는 경우 또는 팝업 창이 독립 실행되는 경우
+    }
 </script>
+
 </html>
