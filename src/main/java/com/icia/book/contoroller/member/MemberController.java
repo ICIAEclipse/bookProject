@@ -150,6 +150,22 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/delete")
+    public String delete(MemberDTO memberDTO, Model model) {
+        MemberDTO memberDTO1 = memberService.findById(memberDTO.getId());
+        System.out.println("여기는 딜리트의 계곡입니다. " + memberDTO1);
+        model.addAttribute("member", memberDTO1);
+        return "memberPages/memberDelete";
+    }
+
+    @PostMapping("delete")
+    public String delete(MemberDTO memberDTO) {
+        memberService.update(memberDTO);
+        return "redirect:/member/logout";
+    }
+
+    ////////////////////////////////////////////
+
     @GetMapping("/address")
     public String addressForm(HttpSession session,
                               Model model,
@@ -207,26 +223,15 @@ public class MemberController {
         return new ResponseEntity<>(addressDTOPage,HttpStatus.OK);
     }
 
-    @GetMapping("/delete")
-    public String delete(MemberDTO memberDTO, Model model) {
-        MemberDTO memberDTO1 = memberService.findById(memberDTO.getId());
-        System.out.println("여기는 딜리트의 계곡입니다. " + memberDTO1);
-        model.addAttribute("member", memberDTO1);
-        return "memberPages/memberDelete";
-    }
-
-    @PostMapping("delete")
-    public String delete(MemberDTO memberDTO) {
-        memberService.update(memberDTO);
-        return "redirect:/member/logout";
-    }
+    ////////////////////////////////////////
 
     @GetMapping("/order")
-    public String orderList(HttpSession session,
+    public String orderList(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                            HttpSession session,
                             Model model){
         MemberDTO memberDTO = memberService.findByMemberEmail((String) session.getAttribute("loginEmail"));
         model.addAttribute("member", memberDTO);
-        List<OrderDTO> orderDTOList = orderService.findAllByMemberEntity(memberDTO.getId());
+        Page<OrderDTO> orderDTOList = orderService.findAllByMemberEntity(memberDTO.getId(), page);
         model.addAttribute("orderList", orderDTOList);
         return "memberPages/orderList";
     }

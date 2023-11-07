@@ -131,6 +131,7 @@ public class BookEntity {
         booksEntity.setBookSalePrice(bookDTO.getBookSalePrice());
         booksEntity.setBookContents(bookDTO.getBookContents());
         return booksEntity;
+    }
 
     public static BookEntity toCountDownEntity(BookEntity bookEntity, int saleCount) {
         BookEntity updateEntity = bookEntity;
