@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+<div class="row m-5">
+    <div class="col">
+        <div class="text-end mb-3">
+            <button class="btn btn-primary">1 대 1 문의</button>
+        </div>
+        <div class="mb-3">
+            <h2>FAQ</h2>
+        </div>
+        <div class="row mb-3">
+            <div class="col-3 mb-3">
+                <div class="input-group">
+                    <button class="btn btn-outline-secondary form-control">베스트10</button>
+                </div>
+            </div>
+            <div class="col-3 mb-3" th:each="csCategory : ${csCenterCategoryList}">
+                <div class="input-group">
+                    <button class="btn btn-outline-secondary form-control" th:text="${csCategory.centerName}"></button>
+                </div>
+            </div>
+        </div>
+        <div id="faq-print-area mb-3"></div>
+        <div class="mb-3">
+            <h2>공지사항</h2>
+        </div>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+
+</body>
+<script th:inline="javascript">
+</script>
+</html>
