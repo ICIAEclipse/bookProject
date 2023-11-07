@@ -11,6 +11,9 @@ import com.icia.book.repository.MemberRepository;
 import com.icia.book.repository.OrderDetailRepository;
 import com.icia.book.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,13 +78,24 @@ public class OrderService {
     }
 
     @Transactional
-    public List<OrderDTO> findAllByMemberEntity(Long memberId) {
+    public Page<OrderDTO> findAllByMemberEntity(Long memberId, int page) {
+        int pageLimit = 5;
         MemberEntity memberEntity = memberRepository.findById(memberId).orElseThrow(() -> new NoSuchElementException());
-        List<OrderDTO> orderDTOList = new ArrayList<>();
-        memberEntity.getOrderEntityList().forEach(orderEntity -> {
-            orderDTOList.add(OrderDTO.toDTO(orderEntity));
-        });
-        return orderDTOList;
+        Page<OrderEntity> orderEntityPage = orderRepository.findAllByMemberEntity(memberEntity, PageRequest.of(page-1,pageLimit, Sort.by(Sort.Order.desc("id"))));
+        Page<OrderDTO> orderDTOPage = orderEntityPage.map(orderEntity ->
+            OrderDTO.builder()
+                .id(orderEntity.getId())
+                .orderCode(orderEntity.getOrderCode())
+                .orderAddress(orderEntity.getOrderAddress())
+                .orderAddressDetail(orderEntity.getOrderAddressDetail())
+                .orderPostCode(orderEntity.getOrderPostCode())
+                .orderMemberName(orderEntity.getOrderMemberName())
+                .orderMemberMobile(orderEntity.getOrderMemberMobile())
+                .orderStatus(orderEntity.getOrderStatus())
+                .orderDate(orderEntity.getOrderDate())
+                .orderTotal(orderEntity.getOrderTotal())
+                .build());
+        return orderDTOPage;
     }
 
     @Transactional
