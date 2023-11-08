@@ -12,30 +12,126 @@
         <div class="text-end mb-3">
             <button class="btn btn-primary">1 대 1 문의</button>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 text-center">
             <h2>FAQ</h2>
         </div>
         <div class="row mb-3">
             <div class="col-3 mb-3">
                 <div class="input-group">
-                    <button class="btn btn-outline-secondary form-control">베스트10</button>
+                    <button class="btn btn-outline-secondary form-control" onclick="faq_list(-1, 1)">베스트10</button>
                 </div>
             </div>
             <div class="col-3 mb-3" th:each="csCategory : ${csCenterCategoryList}">
                 <div class="input-group">
-                    <button class="btn btn-outline-secondary form-control" th:text="${csCategory.centerName}"></button>
+                    <button class="btn btn-outline-secondary form-control" th:text="${csCategory.centerName}"
+                            th:onclick="faq_list([[${csCategory.id}]], 1)"></button>
                 </div>
             </div>
         </div>
-        <div id="faq-print-area mb-3"></div>
-        <div class="mb-3">
+        <div id="faq-print-area" class="mb-3"></div>
+        <div class="text-center mb-3">
             <h2>공지사항</h2>
         </div>
     </div>
 </div>
 <div th:replace="~{component/footer :: footer}"></div>
-
 </body>
 <script th:inline="javascript">
+    const blockLimit = 3;
+
+    const upHits = (id) => {
+        axios({
+            method: "put",
+            url: "/csCenter/faq/upHits",
+            data: {
+                id: id
+            }
+        }).then(res => {
+        }).catch(err => {
+        });
+    }
+
+    const handleAccordionClick = (button, faqId) => {
+        if (!button.classList.contains('collapsed')) {
+            upHits(faqId);
+        }
+    }
+
+    const print_list = (id, page, data) => {
+        const startPage = (Math.ceil(page / blockLimit) - 1) * blockLimit + 1;
+        let endPage = (startPage + blockLimit - 1) < data.totalPages ? startPage + blockLimit - 1 : data.totalPages;
+        if (id == -1) {
+            endPage = 2;
+        }
+        const print_area = document.querySelector("#faq-print-area");
+        let result = "<div class=\"accordion mb-3\" id=\"accordionExample\">";
+        for (let i in data.content) {
+            result += "<div class=\"accordion-item\">";
+            result += "<h2 class=\"accordion-header\">"
+            result += "<button class=\"accordion-button collapsed\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse" + data.content[i].id + "\" aria-expanded=\"false\" aria-controls=\"collapse" + data.content[i].id + "\" onclick=\"handleAccordionClick(this, " + data.content[i].id + ")\">"
+            result += data.content[i].faqTitle;
+            result += "</button>";
+            result += "</h2>";
+            result += "<div id=\"collapse" + data.content[i].id + "\" class=\"accordion-collapse collapse\" data-bs-parent=\"#accordionExample\">";
+            result += "<div class=\"accordion-body\">";
+            result += data.content[i].faqContents;
+            result += "</div></div></div>";
+        }
+        result += "</div>";
+        result += "<div class=\"container\">";
+        result += "<ul class=\"pagination justify-content-center\">"
+        result += "<li class=\"page-item\">";
+        result += "<a class=\"page-link\" onclick=\"faq_list(" + id + "," + 1 + ")\">";
+        result += "<span>First</span>";
+        result += "</a>";
+        result += "</li>";
+        if (data.first) {
+            result += "<li class=\"page-item disabled\">"
+        } else {
+            result += "<li class=\"page-item\">"
+        }
+        result += "<a class=\"page-link\" onclick=\"faq_list(" + id + "," + (page - 1) + ")\">"
+        result += "<span><</span>";
+        result += "</a>";
+        result += "</li>";
+        for (let i = startPage; i <= endPage; i++) {
+            if (i == page) {
+                result += "<li class=\"page-item active\">";
+            } else {
+                result += "<li class=\"page-item\">";
+            }
+            result += "<a class=\"page-link\" onclick=\"faq_list(" + id + "," + i + ")\">";
+            result += "<span>" + i + "</span>";
+            result += "</li>";
+        }
+        if (data.last) {
+            result += "<li class=\"page-item disabled\">"
+        } else if (id == -1 && page == 2) {
+            result += "<li class=\"page-item disabled\">"
+        } else {
+            result += "<li class=\"page-item\">"
+        }
+        result += "<a class=\"page-link\" onclick=\"faq_list(" + id + "," + (page + 1) + ")\">"
+        result += "<span>></span>";
+        result += "</a>";
+        result += "</li>";
+        result += "<li class=\"page-item\">";
+        result += "<a class=\"page-link\" onclick=\"faq_list(" + id + "," + data.totalPages + ")\">";
+        result += "<span>Last</span>";
+        result += "</a>";
+        result += "</li>";
+
+        print_area.innerHTML = result;
+    }
+    const faq_list = (id, page) => {
+        axios({
+            method: "get",
+            url: `/csCenter/faq/list?id=${id}&page=${page}`
+        }).then(res => {
+            print_list(id, page, res.data);
+        }).catch(err => {
+            console.log(err);
+        })
+    }
 </script>
 </html>
