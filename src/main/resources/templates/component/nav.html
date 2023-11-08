@@ -84,20 +84,9 @@
             const loginCheck = [[${session.loginEmail}]]
             if (loginCheck == null) {
                 alert("로그인 페이지로 이동합니다!")
-                location.href = "/member/login"
+                location.href = "/member/login";
             } else {
-                axios({
-                    method: "post",
-                    url: "/basket/list",
-                    data: {
-                        memberEmail: memberEmail
-                    }
-                }).then(res => {
-                    alert("성공 ㅇㅅㅇ")
-
-                }).catch(err => {
-                    alert("실패 ㅠ_ㅠ")
-                })
+                location.href = "/basket/list";
             }
 
         }
