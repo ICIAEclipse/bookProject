@@ -1,7 +1,9 @@
 package com.icia.book.service;
 
 import com.icia.book.dto.CscenterCategoryDTO;
+import com.icia.book.dto.FaqDTO;
 import com.icia.book.entity.CsCenterCategoryEntity;
+import com.icia.book.entity.FaqEntity;
 import com.icia.book.entity.InquiryEntity;
 import com.icia.book.repository.CsCenterCategoryRepository;
 import com.icia.book.repository.InquiryRepository;

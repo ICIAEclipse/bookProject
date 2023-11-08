@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -69,5 +70,33 @@ public class FaqService {
 
     public void delete(Long id) {
         faqRepository.deleteById(id);
+    }
+
+    @Transactional
+    public Page<FaqDTO> findAllById(Long id, int page) {
+        page = page - 1;
+        int pageLimit = 5;
+        Page<FaqEntity> faqEntities = null;
+        if(id == -1L){
+            faqEntities = faqRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "faqHits")));
+        } else {
+            CsCenterCategoryEntity csCenterCategoryEntity = csCenterCategoryRepository.findById(id).orElseThrow(()->new NoSuchElementException());
+            faqEntities = faqRepository.findByCscenterCategoryEntity(csCenterCategoryEntity, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "faqHits")));
+        }
+        Page<FaqDTO> faqDTOPage = faqEntities.map(faqEntity ->
+                FaqDTO.builder()
+                        .id(faqEntity.getId())
+                        .faqTitle(faqEntity.getFaqTitle())
+                        .faqContents(faqEntity.getFaqContents())
+                        .faqHits(faqEntity.getFaqHits())
+                        .cscenterCategoryId(faqEntity.getCscenterCategoryEntity().getId())
+                        .build()
+                );
+        return faqDTOPage;
+    }
+
+    @Transactional
+    public void upHits(Long id) {
+        faqRepository.upHits(id);
     }
 }
