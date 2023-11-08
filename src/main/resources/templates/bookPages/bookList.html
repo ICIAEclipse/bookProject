@@ -127,8 +127,12 @@
             url: `/cart/save`,
             data: {bookId:bookId}
         }).then(res => {
-            alert("장바구니 이동 성공");
-            location.href = "/cart";
+            if(res.data) {
+                alert("장바구니에 이미 담겨져 있습니다.")
+                }else {
+                alert("장바구니 이동 성공");
+                location.href = "/cart";
+                }
         }).catch(err => {
             alert("장바구니 이동 실패");
         })
