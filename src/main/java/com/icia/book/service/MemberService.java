@@ -1,9 +1,12 @@
 package com.icia.book.service;
 
+import com.icia.book.contoroller.util.UtilClass;
 import com.icia.book.dto.AddressDTO;
 import com.icia.book.dto.MemberDTO;
+import com.icia.book.dto.NoticeDTO;
 import com.icia.book.entity.AddressEntity;
 import com.icia.book.entity.MemberEntity;
+import com.icia.book.entity.NoticeEntity;
 import com.icia.book.repository.AddressRepository;
 import com.icia.book.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,14 +44,31 @@ public class MemberService {
         }
     }
 
-    public List<MemberDTO> findAll() {
-        List<MemberEntity> memberEntityList = memberRepository.findAll();
-        List<MemberDTO> memberDTOList = new ArrayList<>();
-        for(MemberEntity memberEntity: memberEntityList){
-            memberDTOList.add(MemberDTO.toDTO(memberEntity));
-        }
-        return memberDTOList;
+    public Page<MemberDTO> findAll(int page, String type, String q) {
 
+        page = page - 1;
+        int pageLimt = 10;
+        Page<MemberEntity> memberEntityList = null;
+        if (q.equals("")) {
+            memberEntityList = memberRepository.findAll(PageRequest.of(page, pageLimt, Sort.by(Sort.Direction.DESC, "id")));
+        } else {
+            if(type.equals("memberEmail")){
+                memberEntityList = memberRepository.findByMemberEmailContaining(q, PageRequest.of(page, pageLimt, Sort.by(Sort.Direction.DESC, "id")));
+            } else {
+                memberEntityList = memberRepository.findByMemberNameContaining(q, PageRequest.of(page, pageLimt, Sort.by(Sort.Direction.DESC, "id")));
+            }
+        }
+        Page<MemberDTO> memberDTOList = memberEntityList.map(memberEntity ->
+                MemberDTO.builder()
+                        .id(memberEntity.getId())
+                        .memberEmail(memberEntity.getMemberEmail())
+                        .memberName(memberEntity.getMemberName())
+                        .memberMobile(memberEntity.getMemberMobile())
+                        .memberStatus(memberEntity.getMemberStatus())
+                        .build()
+        );
+
+        return memberDTOList;
     }
 
 
@@ -165,5 +185,11 @@ public class MemberService {
         }else {
             return null;
         }
+    }
+
+    public void statusUpdate(MemberDTO memberDTO) {
+        MemberEntity memberEntity = memberRepository.findById(memberDTO.getId()).orElseThrow(() -> new NoSuchElementException());
+        memberEntity = MemberEntity.toStatusUpdate(memberEntity, memberDTO.getMemberStatus());
+        memberRepository.save(memberEntity);
     }
 }

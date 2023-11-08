@@ -30,10 +30,11 @@ public class CartEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    public static CartEntity toCartEntity(CartDTO cartDTO){
+    public static CartEntity toSaveEntity(MemberEntity memberEntity, BookEntity bookEntity){
         CartEntity cartEntity = new CartEntity();
-        cartEntity.setId(cartDTO.getId());
-        cartEntity.setCount(cartDTO.getCount());
+        cartEntity.setCount(1);
+        cartEntity.setBookEntity(bookEntity);
+        cartEntity.setMemberEntity(memberEntity);
         return cartEntity;
     }
 }

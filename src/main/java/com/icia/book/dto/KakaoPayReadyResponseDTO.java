@@ -11,8 +11,8 @@ import java.util.Date;
 @ToString
 public class KakaoPayReadyResponseDTO {
     private String tid;
-    private String nextRedirectAppUrl;
-    private String nextRedirectModUrl;
-    private String nextRedirectPcUrl;
-    private Date createdAt;
+    private String next_redirect_app_url;
+    private String next_redirect_mod_url;
+    private String next_redirect_pc_url;
+    private Date created_at;
 }

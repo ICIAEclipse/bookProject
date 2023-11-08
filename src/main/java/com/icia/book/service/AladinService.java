@@ -34,4 +34,22 @@ public class AladinService {
         AladinSearchDTO aladinSearchDTO = objectMapper.readValue(response.getBody(), AladinSearchDTO.class);
         return aladinSearchDTO;
     }
+
+    public AladinSearchDTO bestSeller(int page) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<String> response = restTemplate.getForEntity(aladin_list_URL + "?ttbkey="+ aladin_api_key +"&QueryType=Bestseller&Start="+ page +"&SearchTarget=book&output=js&Version=20131101", String.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+        AladinSearchDTO aladinSearchDTO = objectMapper.readValue(response.getBody(), AladinSearchDTO.class);
+        return aladinSearchDTO;
+    }
+
+    public AladinSearchDTO itemNewSpecial(int page) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<String> response = restTemplate.getForEntity(aladin_list_URL + "?ttbkey="+ aladin_api_key +"&QueryType=ItemNewSpecial&Start="+ page +"&SearchTarget=book&output=js&Version=20131101", String.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+        AladinSearchDTO aladinSearchDTO = objectMapper.readValue(response.getBody(), AladinSearchDTO.class);
+        return aladinSearchDTO;
+    }
 }
