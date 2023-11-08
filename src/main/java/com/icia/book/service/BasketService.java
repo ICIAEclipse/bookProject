@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -48,37 +49,16 @@ public class BasketService {
         }
     }
 
-    public BasketDTO findAll(MemberDTO memberDTO) {
-        String memberEmail = memberDTO.getMemberEmail();
+    @Transactional
+    public List<BasketDTO> findAll(String memberEmail) {
         MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
-        MemberDTO memberDTO1 = MemberDTO.toDTO(memberEntity);
-        Long id = memberDTO1.getId();
-        Optional<BasketEntity> basketEntityOptional = basketRepository.findById(id);
-        Long id2 = basketEntityOptional.get().getId();
-        System.out.println("id 확인 " + id2);
-
-        basketRepository.findById(id2);
-        if(basketEntityOptional.isPresent()) {
-            boolean result = basketEntityOptional.isPresent();
-            System.out.println("값이 있어요? " + result); // true
-            BasketEntity basketEntity = basketEntityOptional.get();
-            System.out.println("확인111 " + basketEntity);
-
-
-
-            return null;
-
-        } else {
-            return null;
-        }
-
-
-//        basketRepository.findByMemberId(memberId);
-//      MemberEntity memberEntity = memberRepository.findByMemberEmail(loginEmail).orElseThrow(() -> new NoSuchElementException()); // memberEmail 확인
-
-
-
-
+        System.out.println("이건 확인해보고 싶어서 " + MemberDTO.toDTO(memberEntity));
+        List<BasketEntity> basketEntityList = basketRepository.findByMemberEntity(memberEntity);
+        List<BasketDTO> basketDTOList = new ArrayList<>();
+        basketEntityList.forEach(basketEntity -> {
+            basketDTOList.add(BasketDTO.toDTO(basketEntity));
+        });
+        return basketDTOList;
 
     }
 }

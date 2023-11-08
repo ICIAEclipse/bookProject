@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -20,43 +22,14 @@ import java.util.NoSuchElementException;
 public class BasketController {
     private final BasketService basketService;
 
-    @PostMapping
-    public ResponseEntity basket(@RequestBody BasketDTO basketDTO) {
-        boolean result = basketService.save(basketDTO.getIsbn(), basketDTO.getMemberEmail());
-        return new ResponseEntity<>(result, HttpStatus.OK);
 
-//        try {
-//            boolean check = basketService.findById(basketDTO.getIsbn(), basketDTO.getMemberEmail());
-//            if (check == true) { // 있음
-//                // DB에서 기존의 것 제거
-//                basketService.delete(basketDTO.getIsbn(), basketDTO.getMemberEmail());
-//                return new ResponseEntity<>("basket", HttpStatus.OK);
-//            } else { // 없음
-//                // DB에 추가
-//                basketService.save(basketDTO.getIsbn(), basketDTO.getMemberEmail());
-//                return new ResponseEntity<>("basket", HttpStatus.OK);
-//            }
-//
-//
-//        } catch (NoSuchElementException e) {
-//            return new ResponseEntity<>("책 또는 회원을 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);
-//        }
-
-//        basketService.save(isbn, loginEmail);
-//        return new ResponseEntity("basket", HttpStatus.OK);
-
-    }
-
-    @PostMapping("/list")
-    public ResponseEntity basketFindAll(@RequestBody MemberDTO memberDTO) {
-        System.out.println("확인 " +memberDTO);
-        BasketDTO basketDTO = basketService.findAll(memberDTO);
-
-        System.out.println("확인중입니다 " + basketDTO);
-
-        boolean result = true;
-        return new ResponseEntity<>(result, HttpStatus.OK);
-
+    @GetMapping("/list")
+    public String basketFindAll(HttpSession session, Model model) {
+        String loginEmail = (String) session.getAttribute("loginEmail");
+        List<BasketDTO> basketDTOList = basketService.findAll(loginEmail);
+        model.addAttribute("basketList", basketDTOList);
+        System.out.println(basketDTOList.toString());
+        return "/bookPages/basketList";
     }
 
 }
