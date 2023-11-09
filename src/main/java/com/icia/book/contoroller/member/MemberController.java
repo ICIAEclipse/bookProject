@@ -231,8 +231,26 @@ public class MemberController {
                             Model model){
         MemberDTO memberDTO = memberService.findByMemberEmail((String) session.getAttribute("loginEmail"));
         model.addAttribute("member", memberDTO);
-        Page<OrderDTO> orderDTOList = orderService.findAllByMemberEntity(memberDTO.getId(), page);
-        model.addAttribute("orderList", orderDTOList);
+        Page<OrderDTO> orderDTOPage = orderService.findAllByMemberEntity(memberDTO.getId(), page);
+
+        int blockLimit = 5;
+        int startPage = 1;
+        int endPage = orderDTOPage.getTotalPages();
+        if(orderDTOPage.getTotalPages() >= blockLimit){
+            if(page+(blockLimit/2) <= orderDTOPage.getTotalPages()){
+                endPage = page+(blockLimit/2);
+            }
+            startPage= endPage-(blockLimit-1);
+            if(page-(blockLimit/2)<1){
+                startPage = 1;
+                endPage = 5;
+            }
+        }
+
+        model.addAttribute("orderList", orderDTOPage);
+        model.addAttribute("page", page);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         return "memberPages/orderList";
     }
 

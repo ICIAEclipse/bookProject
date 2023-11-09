@@ -37,6 +37,27 @@
                 </div>
             </div>
         </div>
+
+        <div id="paging" class="container" th:if="${!orderList.empty}">
+            <ul class="pagination justify-content-center">
+                <li th:class="${orderList.first}? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="@{/member/order(page=1)}">&lt;&lt;</a>
+                </li>
+                <li th:class="${orderList.first}? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="@{/member/order(page=${page}-1)}">&lt;</a>
+                </li>
+                <li th:each="pages : ${#numbers.sequence(startPage,endPage)}" th:class="${pages == orderList.number + 1}? 'page-item active'" class="page-item">
+                    <a th:name="pages" th:if="${pages != orderList.number + 1}" class="page-link" th:href="@{/member/order(page=${pages})}" th:text="${pages}"></a>
+                    <span th:name="pages" th:if="${pages == orderList.number + 1}" class="page-link" th:text="${pages}"></span>
+                </li>
+                <li th:class="${orderList.last}? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="@{/member/order(page=${page}+1)}">&gt;</a>
+                </li>
+                <li th:class="${orderList.last}? 'disabled'" class="page-item">
+                    <a class="page-link" th:href="@{/member/order(page=${orderList.totalPages})}">&gt;&gt;</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
 

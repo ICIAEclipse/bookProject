@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -29,5 +32,14 @@ public class OrderDetailDTO {
         orderDetailDTO.setMemberId(orderDetailEntity.getMemberEntity().getId());
         orderDetailDTO.setOrderId(orderDetailEntity.getOrderEntity().getId());
         return orderDetailDTO;
+    }
+
+    public static List<OrderDetailDTO> toList(List<OrderDetailEntity> orderDetailEntities){
+        List<OrderDetailDTO> orderDetailDTOList = new ArrayList<>();
+        for (OrderDetailEntity orderDetailEntity: orderDetailEntities) {
+            OrderDetailDTO orderDetailDTO = OrderDetailDTO.toDTO(orderDetailEntity);
+            orderDetailDTOList.add(orderDetailDTO);
+        }
+        return orderDetailDTOList;
     }
 }
