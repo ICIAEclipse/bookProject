@@ -1,10 +1,10 @@
 package com.icia.book.dto;
 
+import com.icia.book.contoroller.util.UtilClass;
 import com.icia.book.entity.OrderDetailEntity;
 import com.icia.book.entity.OrderEntity;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class OrderDTO {
     private String orderAddressDetail;
     private String orderPostCode;
     private int orderStatus;
-    private LocalDateTime orderDate;
+    private String orderDate;
     private Long memberId;
     private List<OrderDetailDTO> orderDetailDTOList;
 
@@ -39,7 +39,7 @@ public class OrderDTO {
         orderDTO.setOrderAddressDetail(orderEntity.getOrderAddressDetail());
         orderDTO.setOrderPostCode(orderEntity.getOrderPostCode());
         orderDTO.setOrderStatus(orderEntity.getOrderStatus());
-        orderDTO.setOrderDate(orderEntity.getOrderDate());
+        orderDTO.setOrderDate(UtilClass.dateTimeFormat(orderEntity.getOrderDate()));
         orderDTO.setMemberId(orderEntity.getMemberEntity().getId());
         List<OrderDetailDTO> orderDetailDTOList = new ArrayList<>();
         for(OrderDetailEntity orderDetailEntity : orderEntity.getOrderDetailEntityList()){

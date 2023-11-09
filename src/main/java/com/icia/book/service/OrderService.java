@@ -1,5 +1,6 @@
 package com.icia.book.service;
 
+import com.icia.book.contoroller.util.UtilClass;
 import com.icia.book.dto.OrderDTO;
 import com.icia.book.dto.OrderDetailDTO;
 import com.icia.book.entity.BookEntity;
@@ -96,7 +97,7 @@ public class OrderService {
                 .orderMemberName(orderEntity.getOrderMemberName())
                 .orderMemberMobile(orderEntity.getOrderMemberMobile())
                 .orderStatus(orderEntity.getOrderStatus())
-                .orderDate(orderEntity.getOrderDate())
+                .orderDate(UtilClass.dateTimeFormat(orderEntity.getOrderDate()))
                 .orderTotal(orderEntity.getOrderTotal())
                 .orderDetailDTOList(OrderDetailDTO.toList(orderEntity.getOrderDetailEntityList()))
                 .build());
