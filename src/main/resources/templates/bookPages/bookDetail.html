@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:replace="~{component/config :: config}"></th:block>
+
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+<div th:replace="~{component/nav :: nav}"></div>
+
+<div class="row">
+  <div class="col">
+    <table class="table table-striped">
+      <tr>
+        <th>도서번호</th>
+        <td th:text="${book.isbn}"></td>
+      </tr>
+      <tr>
+        <th>도서제목</th>
+        <td th:text="${book.bookName}"></td>
+      </tr>
+      <tr>
+        <th>도서표지</th>
+        <td>
+        <img th:src="${book.bookProfile}" width="120">
+        </td>
+      </tr>
+      <tr>
+        <th>도서가격</th>
+        <td th:text="${book.bookPrice}"></td>
+      </tr>
+      <tr>
+        <th>세일가격</th>
+        <td th:text="${book.bookSalePrice}"></td>
+      </tr>
+      <tr>
+        <th>내용</th>
+        <td th:text="${book.bookContents}"></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+</html>

@@ -97,4 +97,10 @@ public class BookService {
         bookEntity = BookEntity.toUpdateEntity(bookEntity, bookDTO, categoryEntity);
         bookRepository.save(bookEntity);
     }
+
+    public BookDTO findById(Long id) {
+        BookEntity bookEntity = bookRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        BookDTO bookDTO = BookDTO.toDTO(bookEntity);
+        return bookDTO;
+    }
 }

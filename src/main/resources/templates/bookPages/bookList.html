@@ -35,7 +35,7 @@
                         </tr>
                         <tr width="120">
                             <td width="120" rowspan="5">
-                                <img th:src="${book.bookProfile}" width="120">
+                                <a th:href="@{|/book/${book.id}|}"><img th:src="${book.bookProfile}" width="120"></a>
                             </td>
                         </tr>
                         <tr>
@@ -57,10 +57,8 @@
                         <input type="button" class="btn btn-outline-secondary" disabled value="품절">
                     </div>
                     <div class="text-center" th:unless="${book.bookCount == 0}">
-
                         <input type="button" class="btn btn-sm btn-outline-info" th:onclick="basket_fn([[${book.isbn}]])" value="찜">
-                        <input type="button" th:onclick="cart_fn([[${book.id}]])" value="장바구니">
-
+                        <input type="button" class="btn btn-sm btn-outline-info" th:onclick="cart_fn([[${book.id}]])" value="장바구니">
                         <input type="button" class="btn btn-sm btn-outline-info" th:onclick="to_purchase([[${book.id}]])" value="바로구매">
                     </div>
 
