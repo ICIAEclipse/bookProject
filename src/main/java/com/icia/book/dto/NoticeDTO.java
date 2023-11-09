@@ -33,7 +33,7 @@ public class NoticeDTO {
         noticeDTO.setNoticeTitle(noticeEntity.getNoticeTitle());
         noticeDTO.setNoticeContents(noticeEntity.getNoticeContents());
         noticeDTO.setFileAttached(noticeEntity.getFileAttached());
-        noticeDTO.setCreatedAt(UtilClass.dateTimeFormat(noticeEntity.getCreatedAt()));
+        noticeDTO.setCreatedAt(UtilClass.dateFormat(noticeEntity.getCreatedAt()));
         if(noticeEntity.getFileAttached() == 1){
             for(NoticeFileEntity noticeFileEntity : noticeEntity.getNoticeFileEntityList()){
                 noticeDTO.getNoticeFileList().add(NoticeFileDTO.toDTO(noticeFileEntity));

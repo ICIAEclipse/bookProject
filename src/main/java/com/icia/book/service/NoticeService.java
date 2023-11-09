@@ -61,14 +61,14 @@ public class NoticeService {
         return savedEntity.getId();
     }
 
-    public Page<NoticeDTO> findAll(String q, String type, int page) {
+    public Page<NoticeDTO> findAll(String q, int page) {
         page = page - 1;
         int pageLimt = 10;
         Page<NoticeEntity> noticeEntities = null;
         if (q.equals("")) {
             noticeEntities = noticeRepository.findAll(PageRequest.of(page, pageLimt, Sort.by(Sort.Direction.DESC, "id")));
         } else {
-            noticeEntities = noticeRepository.findByNoticeContentsContaining(q, PageRequest.of(page, pageLimt, Sort.by(Sort.Direction.DESC, "id")));
+            noticeEntities = noticeRepository.findByNoticeTitleContaining(q, PageRequest.of(page, pageLimt, Sort.by(Sort.Direction.DESC, "id")));
         }
         Page<NoticeDTO> noticeDTOPage = noticeEntities.map(noticeEntity ->
                 NoticeDTO.builder()

@@ -6,6 +6,5 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
-
-    Page<NoticeEntity> findByNoticeContentsContaining(String q, PageRequest pageRequest);
+    Page<NoticeEntity> findByNoticeTitleContaining(String q, PageRequest pageRequest);
 }

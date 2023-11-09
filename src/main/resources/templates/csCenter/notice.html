@@ -32,6 +32,15 @@
         <div class="text-center mb-3">
             <h2>공지사항</h2>
         </div>
+        <div id="notice-print-area" class="mb-3"></div>
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <div class="input-group">
+                    <input class="form-control" name="notice-search">
+                    <button class="btn btn-outline-secondary">검색</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div th:replace="~{component/footer :: footer}"></div>
@@ -64,7 +73,7 @@
             endPage = 2;
         }
         const print_area = document.querySelector("#faq-print-area");
-        let result = "<div class=\"accordion mb-3\" id=\"accordionExample\">";
+        let result = "<div class=\"accordion mb-5\" id=\"accordionExample\">";
         for (let i in data.content) {
             result += "<div class=\"accordion-item\">";
             result += "<h2 class=\"accordion-header\">"
@@ -116,11 +125,16 @@
         result += "</a>";
         result += "</li>";
         result += "<li class=\"page-item\">";
-        result += "<a class=\"page-link\" onclick=\"faq_list(" + id + "," + data.totalPages + ")\">";
+        if (id == -1) {
+            result += "<a class=\"page-link\" onclick=\"faq_list(" + id + "," + 2 + ")\">";
+        } else {
+            result += "<a class=\"page-link\" onclick=\"faq_list(" + id + "," + data.totalPages + ")\">";
+        }
         result += "<span>Last</span>";
         result += "</a>";
         result += "</li>";
-
+        result += "</ul>"
+        result += "</div>"
         print_area.innerHTML = result;
     }
     const faq_list = (id, page) => {
@@ -133,5 +147,92 @@
             console.log(err);
         })
     }
+
+    const detail_fn = (id) => {
+        location.href = `/csCenter/notice/${id}`;
+    }
+
+    const print_notice_list = (q, page, data) => {
+        const print_area = document.querySelector("#notice-print-area");
+        const startPage = (Math.ceil(page / blockLimit) - 1) * blockLimit + 1;
+        let endPage = (startPage + blockLimit - 1) < data.totalPages ? startPage + blockLimit - 1 : data.totalPages;
+        let result = "<table class=\"table table-hover\">";
+        result += "<tr>";
+        result += "<th>글번호</th>";
+        result += "<th>글제목</th>";
+        result += "<th>작성시간</th>";
+        result += "</tr>";
+        for (let i in data.content) {
+            result += "<tr onclick=\"detail_fn(" + data.content[i].id + ")\">";
+            result += "<td>" + data.content[i].id + "</td>"
+            result += "<td>" + data.content[i].noticeTitle + "</td>"
+            result += "<td>" + data.content[i].createdAt + "</td>"
+            result += "</tr>";
+        }
+        result += "</table>";
+        result += "<div class=\"container\">";
+        result += "<ul class=\"pagination justify-content-center\">"
+        result += "<li class=\"page-item\">";
+        result += "<a class=\"page-link\" onclick=\"faq_list(" + q + "," + 1 + ")\">";
+        result += "<span>First</span>";
+        result += "</a>";
+        result += "</li>";
+        if (data.first) {
+            result += "<li class=\"page-item disabled\">"
+        } else {
+            result += "<li class=\"page-item\">"
+        }
+        result += "<a class=\"page-link\" onclick=\"get_notice_list(" + q + "," + (page - 1) + ")\">"
+        result += "<span><</span>";
+        result += "</a>";
+        result += "</li>";
+        for (let i = startPage; i <= endPage; i++) {
+            if (i == page) {
+                result += "<li class=\"page-item active\">";
+            } else {
+                result += "<li class=\"page-item\">";
+            }
+            result += "<a class=\"page-link\" onclick=\"get_notice_list(" + q + "," + i + ")\">";
+            result += "<span>" + i + "</span>";
+            result += "</li>";
+        }
+        if (data.last) {
+            result += "<li class=\"page-item disabled\">"
+        } else {
+            result += "<li class=\"page-item\">"
+        }
+        result += "<a class=\"page-link\" onclick=\"get_notice_list(" + q + "," + (page + 1) + ")\">"
+        result += "<span>></span>";
+        result += "</a>";
+        result += "</li>";
+        result += "<li class=\"page-item\">";
+        result += "<a class=\"page-link\" onclick=\"get_notice_list(" + q + "," + data.totalPages + ")\">";
+        result += "<span>Last</span>";
+        result += "</a>";
+        result += "</li>";
+        result += "</ul>"
+        result += "</div>"
+        print_area.innerHTML = result;
+    }
+
+    const get_notice_list = (q, page) => {
+        axios({
+            method: "get",
+            url: `/csCenter/notice?q=${q}&page=${page}`
+        }).then(res => {
+            console.log(res.data);
+            print_notice_list(q, page, res.data);
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+
+    const search_notice_list = () => {
+        const q = document.querySelector('[name="notice-search"]').value;
+        const page = 1;
+        get_notice_list(q, page);
+    }
+
+    get_notice_list("", 1);
 </script>
 </html>
