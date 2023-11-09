@@ -12,7 +12,7 @@
         <div class="card mb-4">
             <div class="card-body p-5">
                 <div th:if="${defaultAddress != null}">
-                    <h6 id="addressName" th:text="${defaultAddress.addressName}" style="display:inline;">&nbsp;&emsp;[</h6><h6 id="postCode" th:text="${defaultAddress.postCode}" style="display:inline;"></h6>]
+                    <h6 id="addressName" class="me-3" th:text="${defaultAddress.addressName}" style="display:inline;"></h6><p style="display:inline;">[</p><h6 id="postCode" th:text="${defaultAddress.postCode}" style="display:inline;"></h6>]
                     <input type="button" class="btn btn-sm btn-outline-info" value="변경" onclick="set_address_fn()">
                     <br>
                     <h6 id="address" th:text="${defaultAddress.address}" style="display:inline;"></h6>&nbsp;<h6 id="addressDetail" th:text="${defaultAddress.addressDetail}" style="display:inline;"></h6>
@@ -190,7 +190,7 @@
     }
 
     const set_address_fn = () => {
-        
+        window.open("/member/order/address","_blank", `width=500, height=700`)
     }
 </script>
 </html>
