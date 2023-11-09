@@ -1,12 +1,9 @@
 package com.icia.book.service;
 
-import com.icia.book.contoroller.util.UtilClass;
 import com.icia.book.dto.AddressDTO;
 import com.icia.book.dto.MemberDTO;
-import com.icia.book.dto.NoticeDTO;
 import com.icia.book.entity.AddressEntity;
 import com.icia.book.entity.MemberEntity;
-import com.icia.book.entity.NoticeEntity;
 import com.icia.book.repository.AddressRepository;
 import com.icia.book.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -191,5 +188,15 @@ public class MemberService {
         MemberEntity memberEntity = memberRepository.findById(memberDTO.getId()).orElseThrow(() -> new NoSuchElementException());
         memberEntity = MemberEntity.toStatusUpdate(memberEntity, memberDTO.getMemberStatus());
         memberRepository.save(memberEntity);
+    }
+
+    public List<AddressDTO> findAllAddressByMemberEmail(String memberEmail) {
+        MemberEntity memberEntity = memberRepository.findByMemberEmail(memberEmail).orElseThrow(() -> new NoSuchElementException());
+        List<AddressEntity> addressEntityList = addressRepository.findAllByMemberEntity(memberEntity);
+        List<AddressDTO> addressDTOList = new ArrayList<>();
+        addressEntityList.forEach(addressEntity -> {
+            addressDTOList.add(AddressDTO.toDTO(addressEntity));
+        });
+        return addressDTOList;
     }
 }

@@ -267,4 +267,13 @@ public class MemberController {
         model.addAttribute("member", memberDTO);
         return "memberPages/orderDetail";
     }
+
+    @GetMapping("/order/address")
+    public String orderAddressForm(HttpSession session,
+                              Model model) {
+        String memberEmail = (String) session.getAttribute("loginEmail");
+        List<AddressDTO> addressDTOList = memberService.findAllAddressByMemberEmail(memberEmail);
+        model.addAttribute("addressList", addressDTOList);
+        return "orderPages/orderAddress";
+    }
 }
