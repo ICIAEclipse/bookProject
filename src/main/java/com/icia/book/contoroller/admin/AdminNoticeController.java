@@ -22,10 +22,9 @@ public class AdminNoticeController {
 
     @GetMapping
     public String findAll(@RequestParam(value = "q", required = false, defaultValue = "") String q,
-                          @RequestParam(value = "type", required = false, defaultValue = "noticeTitle") String type,
                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                           Model model) {
-        Page<NoticeDTO> noticeDTOPage = noticeService.findAll(q, type, page);
+        Page<NoticeDTO> noticeDTOPage = noticeService.findAll(q, page);
         int blockLimit = 3;
         int startPage = (((int) (Math.ceil((double) page / blockLimit))) - 1) * blockLimit + 1;
         int endPage = ((startPage + blockLimit - 1) < noticeDTOPage.getTotalPages()) ? startPage + blockLimit - 1 : noticeDTOPage.getTotalPages();
@@ -33,7 +32,6 @@ public class AdminNoticeController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("page", page);
-        model.addAttribute("type", type);
         model.addAttribute("q", q);
         return "adminPages/noticeList";
     }
