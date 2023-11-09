@@ -82,6 +82,10 @@ public class OrderService {
         int pageLimit = 5;
         MemberEntity memberEntity = memberRepository.findById(memberId).orElseThrow(() -> new NoSuchElementException());
         Page<OrderEntity> orderEntityPage = orderRepository.findAllByMemberEntity(memberEntity, PageRequest.of(page-1,pageLimit, Sort.by(Sort.Order.desc("id"))));
+
+        List<OrderDetailDTO> orderDetailDTOList = new ArrayList<>();
+        System.out.println(orderEntityPage.getContent().get(0).getOrderDetailEntityList());
+
         Page<OrderDTO> orderDTOPage = orderEntityPage.map(orderEntity ->
             OrderDTO.builder()
                 .id(orderEntity.getId())
@@ -94,6 +98,7 @@ public class OrderService {
                 .orderStatus(orderEntity.getOrderStatus())
                 .orderDate(orderEntity.getOrderDate())
                 .orderTotal(orderEntity.getOrderTotal())
+                .orderDetailDTOList(OrderDetailDTO.toList(orderEntity.getOrderDetailEntityList()))
                 .build());
         return orderDTOPage;
     }
