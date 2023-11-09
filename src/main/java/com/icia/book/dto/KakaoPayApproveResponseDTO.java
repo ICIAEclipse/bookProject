@@ -1,6 +1,5 @@
 package com.icia.book.dto;
 
-import com.icia.book.util.Amount;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
