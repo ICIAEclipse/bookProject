@@ -69,4 +69,9 @@ public class OrderEntity {
         orderEntity.setMemberEntity(memberEntity);
         return orderEntity;
     }
+
+    public static OrderEntity updateStatus(OrderEntity orderEntity, int status) {
+        orderEntity.setOrderStatus(status);
+        return orderEntity;
+    }
 }

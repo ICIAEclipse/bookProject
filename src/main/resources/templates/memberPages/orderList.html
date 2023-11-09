@@ -13,7 +13,7 @@
         <div class="card p-5 my-3" th:each="order : ${orderList}">
             <div class="row justify-content-between">
                 <div class="col">
-                    <h5 class="order-date" th:text="|${#temporals.format(order.orderDate, 'yyyy년 MM일 dd일')} 주문|" style="display: inline"></h5>
+                    <h5 class="order-date" th:text="|${order.orderDate} 주문|" style="display: inline"></h5>
                     <h5 th:text="${order.orderStatus == 0}? '[결제대기중]'" style="display: inline"></h5>
                     <h5 th:text="${order.orderStatus == 1}? '[결제완료]'" style="display: inline"></h5>
                     <h5 th:text="${order.orderStatus == 2}? '[상품준비중]'" style="display: inline"></h5>

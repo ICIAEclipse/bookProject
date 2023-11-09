@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
+    <div class="col">
+        <div class="row mb-4">
+            <div class="col-2">
+                <select class="form-select" name="status">
+                    <option value="-1" th:selected="${status == -1}">전체보기</option>
+                    <option value="0" th:selected="${status == 0}">결제대기중</option>
+                    <option value="1" th:selected="${status == 1}">결제완료</option>
+                    <option value="2" th:selected="${status == 2}">상품준비중</option>
+                    <option value="3" th:selected="${status == 3}">배송중</option>
+                    <option value="4" th:selected="${status == 4}">배송완료</option>
+                    <option value="5" th:selected="${status == 5}">구매확정</option>
+                </select>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <tr>
+                <th>주문번호</th>
+                <th>주문자</th>
+                <th>주문자번호</th>
+                <th>주문일</th>
+                <th>주문상태</th>
+                <th>수정</th>
+            </tr>
+            <tr th:each="order: ${orderList}">
+                <td th:text="${order.orderCode}"></td>
+                <td th:text="${order.orderMemberName}"></td>
+                <td th:text="${order.orderMemberMobile}"></td>
+                <td th:text="${order.orderDate}"></td>
+                <td>
+                    <select class="form-select" th:id="|status${order.id}|">
+                        <option th:selected="${order.orderStatus == 0}" value="0">결제중</option>
+                        <option th:selected="${order.orderStatus == 1}" value="1">결제완료</option>
+                        <option th:selected="${order.orderStatus == 2}" value="2">상품준비중</option>
+                        <option th:selected="${order.orderStatus == 3}" value="3">배송중</option>
+                        <option th:selected="${order.orderStatus == 4}" value="4">배송완료</option>
+                        <option th:selected="${order.orderStatus == 5}" value="5">주문확정</option>
+                    </select>
+                </td>
+                <td>
+                    <button class="btn btn-secondary" th:onclick="update_fn([[${order.id}]])">상태수정</button>
+                </td>
+            </tr>
+        </table>
+        <div class="container">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <!--첫페이지 요청 링크 /board?page=1 -->
+                    <a class="page-link" th:href="@{/admin/order(page=1, status=${status})}">
+                        <span>First</span>
+                    </a>
+                </li>
+
+                <li th:class="${orderList.first} ? 'disabled'" class="page-item">
+                    <!--boardList.first: isFirst()
+                        boardList.number: getNumber()-->
+                    <a class="page-link"
+                       th:href="${orderList.first} ? '#' : @{/admin/order(page=${noticeList.number}, status=${status})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=2 -->
+                        <span><</span> <!-- < -->
+                    </a>
+                </li>
+
+                <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할
+                    for(int page=startPage; page<=endPage; page++) -->
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:class="${page == orderList.number + 1} ? 'page-item active'" class="page-item">
+                    <a class="page-link" th:text="${page}"
+                       th:href="@{/admin/order(page=${page}, status=${status})}"></a>
+                </li>
+
+                <!-- 다음 페이지 요청
+                    현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+                    getNumber() 값은 2임.
+                    따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+                <li th:class="${orderList.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="${orderList.last} ? '#' : @{/admin/order(page=${noticeList.number + 2}, status=${status})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=4 -->
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/admin/order(page=${orderList.totalPages}, status=${status})}">
+                        <span>Last</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const update_fn = (id) => {
+        const status = document.querySelector("#status"+id).value;
+        axios({
+            method:"put",
+            url:"/admin/order",
+            data:{
+                id:id,
+                status:status
+            }
+        }).then(res => {
+            const page = [[${page}]];
+            const status = [[${status}]];
+            location.href = `/admin/order?page=${page}&status=${status}`;
+        }).catch(err => {
+            console.log(err);
+        })
+    }
+
+    const statusSelect = document.querySelector('[name="status"]');
+    statusSelect.addEventListener("change", () => {
+        let status = statusSelect.value;
+        location.href = `/admin/order?page=1&status=${status}`;
+    })
+</script>
+</html>

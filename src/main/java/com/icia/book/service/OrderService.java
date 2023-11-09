@@ -1,5 +1,6 @@
 package com.icia.book.service;
 
+import com.icia.book.contoroller.util.UtilClass;
 import com.icia.book.dto.OrderDTO;
 import com.icia.book.dto.OrderDetailDTO;
 import com.icia.book.entity.BookEntity;
@@ -120,5 +121,34 @@ public class OrderService {
     public OrderDTO findById(Long orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId).orElseThrow(() -> new NoSuchElementException());
         return OrderDTO.toDTO(orderEntity);
+    }
+
+
+    public Page<OrderDTO> findAllByStatus(int status, int page) {
+        page = page - 1;
+        int pageLimit = 10;
+        Page<OrderEntity> orderEntities = null;
+        if(status == -1){
+            orderEntities = orderRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        } else {
+            orderEntities = orderRepository.findByOrderStatus(status, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        }
+        Page<OrderDTO> orderDTOPage = orderEntities.map(orderEntity ->
+                OrderDTO.builder()
+                        .id(orderEntity.getId())
+                        .orderCode(orderEntity.getOrderCode())
+                        .orderDate(UtilClass.dateTimeFormat(orderEntity.getOrderDate()))
+                        .orderStatus(orderEntity.getOrderStatus())
+                        .orderMemberName(orderEntity.getOrderMemberName())
+                        .orderMemberMobile(orderEntity.getOrderMemberMobile())
+                        .build()
+        );
+        return orderDTOPage;
+    }
+
+    public void updateStatus(Long id, int status) {
+        OrderEntity orderEntity = orderRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        orderEntity = OrderEntity.updateStatus(orderEntity, status);
+        orderRepository.save(orderEntity);
     }
 }
