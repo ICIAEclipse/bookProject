@@ -1,4 +1,4 @@
-package com.icia.book.util;
+package com.icia.book.dto;
 
 import lombok.Getter;
 import lombok.Setter;
