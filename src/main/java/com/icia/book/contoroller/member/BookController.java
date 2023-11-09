@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -78,5 +75,12 @@ public class BookController {
         model.addAttribute("aladinSearch", aladinSearchDTO);
         model.addAttribute("categoryList", categoryService.findAll());
         return "bookPages/bookNew";
+    }
+
+    @GetMapping("/{id}")
+    public String findById(@PathVariable("id") Long id, Model model){
+        BookDTO bookDTO = bookService.findById(id);
+        model.addAttribute("book", bookDTO);
+        return "bookPages/bookDetail";
     }
 }
