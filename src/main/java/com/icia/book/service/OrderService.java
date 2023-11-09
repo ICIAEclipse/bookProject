@@ -97,7 +97,7 @@ public class OrderService {
                 .orderMemberName(orderEntity.getOrderMemberName())
                 .orderMemberMobile(orderEntity.getOrderMemberMobile())
                 .orderStatus(orderEntity.getOrderStatus())
-                .orderDate(orderEntity.getOrderDate())
+                .orderDate(UtilClass.dateTimeFormat(orderEntity.getOrderDate()))
                 .orderTotal(orderEntity.getOrderTotal())
                 .orderDetailDTOList(OrderDetailDTO.toList(orderEntity.getOrderDetailEntityList()))
                 .build());
