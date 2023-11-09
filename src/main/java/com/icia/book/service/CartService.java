@@ -25,9 +25,6 @@ public class CartService {
     public void save(CartDTO cartDTO) {
         MemberEntity memberEntity = memberRepository.findById(cartDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
         BookEntity bookEntity = bookRepository.findById(cartDTO.getBookId()).orElseThrow(() -> new NoSuchElementException());
-
-
-
         /*MemberEntity memberEntity = null;
         BookEntity bookEntity = null;
         if(optionalBookEntity.isEmpty() && optionalMemberEntity.isEmpty()){
@@ -45,12 +42,6 @@ public class CartService {
             bookEntity = optionalBookEntity.get();
             memberEntity = optionalMemberEntity.get();
         }*/
-
-
-
-
-
-
         CartEntity cartEntity = CartEntity.toSaveEntity(memberEntity, bookEntity);
         cartRepository.save(cartEntity);
     }

@@ -150,6 +150,22 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/delete")
+    public String delete(MemberDTO memberDTO, Model model) {
+        MemberDTO memberDTO1 = memberService.findById(memberDTO.getId());
+        System.out.println("여기는 딜리트의 계곡입니다. " + memberDTO1);
+        model.addAttribute("member", memberDTO1);
+        return "memberPages/memberDelete";
+    }
+
+    @PostMapping("delete")
+    public String delete(MemberDTO memberDTO) {
+        memberService.update(memberDTO);
+        return "redirect:/member/logout";
+    }
+
+    ////////////////////////////////////////////
+
     @GetMapping("/address")
     public String addressForm(HttpSession session,
                               Model model,
@@ -207,27 +223,34 @@ public class MemberController {
         return new ResponseEntity<>(addressDTOPage,HttpStatus.OK);
     }
 
-    @GetMapping("/delete")
-    public String delete(MemberDTO memberDTO, Model model) {
-        MemberDTO memberDTO1 = memberService.findById(memberDTO.getId());
-        System.out.println("여기는 딜리트의 계곡입니다. " + memberDTO1);
-        model.addAttribute("member", memberDTO1);
-        return "memberPages/memberDelete";
-    }
-
-    @PostMapping("delete")
-    public String delete(MemberDTO memberDTO) {
-        memberService.update(memberDTO);
-        return "redirect:/member/logout";
-    }
+    ////////////////////////////////////////
 
     @GetMapping("/order")
-    public String orderList(HttpSession session,
+    public String orderList(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                            HttpSession session,
                             Model model){
         MemberDTO memberDTO = memberService.findByMemberEmail((String) session.getAttribute("loginEmail"));
         model.addAttribute("member", memberDTO);
-        List<OrderDTO> orderDTOList = orderService.findAllByMemberEntity(memberDTO.getId());
-        model.addAttribute("orderList", orderDTOList);
+        Page<OrderDTO> orderDTOPage = orderService.findAllByMemberEntity(memberDTO.getId(), page);
+
+        int blockLimit = 5;
+        int startPage = 1;
+        int endPage = orderDTOPage.getTotalPages();
+        if(orderDTOPage.getTotalPages() >= blockLimit){
+            if(page+(blockLimit/2) <= orderDTOPage.getTotalPages()){
+                endPage = page+(blockLimit/2);
+            }
+            startPage= endPage-(blockLimit-1);
+            if(page-(blockLimit/2)<1){
+                startPage = 1;
+                endPage = 5;
+            }
+        }
+
+        model.addAttribute("orderList", orderDTOPage);
+        model.addAttribute("page", page);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         return "memberPages/orderList";
     }
 

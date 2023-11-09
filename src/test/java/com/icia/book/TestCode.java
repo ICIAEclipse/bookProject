@@ -7,8 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 @SpringBootTest
 public class TestCode {
@@ -20,7 +19,7 @@ public class TestCode {
     @Test
     @DisplayName("오더에서오더디테일DTO로 가져오나")
     public void orderOrderDetail(){
-        List<OrderDTO> orderDTOList = orderService.findAllByMemberEntity(1L);
+        Page<OrderDTO> orderDTOList = orderService.findAllByMemberEntity(1L, 1);
         for(OrderDTO  orderDTO : orderDTOList){
             System.out.println(orderDTO.getOrderDetailDTOList());
         }

@@ -79,13 +79,29 @@ public class OrderService {
     }
 
     @Transactional
-    public List<OrderDTO> findAllByMemberEntity(Long memberId) {
+    public Page<OrderDTO> findAllByMemberEntity(Long memberId, int page) {
+        int pageLimit = 5;
         MemberEntity memberEntity = memberRepository.findById(memberId).orElseThrow(() -> new NoSuchElementException());
-        List<OrderDTO> orderDTOList = new ArrayList<>();
-        memberEntity.getOrderEntityList().forEach(orderEntity -> {
-            orderDTOList.add(OrderDTO.toDTO(orderEntity));
-        });
-        return orderDTOList;
+        Page<OrderEntity> orderEntityPage = orderRepository.findAllByMemberEntity(memberEntity, PageRequest.of(page-1,pageLimit, Sort.by(Sort.Order.desc("id"))));
+
+        List<OrderDetailDTO> orderDetailDTOList = new ArrayList<>();
+        System.out.println(orderEntityPage.getContent().get(0).getOrderDetailEntityList());
+
+        Page<OrderDTO> orderDTOPage = orderEntityPage.map(orderEntity ->
+            OrderDTO.builder()
+                .id(orderEntity.getId())
+                .orderCode(orderEntity.getOrderCode())
+                .orderAddress(orderEntity.getOrderAddress())
+                .orderAddressDetail(orderEntity.getOrderAddressDetail())
+                .orderPostCode(orderEntity.getOrderPostCode())
+                .orderMemberName(orderEntity.getOrderMemberName())
+                .orderMemberMobile(orderEntity.getOrderMemberMobile())
+                .orderStatus(orderEntity.getOrderStatus())
+                .orderDate(orderEntity.getOrderDate())
+                .orderTotal(orderEntity.getOrderTotal())
+                .orderDetailDTOList(OrderDetailDTO.toList(orderEntity.getOrderDetailEntityList()))
+                .build());
+        return orderDTOPage;
     }
 
     @Transactional

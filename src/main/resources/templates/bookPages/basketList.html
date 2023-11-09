@@ -7,10 +7,33 @@
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
+<div class="row m-5">
+        <div class="col">
+            <div class="row">
+                <div class="col-3 text-center p-5" th:each="basket : ${basketList}">
+                    <div class="card" style="width: 200px">
+                        <img th:src="${basket.bookDTO.bookProfile}" th:onclick="detail_fn(${basket.bookDTO.id})">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
 
 </body>
 <script th:inline="javascript">
 
+    const detail_fn = (bookId) => {
+        axios({
+            method:"post",
+            url:"/book/detail/bookId",
+        }).then(response => {
+
+        }).catch(error => {
+
+        });
+    }
 
 </script>
 </html>

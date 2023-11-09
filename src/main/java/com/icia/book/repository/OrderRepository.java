@@ -1,5 +1,6 @@
 package com.icia.book.repository;
 
+import com.icia.book.entity.MemberEntity;
 import com.icia.book.entity.OrderEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,5 +14,9 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     Optional<OrderEntity> findByOrderCode(String orderCode);
 
+
     Page<OrderEntity> findByOrderStatus(int page, PageRequest pageRequest);
+
+    Page<OrderEntity> findAllByMemberEntity(MemberEntity memberEntity, Pageable pageable);
+
 }

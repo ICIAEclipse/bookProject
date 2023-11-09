@@ -10,18 +10,15 @@ import lombok.ToString;
 @ToString
 public class BasketDTO {
     private Long id;
-    private String isbn;
-    private String memberEmail;
-    private String bookId;
-    private String memberId;
+    private Long bookId;
+    private Long memberId;
+    private BookDTO bookDTO;
 
-
-
-    public static BasketDTO toSaveDTO(BasketEntity basketEntity) {
+    public static BasketDTO toDTO(BasketEntity basketEntity) {
         BasketDTO basketDTO = new BasketDTO();
-        basketDTO.setIsbn(basketEntity.getBookEntity().getIsbn());
-        basketDTO.setMemberId(basketEntity.getMemberEntity().getMemberEmail());
         basketDTO.setId(basketEntity.getId());
+        basketDTO.setBookDTO(BookDTO.toDTO(basketEntity.getBookEntity()));
+        basketDTO.setMemberId(basketEntity.getMemberEntity().getId());
         return basketDTO;
     }
 }
