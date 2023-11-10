@@ -1,5 +1,6 @@
 package com.icia.book.entity;
 
+import com.icia.book.dto.InquiryCommentDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +32,16 @@ public class InquiryCommentEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inquiry_id")
     private InquiryEntity inquiryEntity;
+
+    public static InquiryCommentEntity toSaveEntity(InquiryCommentDTO inquiryCommentDTO, MemberEntity memberEntity, InquiryEntity inquiryEntity) {
+        InquiryCommentEntity inquiryCommentEntity = new InquiryCommentEntity();
+        inquiryCommentEntity.setInquiryCommentWriter(inquiryCommentDTO.getInquiryCommentWriter());
+        inquiryCommentEntity.setInquiryCommentContents(inquiryCommentDTO.getInquiryCommentContents());
+        inquiryCommentEntity.setMemberEntity(memberEntity);
+        inquiryCommentEntity.setInquiryEntity(inquiryEntity);
+        return inquiryCommentEntity;
+    }
 }

@@ -10,7 +10,7 @@
 <div class="row m-5">
     <div class="col">
         <div class="text-end mb-3">
-            <button class="btn btn-primary">1 대 1 문의</button>
+            <button class="btn btn-primary" onclick="open_inquiry()">1 대 1 문의</button>
         </div>
         <div class="mb-3 text-center">
             <h2>FAQ</h2>
@@ -37,7 +37,7 @@
             <div class="col-6">
                 <div class="input-group">
                     <input class="form-control" name="notice-search">
-                    <button class="btn btn-outline-secondary">검색</button>
+                    <button class="btn btn-outline-secondary" onclick="search_notice_list()">검색</button>
                 </div>
             </div>
         </div>
@@ -234,5 +234,14 @@
     }
 
     get_notice_list("", 1);
+
+    const open_inquiry = () => {
+        const loginEmail = [[${session.loginEmail}]];
+        if(loginEmail == null){
+            alert("로그인이 필요한 기능입니다.");
+        } else {
+            window.open("/csCenter/inquiry", 'window_name', 'width=1024, height=800, location=no, status=no, scrollbars=yes');
+        }
+    }
 </script>
 </html>
