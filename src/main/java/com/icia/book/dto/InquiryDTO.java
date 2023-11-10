@@ -36,7 +36,6 @@ public class InquiryDTO {
         } else {
             inquiryDTO.setIsComment(0);
         }
-        System.out.println("inquiryDTO = " + inquiryDTO);
         return inquiryDTO;
     }
 }
