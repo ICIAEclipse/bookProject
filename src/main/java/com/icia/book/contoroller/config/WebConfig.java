@@ -19,10 +19,12 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry){
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1) // 해당 인터셉터의 우선순위
-                .addPathPatterns("/member/mypage") // 인터셉터로 체크할 주소(모든주소)
+                .addPathPatterns("/member/**") // 인터셉터로 체크할 주소(모든주소)
                 .addPathPatterns("/admin/**")
                 .addPathPatterns("/order/**")
-                .excludePathPatterns("/order/createNumber"); // 인터셉터 검증을 하지 않을 주소
+                .addPathPatterns("/csCenter/inquiry/**")
+                .excludePathPatterns("/member/save", "/member/login", "/member/logout", "member/duplicate-check",
+                        "/order/createNumber"); // 인터셉터 검증을 하지 않을 주소
         registry.addInterceptor(new AdminCheckInterceptor())
                 .order(2)
                 .addPathPatterns("/admin/**");

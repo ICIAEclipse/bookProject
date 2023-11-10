@@ -12,7 +12,6 @@ public class AdminCheckInterceptor implements HandlerInterceptor{
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
                              Object handler) throws IOException {
         // 사용자가 요청한 주소 확인
-        String requestURI = request.getRequestURI();
         // 세션객체 생성
         HttpSession session = request.getSession();
         // 세션에 저장된 로그인 정보 확인

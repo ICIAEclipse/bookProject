@@ -237,11 +237,7 @@
 
     const open_inquiry = () => {
         const loginEmail = [[${session.loginEmail}]];
-        if(loginEmail == null){
-            alert("로그인이 필요한 기능입니다.");
-        } else {
-            window.open("/csCenter/inquiry", 'window_name', 'width=1024, height=800, location=no, status=no, scrollbars=yes');
-        }
+        window.open("/csCenter/inquiry", 'window_name', 'width=1024, height=800, location=no, status=no, scrollbars=yes');
     }
 </script>
 </html>

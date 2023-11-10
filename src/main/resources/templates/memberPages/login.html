@@ -5,28 +5,29 @@
 </head>
 <body>
 <div th:replace="~{component/header :: header}"></div>
-<div th:replace="~{component/nav :: nav}"></div>
 
-<div class="row m-5 justify-content-center">
-    <div class="col">
+<div class="row m-5 justify-content-center align-items-center" style="height:70vh">
+    <div class="col-auto">
         <div>
-            <div id="error-type" style="color: red">
-                <p th:if="${error== 'error1'}">등록되지 않은 아이디이거나 아이디 혹은 비밀번호를 잘못 입력했습니다..</p>
+            <div class="text-center">
+                <div id="error-type" style="color: red">
+                    <p th:if="${error== 'error1'}">등록되지 않은 아이디이거나 아이디 혹은 비밀번호를 잘못 입력했습니다..</p>
+                </div>
+                <form name="login-form" action="/member/login" method="post">
+                    <input type="hidden" class="form-control mb-3" name="continued" th:value="${continued}">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" style="display: inline-block; width: 100px">Email</span>
+                        <input type="text" class="form-control" name="memberEmail" onkeyup="enterkey_press(this.name)">
+                    </div>
+                    <div class="input-group mb-3">
+                        <sapn class="input-group-text" style="display: inline-block; width: 100px">비밀번호</sapn>
+                        <input class="form-control" type="text" name="memberPassword" onkeyup="enterkey_press(this.name)">
+                    </div>
+                    <div>
+                        <input type="button" class="btn btn-outline-info" value="login" onclick="login_fn()">
+                    </div>
+                </form>
             </div>
-            <form name="login-form" action="/member/login" method="post">
-                <input type="hidden" name="continued" th:value="${continued}">
-                <div>
-                    <span style="display: inline-block; width: 100px">Email</span>
-                    <input type="text" name="memberEmail" onkeyup="enterkey_press(this.name)">
-                </div>
-                <div>
-                    <sapn style="display: inline-block; width: 100px">비밀번호</sapn>
-                    <input type="text" name="memberPassword" onkeyup="enterkey_press(this.name)">
-                </div>
-                <div>
-                    <input type="button" value="login" onclick="login_fn()">
-                </div>
-            </form>
         </div>
     </div>
 </div>
@@ -58,7 +59,6 @@
             }else if(name == "memberPassword"){
                 login_fn();
             }
-
         }
     }
 </script>
