@@ -23,7 +23,7 @@ public class OrderController {
     private final MemberService memberService;
     private final PayService payService;
 
-    @PostMapping("/createNumber")
+    @PostMapping("/createCode")
     public ResponseEntity createNumber(@RequestBody OrderRequestDTO orderRequestDTO,
                                        HttpSession session){
         while(true){
