@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
+    <div class="col">
+        <div class="row justify-content-end mb-4">
+            <div class="col-2">
+                <select name="status" class="form-select">
+                    <option value="-1" th:selected="${status == -1}">전체</option>
+                    <option value="0" th:selected="${status == 0}">대기중</option>
+                    <option value="1" th:selected="${status == 1}">답변완료</option>
+                    <option value="2" th:selected="${status == 2}">문의취소</option>
+                </select>
+            </div>
+        </div>
+        <table class="table mb-3">
+            <tr>
+                <th>문의번호</th>
+                <th>문의제목</th>
+                <th>문의날짜</th>
+                <th class="text-end">문의상태</th>
+            </tr>
+            <tr th:each="inquiry: ${inquiryList}" th:onclick="detail_fn([[${inquiry.id}]])">
+                <td th:text="${inquiry.id}"></td>
+                <td th:text="${inquiry.inquiryTitle}"></td>
+                <td th:text="${inquiry.createdAt}"></td>
+                <td class="text-end" th:if="${inquiry.inquiryStatus == 0}">대기중 &nbsp;<button class="btn btn-secondary"
+                                                                                             th:onclick="inquiry_comment_fn([[${inquiry.id}]])">
+                    답변하기
+                </button>
+                </td>
+                <td class="text-end" th:if="${inquiry.inquiryStatus == 1}">답변완료</td>
+                <td class="text-end" th:if="${inquiry.inquiryStatus == 2}">문의취소</td>
+            </tr>
+        </table>
+        <div class="container">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <!--첫페이지 요청 링크 /board?page=1 -->
+                    <a class="page-link" th:href="@{/admin/inquiry(page=1, status=${status})}">
+                        <span>First</span>
+                    </a>
+                </li>
+
+                <li th:class="${inquiryList.first} ? 'disabled'" class="page-item">
+                    <!--boardList.first: isFirst()
+                        boardList.number: getNumber()-->
+                    <a class="page-link"
+                       th:href="${inquiryList.first} ? '#' : @{/admin/inquiry(page=${inquiryList.number}, status=${status})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=2 -->
+                        <span><</span> <!-- < -->
+                    </a>
+                </li>
+
+                <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할
+                    for(int page=startPage; page<=endPage; page++) -->
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:class="${page == inquiryList.number + 1} ? 'page-item active'" class="page-item">
+                    <a class="page-link" th:text="${page}"
+                       th:href="@{/admin/inquiry(page=${page}, status=${status})}"></a>
+                </li>
+
+                <!-- 다음 페이지 요청
+                    현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+                    getNumber() 값은 2임.
+                    따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+                <li th:class="${inquiryList.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="${inquiryList.last} ? '#' : @{/admin/inquiry(page=${inquiryList.number + 2}, status=${status})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=4 -->
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link"
+                       th:href="@{/csCenter/inquiry(page=${inquiryList.totalPages}, status=${status})}">
+                        <span>Last</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const status_select = document.querySelector('[name="status"]');
+    status_select.addEventListener("change", () => {
+        const status = status_select.value;
+        location.href = `/admin/inquiry?page=1&status=${status}`;
+    })
+
+    const inquiry_comment_fn = (id) => {
+        location.href = `/admin/inquiry/${id}`;
+    }
+</script>
+</html>

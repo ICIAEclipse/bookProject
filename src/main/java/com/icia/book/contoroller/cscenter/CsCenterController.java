@@ -49,8 +49,8 @@ public class CsCenterController {
     }
 
     @GetMapping("/notice")
-    public ResponseEntity noticeList(@RequestParam(value = "id", required = false, defaultValue = "") String q,
-                                     @RequestParam(value = "model", required = false, defaultValue = "1") int page){
+    public ResponseEntity noticeList(@RequestParam(value = "q", required = false, defaultValue = "") String q,
+                                     @RequestParam(value = "page", required = false, defaultValue = "1") int page){
         Page<NoticeDTO> noticeDTOPage = noticeService.findAll(q, page);
         return new ResponseEntity(noticeDTOPage, HttpStatus.OK);
     }

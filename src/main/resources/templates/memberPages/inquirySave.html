@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col">
+        <div class="text-center mb-5">
+            <h2>고객센터</h2>
+        </div>
+        <form action="/csCenter/inquiry/save" method="post">
+            <input type="hidden" name="inquiryWriter" th:value="${session.loginEmail}">
+            <div class="input-group mb-3">
+                <span class="input-group-text">문의제목</span>
+                <input class="form-control" name="inquiryTitle">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">문의유형</span>
+                <select name="cscenterCategoryId" class="form-select">
+                    <option th:each="category :${centerCategory}" th:text="${category.centerName}"
+                            th:value="${category.id}"></option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <textarea class="form-control" rows="10" name="inquiryContents"></textarea>
+            </div>
+            <div class="text-center mb-3">
+                <button class="btn btn-primary">등록</button>
+                <button type="button" class="btn btn-secondary">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+
+</script>
+</html>

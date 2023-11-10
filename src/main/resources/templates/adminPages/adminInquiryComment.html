@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col-3">
+        <div th:replace="~{component/adminNav :: adminNav}"></div>
+    </div>
+    <div class="col">
+        <div class="input-group mb-3">
+            <span class="input-group-text">문의제목</span>
+            <input class="form-control" th:value="${inquiry.inquiryTitle}" readonly>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">문의유형</span>
+            <input class="form-control" th:each="category :${centerCategory}"
+                   th:value="${category.centerName}" th:if="${inquiry.cscenterCategoryId == category.id}" readonly>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">문의시간</span>
+            <input class="form-control" th:value="${inquiry.createdAt}" readonly>
+        </div>
+        <div class="input-group mb-3">
+            <textarea class="form-control" rows="10" name="inquiryContents" th:text="${inquiry.inquiryContents}"
+                      readonly></textarea>
+        </div>
+        <div>
+            <h3 class="text-center mb-5">답변하기</h3>
+        </div>
+        <form action="/admin/inquiry" method="post">
+            <input type="hidden" name="inquiryId" th:value="${inquiry.id}">
+            <input type="hidden" name="inquiryCommentWriter" th:value="${session.loginEmail}">
+            <textarea class="form-control mb-3" name="inquiryCommentContents"></textarea>
+            <div class="text-center">
+                <button class="btn btn-primary">답변등록</button>
+                <button type="button" class="btn btn-secondary" onclick="cancel_fn()">취소</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+    const status_select = document.querySelector('[name="status"]');
+
+    const cancel_fn = () => {
+      location.href = "/admin/inquiry";
+    }
+
+    status_select.addEventListener("change", () => {
+        const status = status_select.value;
+        location.href = `/admin/inquiry?page=1&status=${status}`;
+    })
+
+    const inquiry_comment_fn = (id) => {
+        location.href = `/admin/inquiry/${id}`;
+    }
+</script>
+</html>

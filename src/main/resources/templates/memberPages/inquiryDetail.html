@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{component/config :: config}"></th:block>
+</head>
+<body>
+<div th:replace="~{component/header :: header}"></div>
+
+<div class="row m-5">
+    <div class="col">
+        <div class="text-center mb-5">
+            <h2>고객센터</h2>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">문의제목</span>
+            <input class="form-control" th:value="${inquiry.inquiryTitle}" readonly>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">문의유형</span>
+            <input class="form-control" th:each="category :${centerCategory}"
+                   th:value="${category.centerName}" th:if="${inquiry.cscenterCategoryId == category.id}" readonly>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">문의시간</span>
+            <input class="form-control" th:value="${inquiry.createdAt}" readonly>
+        </div>
+        <div class="input-group mb-3">
+            <textarea class="form-control" rows="10" name="inquiryContents" th:text="${inquiry.inquiryContents}"
+                      readonly></textarea>
+        </div>
+        <div th:if="${inquiry.isComment == 1}" class="mb-5">
+            <h2>답변</h2>
+            <div class="input-group mb-3">
+                <span class="input-group-text">답변자</span>
+                <input class="form-control" th:value="${inquiry.inquiryCommentDTO.inquiryCommentWriter}" readonly>
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">답변시간</span>
+                <input class="form-control" th:value="${inquiry.inquiryCommentDTO.createdAt}" readonly>
+            </div>
+            <div class="input-group mb-3">
+            <textarea class="form-control" rows="10" name="inquiryContents" th:text="${inquiry.inquiryCommentDTO.inquiryCommentContents}"
+                      readonly></textarea>
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-warning" th:if="${inquiry.inquiryStatus == 0}"
+                    th:onclick="inquiry_cancel_fn([[${inquiry.id}]])">문의 취소
+            </button>
+            <button class="btn btn-secondary" onclick="list_fn()">문의 목록</button>
+        </div>
+    </div>
+</div>
+<div th:replace="~{component/footer :: footer}"></div>
+</body>
+<script th:inline="javascript">
+
+    const list_fn = () => {
+        location.href = "/csCenter/inquiry";
+    }
+
+    const inquiry_cancel_fn = (id) => {
+        if (confirm("취소하시겠습니까?")) {
+            axios({
+                method: "put",
+                url: `/csCenter/inquiry/${id}`
+            }).then(res => {
+                location.href = `/csCenter/inquiry`;
+            }).catch(err => {
+                alert("취소실패");
+            });
+        }
+    }
+</script>
+</html>
