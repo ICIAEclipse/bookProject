@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -32,4 +33,20 @@ public class BasketController {
         return "/bookPages/basketList";
     }
 
+    @PostMapping
+    public ResponseEntity basket(@RequestBody Map<String, String> req, HttpSession session) {
+        String loginEmail = (String) session.getAttribute("loginEmail");
+        String isbn = req.get("isbn");
+        System.out.println("이상하네" + isbn + loginEmail);
+        boolean result = basketService.save(isbn, loginEmail);
+        System.out.println("값은? " + result);
+        if(result == true) {
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+    }
 }
+
+

@@ -27,26 +27,34 @@ public class BasketService {
 
     @Transactional
     public boolean save(String isbn, String loginEmail) {
+        System.out.println("확인0" +  isbn + loginEmail);
         BookEntity bookEntity = bookRepository.findByIsbn(isbn).orElseThrow(() -> new NoSuchElementException()); // book isbb 확인
         MemberEntity memberEntity = memberRepository.findByMemberEmail(loginEmail).orElseThrow(() -> new NoSuchElementException()); // memberEmail 확인
 
-        System.out.println(BookDTO.toDTO(bookEntity));
-        System.out.println(MemberDTO.toDTO(memberEntity));
+        System.out.println("확인1" + BookDTO.toDTO(bookEntity));
+        System.out.println("확인2" + MemberDTO.toDTO(memberEntity));
 
         Optional<BasketEntity> basketDbEntityOptional = basketRepository.findByMemberEntityAndBookEntity(memberEntity, bookEntity); // 위으 isbn값과 일치하는 id를 bookDbId에 넣음
         System.out.println("실행1");
 
-        if(basketDbEntityOptional.isPresent()) { // DB에 이미 있으면
-            // 삭제
-            BasketEntity basketEntity = basketDbEntityOptional.get(); // basket엔티티로 만듦
-            basketRepository.delete(basketEntity);
-            return false;
-        }else{
+//        if(basketDbEntityOptional.isPresent()) { // DB에 이미 있으면
+//            // 삭제
+//            BasketEntity basketEntity = basketDbEntityOptional.get(); // basket엔티티로 만듦
+//            basketRepository.delete(basketEntity);
+//            return false;
+//        }else{
             // 저장
             BasketEntity basketEntity = BasketEntity.toSaveEntity(bookEntity, memberEntity); // basket엔티티로 만듦
-            basketRepository.save(basketEntity);
-            return true;
-        }
+
+            Optional<BasketEntity> basketEntityOptional =basketRepository.findByMemberEntityAndBookEntity(memberEntity, bookEntity);
+            if(basketEntityOptional.isPresent()) {
+                return false;
+            } else {
+                basketRepository.save(basketEntity);
+                return true;
+            }
+
+//        }
     }
 
     @Transactional
