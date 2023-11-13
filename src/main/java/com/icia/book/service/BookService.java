@@ -4,8 +4,10 @@ import com.icia.book.dto.BookDTO;
 import com.icia.book.dto.CategoryDTO;
 import com.icia.book.entity.BookEntity;
 import com.icia.book.entity.CategoryEntity;
+import com.icia.book.entity.CommentEntity;
 import com.icia.book.repository.BookRepository;
 import com.icia.book.repository.CategoryRepository;
+import com.icia.book.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,8 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
+
+    private final CommentRepository commentRepository;
 
     public boolean save(BookDTO bookDTO) {
         if (!bookRepository.findByIsbn(bookDTO.getIsbn()).isEmpty()) {
@@ -100,7 +104,8 @@ public class BookService {
 
     public BookDTO findById(Long id) {
         BookEntity bookEntity = bookRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
-        BookDTO bookDTO = BookDTO.toDTO(bookEntity);
+        List<CommentEntity> commentEntityList = commentRepository.findByBookEntityOrderByIdDesc(bookEntity);
+        BookDTO bookDTO = BookDTO.toDTO(bookEntity, commentEntityList);
         return bookDTO;
     }
 }

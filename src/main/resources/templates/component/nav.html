@@ -22,9 +22,6 @@
             <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="/board/save">글작성</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="/book">책목록</a>
                     </li>
                     <li class="nav-item">
@@ -40,15 +37,6 @@
                         <a class="nav-link" href="/csCenter">고객센터</a>
                     </li>
                 </ul>
-                <form action="/board" method="get" class="d-flex" role="search">
-                    <select name="type" class="form-select me-2 w-50">
-                        <option value="boardTitle" th:selected="${type==null or type=='1'}">제목</option>
-                        <option value="boardWriter" th:selected="${type=='2'}">작성자</option>
-                    </select>
-                    <input class="form-control me-2 " type="search" name="query" placeholder="검색어를 입력하세요"
-                           aria-label="Search" th:value="${query==null? '':query}">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
                     <li class="nav-item" th:if="${session.loginEmail} == null">
                         <a class="nav-link" href="/member/save">회원가입</a>

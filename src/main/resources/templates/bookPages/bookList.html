@@ -172,24 +172,17 @@
                 method: "post",
                 url: "/basket",
                 data: {
-                    isbn: isbn,
-                    memberEmail: loginEmail
+                    isbn,
                 }
             }).then(res => {
-                if(res.data == true) {
-                    alert("찜 되었습니다")
-                } else {
-                    alert("찜 삭제되었습니다")
-                }
+                alert("찜 되었습니다")
             }).catch(err => {
-                alert("찜에 실패했습니다" + isbn)
+                alert("이미 찜이 되어있습니다")
             });
         } else {
             alert("로그인페이지로 이동합니다.")
             location.href = "/member/login"
         }
     }
-
-
 </script>
 </html>

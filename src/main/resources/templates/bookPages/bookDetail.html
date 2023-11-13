@@ -1,46 +1,240 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <th:block th:replace="~{component/config :: config}"></th:block>
+    <th:block th:replace="~{component/config :: config}"></th:block>
 
 </head>
 <body>
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
-<div class="row">
-  <div class="col">
-    <table class="table table-striped">
-      <tr>
-        <th>도서번호</th>
-        <td th:text="${book.isbn}"></td>
-      </tr>
-      <tr>
-        <th>도서제목</th>
-        <td th:text="${book.bookName}"></td>
-      </tr>
-      <tr>
-        <th>도서표지</th>
-        <td>
-        <img th:src="${book.bookProfile}" width="120">
-        </td>
-      </tr>
-      <tr>
-        <th>도서가격</th>
-        <td th:text="${book.bookPrice}"></td>
-      </tr>
-      <tr>
-        <th>세일가격</th>
-        <td th:text="${book.bookSalePrice}"></td>
-      </tr>
-      <tr>
-        <th>내용</th>
-        <td th:text="${book.bookContents}"></td>
-      </tr>
-    </table>
-  </div>
+<div class="row mt-5 p-5">
+    <div class="col">
+        <div class="card p-3">
+            <div class="row mb-3">
+                <div class="col-2 text-center">
+                    <img th:src="${book.bookProfile}" width="80%">
+                </div>
+                <div class="col">
+                    <div class="card-title" th:text="${book.bookName}"></div>
+                    <div class="card-subtitle" th:text="${book.bookAuthor}"></div>
+                    <hr>
+                    <div th:text="|정가: ${book.bookPrice}|"></div>
+                    <div th:text="|판매가: ${book.bookSalePrice}|"></div>
+                    <div>
+                        <i th:if="${book.bookScore > 0}" class="bi bi-star-fill" style="color: darkred"></i>
+                        <i th:unless="${book.bookScore > 0}" class="bi bi-star" style="color: darkred"></i>
+                        <i th:if="${book.bookScore > 1}" class="bi bi-star-fill" style="color: darkred"></i>
+                        <i th:unless="${book.bookScore > 1}" class="bi bi-star" style="color: darkred"></i>
+                        <i th:if="${book.bookScore > 2}" class="bi bi-star-fill" style="color: darkred"></i>
+                        <i th:unless="${book.bookScore > 2}" class="bi bi-star" style="color: darkred"></i>
+                        <i th:if="${book.bookScore > 3}" class="bi bi-star-fill" style="color: darkred"></i>
+                        <i th:unless="${book.bookScore > 3}" class="bi bi-star" style="color: darkred"></i>
+                        <i th:if="${book.bookScore > 4}" class="bi bi-star-fill" style="color: darkred"></i>
+                        <i th:unless="${book.bookScore > 4}" class="bi bi-star" style="color: darkred"></i>
+                         : [[${book.bookScore}]]
+                    </div>
+                    <div class="text-end" th:if="${book.bookCount == 0}">
+                        <input type="button" class="btn btn-outline-secondary" disabled value="품절">
+                    </div>
+                    <div class="text-end" th:unless="${book.bookCount == 0}">
+                        <input type="button" class="btn btn-sm btn-outline-info"
+                               th:onclick="basket_fn([[${book.isbn}]])" value="찜">
+                        <input type="button" class="btn btn-sm btn-outline-info" th:onclick="cart_fn([[${book.id}]])"
+                               value="장바구니">
+                        <input type="button" class="btn btn-sm btn-outline-info"
+                               th:onclick="to_purchase([[${book.id}]])" value="바로구매">
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div>
+                <h4>책소개</h4>
+                <div th:text="${book.bookContents}"></div>
+            </div>
+            <hr>
+            <div id="comment-area">
+                <div id="comment-save" th:if="${session.loginEmail != null}">
+                    <i id="star1" class="bi bi-star" onclick="score(1)" style="color: darkred"></i>
+                    <i id="star2" class="bi bi-star" onclick="score(2)" style="color: darkred"></i>
+                    <i id="star3" class="bi bi-star" onclick="score(3)" style="color: darkred"></i>
+                    <i id="star4" class="bi bi-star" onclick="score(4)" style="color: darkred"></i>
+                    <i id="star5" class="bi bi-star" onclick="score(5)" style="color: darkred"></i>
+                    <br>
+                    <input type="hidden" name="commentScore" id="commentScore">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">작성자</span>
+                        <input name="commentWriter" id="commentWriter" class="form-control"
+                               th:value="${session.loginEmail}"
+                               readonly>
+                    </div>
+                    <div class="input-group mb-2">
+                        <textarea class="form-control" id="commentContents" name="commentContents" rows="2"></textarea>
+                    </div>
+                    <div class="text-end">
+                        <button class="btn btn-secondary btn-sm" th:onclick="comment_save([[${book.id}]])">댓글등록</button>
+                    </div>
+                </div>
+                <div id="comment-save-not-login" th:unless="${session.loginEmail != null}">
+                    <div class="text-end">
+                        <button class="btn btn-secondary btn-sm" onclick="toLogin()">댓글작성</button>
+                    </div>
+                </div>
+                <div id="comment-list">
+                    <div th:each="comment : ${book.commentDTOList}">
+                        <hr>
+                        <div class="card p-3">
+                            <div class="card-title" th:text="|작성자: ${comment.commentWriter}|"></div>
+                            <div class="card-body" th:text="${comment.commentContents}"></div>
+                            <div class="text-end">
+                                <i th:if="${comment.commentScore > 0}" class="bi bi-star-fill" style="color: darkred"></i>
+                                <i th:unless="${comment.commentScore > 0}" class="bi bi-star" style="color: darkred"></i>
+                                <i th:if="${comment.commentScore > 1}" class="bi bi-star-fill" style="color: darkred"></i>
+                                <i th:unless="${comment.commentScore > 1}" class="bi bi-star" style="color: darkred"></i>
+                                <i th:if="${comment.commentScore > 2}" class="bi bi-star-fill" style="color: darkred"></i>
+                                <i th:unless="${comment.commentScore > 2}" class="bi bi-star" style="color: darkred"></i>
+                                <i th:if="${comment.commentScore > 3}" class="bi bi-star-fill" style="color: darkred"></i>
+                                <i th:unless="${comment.commentScore > 3}" class="bi bi-star" style="color: darkred"></i>
+                                <i th:if="${comment.commentScore > 4}" class="bi bi-star-fill" style="color: darkred"></i>
+                                <i th:unless="${comment.commentScore > 4}" class="bi bi-star" style="color: darkred"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
+<script th:inline="javascript">
+
+    const toLogin = () => {
+        alert("로그인이 필요한 기능입니다.");
+        location.href = "/member/login?continued="+ window.location.pathname + window.location.search;
+    }
+
+    const print = (data) => {
+        const area = document.querySelector("#comment-list");
+        let result = "";
+        for(let i in data) {
+            result += "<hr>";
+            result += "<div class=\"card p-3\">";
+            result += "<div class=\"card-title\">작성자: "+ data[i].commentWriter +"</div>";
+            result += "<div class=\"card-body\">"+ data[i].commentContents +"</div>";
+            result += "<div class=\"text-end\">"
+            for(let l = 1; l <= data[i].commentScore; l++){
+                result += "<i id=\"star1\" class=\"bi bi-star-fill\" style=\"color: darkred\"></i>";
+            }
+            for(let l = data[i].commentScore; l < 5; l++){
+                result += "<i class=\"bi bi-star\" style=\"color: darkred\"></i>";
+            }
+            result += "</div>";
+            result += "</div>";
+        }
+        area.innerHTML = result;
+    }
+
+    const comment_save = (bookId) => {
+        const commentScore = document.querySelector("#commentScore").value;
+        const commentWriter = document.querySelector("#commentWriter").value;
+        const commentContents = document.querySelector("#commentContents").value;
+        axios({
+            method:"post",
+            url:"/comment/save",
+            data:{
+                commentScore:commentScore,
+                commentWriter:commentWriter,
+                commentContents:commentContents,
+                bookId:bookId
+            }
+        }).then(res => {
+            console.log(res);
+            print(res.data);
+        }).catch(err => {
+            alert("등록실패");
+        })
+    }
+
+    const score = (score) => {
+        for(let i = 1; i <= score; i++){
+            document.querySelector("#star"+i).className = "bi bi-star-fill";
+        }
+        for(let i = score+1; i <= 5; i++){
+            document.querySelector("#star"+i).className = "bi bi-star";
+        }
+        document.querySelector("#commentScore").value = score;
+    }
+
+    const cart_fn = (bookId) => {
+        axios({
+            method: "post",
+            url: `/cart/save`,
+            data: {bookId: bookId}
+        }).then(res => {
+            if (res.data) {
+                alert("장바구니에 이미 담겨져 있습니다.")
+            } else {
+                alert("장바구니 이동 성공");
+                location.href = "/cart";
+            }
+        }).catch(err => {
+            alert("장바구니 이동 실패");
+        })
+    }
+
+    const to_purchase = (bookId) => {
+        const loginEmail = [[${session.loginEmail}]];
+        if (loginEmail == null) {
+            alert("로그인이 필요한 기능입니다.")
+            location.href = "/member/login?continued=" + window.location.pathname + window.location.search;
+        } else {
+            const booKIdList = [];
+            const countList = [];
+            booKIdList[0] = bookId;
+            countList[0] = 1;
+            let requestData = {
+                booKIdList: booKIdList,
+                countList: countList
+            };
+            axios({
+                method: "post",
+                url: `/order/createCode`,
+                data: requestData,
+            }).then(res => {
+                requestData = res.data;
+                let queryParameters = `?booKIdList=${res.data.booKIdList.join(',')}&countList=${res.data.countList.join(',')}&orderCode=${res.data.orderCode}`;
+                location.href = "/order/order" + queryParameters
+            }).catch(err => {
+                console.log(err)
+            });
+        }
+    }
+
+    const basket_fn = (isbn) => {
+        const loginEmail = [[${session.loginEmail}]];
+        if (loginEmail != null) {
+            console.log(isbn)
+            axios({
+                method: "post",
+                url: "/basket",
+                data: {
+                    isbn: isbn,
+                    memberEmail: loginEmail
+                }
+            }).then(res => {
+                if (res.data == true) {
+                    alert("찜 되었습니다")
+                } else {
+                    alert("찜 삭제되었습니다")
+                }
+            }).catch(err => {
+                alert("찜에 실패했습니다" + isbn)
+            });
+        } else {
+            alert("로그인페이지로 이동합니다.")
+            location.href = "/member/login"
+        }
+    }
+</script>
 </html>

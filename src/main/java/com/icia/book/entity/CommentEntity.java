@@ -1,5 +1,6 @@
 package com.icia.book.entity;
 
+import com.icia.book.dto.CommentDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import java.util.List;
 public class CommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Column(length = 20, nullable = false)
     private String commentWriter;
@@ -35,4 +36,14 @@ public class CommentEntity {
 
     @OneToMany(mappedBy = "commentEntity", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<CommentLikeEntity> commentLikeEntityList;
+
+    public static CommentEntity toSaveEntity(CommentDTO commentDTO, MemberEntity memberEntity, BookEntity bookEntity) {
+        CommentEntity commentEntity = new CommentEntity();
+        commentEntity.setCommentWriter(commentDTO.getCommentWriter());
+        commentEntity.setCommentContents(commentDTO.getCommentContents());
+        commentEntity.setCommentScore(commentDTO.getCommentScore());
+        commentEntity.setMemberEntity(memberEntity);
+        commentEntity.setBookEntity(bookEntity);
+        return commentEntity;
+    }
 }
