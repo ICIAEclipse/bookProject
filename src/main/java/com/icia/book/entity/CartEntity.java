@@ -22,6 +22,9 @@ public class CartEntity {
     @ColumnDefault("1")
     private int count;
 
+    @Column(nullable = false)
+    private boolean isDuplicate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private BookEntity bookEntity;
@@ -30,11 +33,20 @@ public class CartEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    public static CartEntity toSaveEntity(MemberEntity memberEntity, BookEntity bookEntity){
+    public static CartEntity toSaveEntity(CartDTO cartDTO, MemberEntity memberEntity, BookEntity bookEntity){
         CartEntity cartEntity = new CartEntity();
         cartEntity.setCount(1);
+        cartEntity.setDuplicate(cartDTO.isDuplicate());
         cartEntity.setBookEntity(bookEntity);
         cartEntity.setMemberEntity(memberEntity);
         return cartEntity;
+    }
+
+    public boolean isDuplicate() {
+        return isDuplicate;
+    }
+
+    public void setDuplicate(boolean duplicate) {
+        isDuplicate = duplicate;
     }
 }

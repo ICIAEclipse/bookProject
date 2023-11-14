@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,10 +23,10 @@ public class CartService {
     private final MemberRepository memberRepository;
     private final BookRepository bookRepository;
 
-    public void save(CartDTO cartDTO) {
+    public boolean save(CartDTO cartDTO) {
         MemberEntity memberEntity = memberRepository.findById(cartDTO.getMemberId()).orElseThrow(() -> new NoSuchElementException());
         BookEntity bookEntity = bookRepository.findById(cartDTO.getBookId()).orElseThrow(() -> new NoSuchElementException());
-        /*MemberEntity memberEntity = null;
+        /*
         BookEntity bookEntity = null;
         if(optionalBookEntity.isEmpty() && optionalMemberEntity.isEmpty()){
             MemberDTO memberDTO = new MemberDTO();
@@ -42,8 +43,16 @@ public class CartService {
             bookEntity = optionalBookEntity.get();
             memberEntity = optionalMemberEntity.get();
         }*/
-        CartEntity cartEntity = CartEntity.toSaveEntity(memberEntity, bookEntity);
-        cartRepository.save(cartEntity);
+        CartEntity cartEntity = CartEntity.toSaveEntity(cartDTO, memberEntity, bookEntity);
+
+        // 추가코드
+        Optional<CartEntity> cartEntityOptional = cartRepository.findByMemberEntityAndBookEntity(memberEntity, bookEntity);
+        if (cartEntityOptional.isPresent()) {
+            return false;
+        } else {
+            cartRepository.save(cartEntity);
+            return true;
+        }
     }
 
     @Transactional

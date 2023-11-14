@@ -1,11 +1,9 @@
 package com.icia.book.contoroller.cart;
 
-import com.icia.book.dto.BookDTO;
 import com.icia.book.dto.CartDTO;
 import com.icia.book.dto.MemberDTO;
 import com.icia.book.service.CartService;
 import com.icia.book.service.MemberService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +27,17 @@ public class CartController {
     }
 
     @PostMapping("/save")
-    public String save(@RequestBody CartDTO cartDTO,
+    public ResponseEntity save(@RequestBody CartDTO cartDTO,
                        HttpSession session){
-        MemberDTO memberDTO = memberService.findByMemberEmail((String) session.getAttribute("loginEmail"));
-        cartDTO.setMemberId(memberDTO.getId());
+        MemberDTO memberDTO = memberService.findByMemberEmail((String) session.getAttribute("loginEmail")); // 세션에 있는 이메일 값을 memberDTO로 저장
+        cartDTO.setMemberId(memberDTO.getId()); // 멤버아이디를(DTO) cartDTO로 진짜 만듦
         System.out.println(cartDTO);
-        cartService.save(cartDTO);
-        return "redirect:/cart";
+        boolean result = cartService.save(cartDTO); // 멤버 아이디랑 북 아이디를 카트서비스에 저장
+        if (result==true) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity(HttpStatus.OK);
+        }
     }
 
     @GetMapping
