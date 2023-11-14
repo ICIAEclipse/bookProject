@@ -8,6 +8,7 @@ import com.icia.book.service.BookService;
 import com.icia.book.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -79,8 +80,17 @@ public class BookController {
 
     @GetMapping("/{id}")
     public String findById(@PathVariable("id") Long id, Model model){
+        System.out.println("여기입니다" + id);
         BookDTO bookDTO = bookService.findById(id);
         model.addAttribute("book", bookDTO);
         return "bookPages/bookDetail";
+    }
+
+    @PostMapping("/{id}")
+    public String detail(@RequestBody Long id, Model model){
+        BookDTO bookDTO = bookService.findById(id);
+        model.addAttribute("book", bookDTO);
+        return "bookPages/bookDetail";
+
     }
 }

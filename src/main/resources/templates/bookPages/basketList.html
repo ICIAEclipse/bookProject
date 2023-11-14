@@ -8,16 +8,16 @@
 <div th:replace="~{component/nav :: nav}"></div>
 
 <div class="row m-5">
-        <div class="col">
-            <div class="row">
-                <div class="col-3 text-center p-5" th:each="basket : ${basketList}">
-                    <div class="card" style="width: 200px">
-                        <img th:src="${basket.bookDTO.bookProfile}" th:onclick="detail_fn(${basket.bookDTO.id})">
-                    </div>
+    <div class="col">
+        <div class="row">
+            <div class="col-3 text-center p-5" th:each="basket : ${basketList}">
+                <div class="card" style="height: 200px; width: 200px" >
+                    <a th:href="@{|/book/${basket.bookDTO.id}|}">
+                    <img th:src="${basket.bookDTO.bookProfile}" style="height: 200px"></a>
                 </div>
             </div>
         </div>
-
+    </div>
 </div>
 <div th:replace="~{component/footer :: footer}"></div>
 
