@@ -123,16 +123,14 @@
         axios({
             method: "post",
             url: `/cart/save`,
-            data: {bookId:bookId}
+            data: {
+                bookId:bookId
+            }
         }).then(res => {
-            if(res.data) {
-                alert("장바구니에 이미 담겨져 있습니다.")
-                }else {
-                alert("장바구니 이동 성공");
-                location.href = "/cart";
-                }
+            alert("장바구니에 이미 담겨져 있습니다.");
         }).catch(err => {
-            alert("장바구니 이동 실패");
+            alert("장바구니 이동 성공");
+            location.href = "/cart";
         })
     }
 

@@ -17,12 +17,22 @@ public class CartDTO {
     private String memberEmail;
     private BookDTO bookDTO;
     private int count;
+    private boolean isDuplicate;
 
     public static CartDTO toCartDTO(CartEntity cartEntity){
         CartDTO cartDTO = new CartDTO();
         cartDTO.setId(cartEntity.getId());
         cartDTO.setCount(cartEntity.getCount());
+        cartDTO.setDuplicate(cartEntity.isDuplicate());
         cartDTO.setBookDTO(BookDTO.toDTO(cartEntity.getBookEntity()));
         return cartDTO;
+    }
+
+    public boolean isDuplicate() {
+        return isDuplicate;
+    }
+
+    public void setDuplicate(boolean duplicate) {
+        isDuplicate = duplicate;
     }
 }
