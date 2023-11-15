@@ -9,53 +9,56 @@
 
 <div class="row m-5 justify-content-center">
     <div class="col">
-        <div>
-            <div id="error-type" style="color: red">
-                <p th:if="${error== 'error1'}">등록되지 않은 아이디이거나 아이디 혹은 비밀번호를 잘못 입력했습니다..</p>
+        <div class="row justify-content-center">
+            <div class="col-6 card p-3">
+                <div id="error-type" style="color: red">
+                    <p th:if="${error== 'error1'}">등록되지 않은 아이디이거나 아이디 혹은 비밀번호를 잘못 입력했습니다..</p>
+                </div>
+                <form name="login-form" action="/member/login" method="post">
+                    <input type="hidden" name="continued" th:value="${continued}">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" style="display: inline-block; width: 100px">Email</span>
+                        <input class="form-control" type="text" name="memberEmail" onkeyup="enterkey_press(this.name)">
+                    </div>
+                    <div class="input-group mb-3">
+                        <sapn class="input-group-text" style="display: inline-block; width: 100px">비밀번호</sapn>
+                        <input class="form-control" type="password" name="memberPassword" onkeyup="enterkey_press(this.name)">
+                    </div>
+                    <div class="text-center mb-3">
+                        <input class="btn btn-primary" type="button" value="login" onclick="login_fn()">
+                    </div>
+                </form>
             </div>
-            <form name="login-form" action="/member/login" method="post">
-                <input type="hidden" name="continued" th:value="${continued}">
-                <div>
-                    <span style="display: inline-block; width: 100px">Email</span>
-                    <input type="text" name="memberEmail" onkeyup="enterkey_press(this.name)">
-                </div>
-                <div>
-                    <sapn style="display: inline-block; width: 100px">비밀번호</sapn>
-                    <input type="text" name="memberPassword" onkeyup="enterkey_press(this.name)">
-                </div>
-                <div>
-                    <input type="button" value="login" onclick="login_fn()">
-                </div>
-            </form>
         </div>
     </div>
+</div>
 </div>
 
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
 
 <script th:inline="javascript">
-    const login_fn = () =>{
+    const login_fn = () => {
         const loginForm = document.querySelector("[name = 'login-form']");
         const loginEmail = document.querySelector("[name = 'memberEmail']");
         const loginPassword = document.querySelector("[name = 'memberPassword']").value;
         const errorType = document.getElementById("error-type")
-        if(loginEmail.value == ''){
+        if (loginEmail.value == '') {
             errorType.innerHTML = `<p>아이디를 입력해주세요.</p>`
             loginEmail.focus();
-        }else if (loginPassword == "") {
+        } else if (loginPassword == "") {
             errorType.innerHTML = `<p>비밀번호를 입력해주세요.</p>`
             loginEmail.focus();
-        }else {
+        } else {
             loginForm.submit();
         }
     }
 
-    const enterkey_press = (name) =>{
-        if (window.event.keyCode == 13){
-            if(name== "memberEmail"){
+    const enterkey_press = (name) => {
+        if (window.event.keyCode == 13) {
+            if (name == "memberEmail") {
                 $("input[name=memberPassword]").focus();
-            }else if(name == "memberPassword"){
+            } else if (name == "memberPassword") {
                 login_fn();
             }
 
