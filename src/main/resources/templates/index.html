@@ -7,18 +7,27 @@
 <div th:replace="~{component/header :: header}"></div>
 <div th:replace="~{component/nav :: nav}"></div>
 
-<div class="row m-5">
-    <div class="col">
-        <h1>index</h1>
-        <a href="/admin/member">관리자 회원 관리</a>
-        <form action="/member/update">
-            <input type="hidden" name="id" th:value="${session.loginId}">
-            <input type="button" value="회원정보수정">
-        </form>
-        <a href="/book">책 구매링크</a>
+<div class="row m-5 justify-content-center">
+    <div class="col-4">
+        <div class="card p-3 mb-5">
+            <img src="/images/best.png" onclick="bestPage()">
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="card p-3 mb-5">
+            <img src="/images/new.png" onclick="newPage()">
+        </div>
     </div>
 </div>
-
 <div th:replace="~{component/footer :: footer}"></div>
 </body>
+<script th:inline="javascript">
+    const bestPage = () => {
+        location.href = "/book/bestseller";
+    }
+
+    const newPage = () => {
+        location.href = "/book/new";
+    }
+</script>
 </html>
